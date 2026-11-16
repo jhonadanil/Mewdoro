@@ -1,0 +1,297 @@
+/* ========================================
+   COLORES - NOTION DARK
+======================================== */
+
+/* MODO OSCURO */
+:root {
+  --background: #191919;
+  --surface: #202020;
+  --surface-hover: #2c2c2c;
+  --border: #373737;
+
+  --text: #e6e6e5;
+  --text-muted: #9b9a97;
+
+  --accent: #ffffff;
+  --accent-hover: #d4d4d4;
+}
+
+/* MODO CLARO */
+:root[data-theme="light"] {
+  --background: #ffffff;
+  --surface: #f7f6f3;
+  --surface-hover: #eae9e5;
+  --border: #e5e5e3;
+
+  --text: #37352f;
+  --text-muted: #787774;
+
+  --accent: #37352f;
+  --accent-hover: #55534d;
+}
+
+
+/* ========================================
+   ESTILOS GENERALES
+======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--background);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+}
+
+
+/* ========================================
+   ESTRUCTURA PRINCIPAL
+======================================== */
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+.app__content {
+  flex: 1;
+  min-width: 0;
+}
+
+
+/* ========================================
+   SEARCH BAR
+======================================== */
+
+.searchbar {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 25px 35px;
+}
+
+/* Buscador */
+
+.searchbar__search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  max-width: 550px;
+
+  padding: 12px 18px;
+
+  background: transparent;
+  border: none;
+  border-radius: 0;
+
+  color: var(--text-muted);
+}
+
+.searchbar__search svg {
+  flex-shrink: 0;
+}
+
+/* Alineación de la lupa */
+
+.searchbar__search svg {
+  flex-shrink: 0;
+}
+
+/* Efecto al seleccionar el buscador */
+
+.searchbar__search:focus-within {
+  border-color: #666666;
+}
+
+/* Input */
+
+.searchbar__input {
+  width: 100%;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: var(--text);
+  font-size: 15px;
+}
+
+.searchbar__input::placeholder {
+  color: var(--text-muted);
+}
+
+
+/* ========================================
+   BOTÓN PARA CAMBIAR EL TEMA
+======================================== */
+
+.searchbar__theme {
+  position: absolute;
+  right: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+
+  color: var(--text-muted);
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.searchbar__theme:hover {
+  background-color: var(--surface-hover);
+  color: var(--text);
+}
+
+
+/* ========================================
+   SIDEBAR
+======================================== */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 220px;
+  height: 100%;
+  min-height: 100vh;
+  flex-shrink: 0;
+
+  padding: 25px 12px;
+
+  background-color: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+/* Menú superior */
+
+.sidebar__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Apartado inferior: Ajustes */
+
+.sidebar__bottom {
+  margin-top: auto;
+}
+
+
+/* ========================================
+   ENLACES DEL SIDEBAR
+======================================== */
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  padding: 10px 12px;
+
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+
+  border-radius: 6px;
+
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Efecto hover */
+
+.sidebar__link:hover {
+  background-color: var(--surface-hover);
+  color: var(--text);
+}
+
+/* Apartado seleccionado */
+
+.sidebar__link--active {
+  background-color: var(--surface-hover);
+  color: var(--text);
+}
+
+
+/* ========================================
+   SIDEBAR MINIMIZABLE
+======================================== */
+
+.sidebar-container {
+  position: relative;
+  flex-shrink: 0;
+
+  width: 220px;
+  min-height: 100vh;
+
+  transition: width 0.25s ease;
+}
+
+/* Sidebar cerrado */
+
+.sidebar-container--closed {
+  width: 0;
+}
+
+/* Botón para ocultar y mostrar */
+
+.sidebar__toggle {
+  position: absolute;
+  top: 20px;
+  right: -44px;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  background-color: var(--surface);
+  color: var(--text-muted);
+
+  border: 1px solid var(--border);
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar__toggle:hover {
+  background-color: var(--surface-hover);
+  color: var(--text);
+}
+
+/* El Sidebar ocupa el contenedor */
+
+.sidebar-container .sidebar {
+  width: 220px;
+  height: 100%;
+  min-height: 100vh;
+} */
