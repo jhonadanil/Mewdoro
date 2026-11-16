@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import NoteCard from '../components/NoteCard'
 import type { Note } from '../types'
+import NoteCard from '../components/NoteCard'
 
 const initialNotes: Note[] = [
   {
