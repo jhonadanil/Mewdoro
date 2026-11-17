@@ -11,7 +11,7 @@ interface IconButtonProps extends ComponentProps<typeof Button> {
   side?: 'top' | 'right' | 'bottom' | 'left'
 }
 
-// Botón de icono con tooltip, como los de Notion
+// Botón de icono con tooltip que nombra la acción (y su atajo, si lo tiene)
 export function IconButton({
   label,
   shortcut,

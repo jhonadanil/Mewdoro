@@ -1,4 +1,4 @@
-import { ChevronDown } from 'lucide-react'
+import { CaretDownIcon } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -31,7 +31,7 @@ export default function Dropdown<T extends string>({ value, options, onChange, l
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="max-w-56 font-normal text-muted-foreground" aria-label={label}>
           <span className="truncate">{selected?.label}</span>
-          <ChevronDown className="opacity-60" />
+          <CaretDownIcon className="opacity-60" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} className="min-w-48">

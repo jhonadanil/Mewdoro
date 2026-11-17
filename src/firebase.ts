@@ -1,6 +1,5 @@
 import { initializeApp } from 'firebase/app'
 import { GoogleAuthProvider, getAuth } from 'firebase/auth'
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore'
 
 // Los valores salen de .env.local (ver .env.example)
 const config = {
@@ -15,12 +14,9 @@ const config = {
 export const isFirebaseConfigured = Boolean(config.apiKey && config.projectId && config.appId)
 
 // Sin configuración se usa un valor de relleno para que la app pueda mostrar el aviso
-const app = initializeApp(isFirebaseConfigured ? config : { apiKey: 'missing', projectId: 'missing', appId: 'missing' })
+export const app = initializeApp(isFirebaseConfigured ? config : { apiKey: 'missing', projectId: 'missing', appId: 'missing' })
 
 export const auth = getAuth(app)
 export const googleProvider = new GoogleAuthProvider()
 
-// Caché local: las notas se ven y se editan aunque no haya conexión
-export const db = initializeFirestore(app, {
-  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-})
+// Firestore vive en db.ts: solo lo carga la app con sesión iniciada, no la pantalla de login

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { collection, doc, getDocFromServer, onSnapshot, orderBy, query, setDoc, updateDoc, writeBatch } from 'firebase/firestore'
-import { db } from '../firebase'
+import { db } from '../db'
 import type { Folder } from '../types'
 
 // Iconos para las carpetas, agrupados como en el selector de Notion

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { Trash2 } from 'lucide-react'
+import { TrashIcon } from '@phosphor-icons/react'
 import { IconButton } from '@/components/IconButton'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
@@ -17,19 +17,21 @@ interface TaskItemProps {
   actions?: ReactNode
 }
 
-// Casilla de shadcn con el azul de Notion al marcarla
-export function TaskCheckbox({ checked, onChange }: { checked: boolean; onChange: () => void }) {
+// Casilla que se llena de Lavanda Hecha al marcarla.
+// Con el texto de la tarea, el lector de pantalla dice cuál se marca
+export function TaskCheckbox({ checked, onChange, text }: { checked: boolean; onChange: () => void; text?: string }) {
+  const action = checked ? 'Marcar como pendiente' : 'Marcar como hecha'
   return (
     <Checkbox
       checked={checked}
       onCheckedChange={onChange}
-      aria-label={checked ? 'Marcar como pendiente' : 'Marcar como hecha'}
+      aria-label={text ? `${action}: ${text}` : action}
       className="size-[18px] rounded-[4px] border-muted-foreground/60 data-checked:border-brand data-checked:bg-brand data-checked:text-white dark:data-checked:bg-brand"
     />
   )
 }
 
-// Una tarea como las to-do de Notion: casilla, texto editable en el sitio y borrar al pasar el ratón
+// Una tarea: casilla, texto editable en el sitio y borrar al pasar el ratón
 export default function TaskItem({ task, onUpdate, onDelete, meta, actions }: TaskItemProps) {
   const [text, setText] = useState(task.text)
 
@@ -41,8 +43,9 @@ export default function TaskItem({ task, onUpdate, onDelete, meta, actions }: Ta
   }
 
   return (
-    <div className="group flex min-h-9 items-center gap-2.5 rounded-md px-1.5 hover:bg-muted/70">
-      <TaskCheckbox checked={task.done} onChange={() => onUpdate(task.id, { done: !task.done })} />
+    // Al editar el texto la fila se resalta, así se ve dónde está el foco
+    <div className="group flex min-h-9 items-center gap-2.5 rounded-md px-1.5 hover:bg-muted/70 has-[input:focus-visible]:bg-muted/70 has-[input:focus-visible]:ring-1 has-[input:focus-visible]:ring-ring/50">
+      <TaskCheckbox checked={task.done} text={task.text} onChange={() => onUpdate(task.id, { done: !task.done })} />
       <input
         className={cn(
           'min-w-0 flex-1 bg-transparent py-1.5 text-[15px] outline-none',
@@ -58,7 +61,7 @@ export default function TaskItem({ task, onUpdate, onDelete, meta, actions }: Ta
       <div className="flex gap-0.5 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100">
         {actions}
         <IconButton label="Eliminar tarea" size="icon-xs" onClick={() => onDelete(task.id)}>
-          <Trash2 />
+          <TrashIcon />
         </IconButton>
       </div>
     </div>

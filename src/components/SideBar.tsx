@@ -1,23 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
-import {
-  House,
-  NotebookPen,
-  Timer,
-  ListChecks,
-  CalendarDays,
-  Settings,
-  PanelLeftClose,
-  PanelLeftOpen,
-  LogOut,
-  ChevronDown,
-  ChevronRight,
-  Plus
-} from "lucide-react";
+import { CalendarDotsIcon, CaretDownIcon, CaretRightIcon, GearSixIcon, HouseIcon, ListChecksIcon, NotebookIcon, PlusIcon, SidebarSimpleIcon, SignOutIcon, TimerIcon } from "@phosphor-icons/react";
 import type { User } from "firebase/auth";
 
 import { IconButton } from "@/components/IconButton";
+import { IS_MAC } from "../utils/platform";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { Separator } from "@/components/ui/separator";
@@ -41,14 +29,14 @@ interface SidebarProps {
 }
 
 const LINKS = [
-  { page: "home", label: "Inicio", Icon: House },
-  { page: "notes", label: "Notas", Icon: NotebookPen },
-  { page: "pomodoro", label: "Pomodoro", Icon: Timer },
-  { page: "tasks", label: "Tareas", Icon: ListChecks },
-  { page: "calendar", label: "Calendario", Icon: CalendarDays },
+  { page: "home", label: "Inicio", Icon: HouseIcon },
+  { page: "notes", label: "Notas", Icon: NotebookIcon },
+  { page: "pomodoro", label: "Pomodoro", Icon: TimerIcon },
+  { page: "tasks", label: "Tareas", Icon: ListChecksIcon },
+  { page: "calendar", label: "Calendario", Icon: CalendarDotsIcon },
 ] as const;
 
-const IS_MAC = /Mac|iPhone|iPad/.test(navigator.userAgent);
+
 
 interface NavItemProps {
   icon: ReactNode;
@@ -103,7 +91,7 @@ function FolderRow({
     <div>
       <div className={cn("group/row flex items-center rounded-md hover:bg-sidebar-accent", isActive && "bg-sidebar-accent")}>
         <IconButton label={isExpanded ? "Contraer carpeta" : "Desplegar carpeta"} size="icon-xs" side="right" onClick={onToggle}>
-          {isExpanded ? <ChevronDown /> : <ChevronRight />}
+          {isExpanded ? <CaretDownIcon /> : <CaretRightIcon />}
         </IconButton>
         <button
           type="button"
@@ -124,7 +112,7 @@ function FolderRow({
           className="mr-0.5 opacity-0 group-hover/row:opacity-100 focus-visible:opacity-100"
           onClick={onCreateNote}
         >
-          <Plus />
+          <PlusIcon />
         </IconButton>
       </div>
 
@@ -151,6 +139,9 @@ function FolderRow({
   );
 }
 
+// Por debajo de 768px (md) la barra lateral se comporta como panel flotante
+const isNarrow = () => typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches;
+
 function Sidebar({
   page,
   onNavigate,
@@ -165,8 +156,20 @@ function Sidebar({
   onCreateNote,
   onCreateFolder,
 }: SidebarProps) {
-  const [isOpen, setIsOpen] = useState(true);
+  // En pantallas estrechas la barra empieza cerrada y, abierta, flota encima del contenido
+  const [isOpen, setIsOpen] = useState(() => !isNarrow());
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const asideRef = useRef<HTMLElement>(null);
+  // Se sigue el ancho en vivo: al girar una tablet o ensanchar la ventana, la barra deja de ser panel
+  const [narrow, setNarrow] = useState(isNarrow);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 767px)");
+    const handleChange = () => setNarrow(query.matches);
+    query.addEventListener("change", handleChange);
+    return () => query.removeEventListener("change", handleChange);
+  }, []);
 
   const name = user.displayName || user.email || "Mi cuenta";
   const notesWithoutFolder = filterByFolder(notes, folders, "none");
@@ -182,6 +185,33 @@ function Sidebar({
 
   const isFolderActive = (view: FolderView) => page === "notes" && folderView === view && !openNoteId;
 
+  // En móvil, al elegir una página o nota la barra se cierra para dejar ver el contenido
+  useEffect(() => {
+    if (isNarrow()) setIsOpen(false);
+  }, [page, openNoteId, folderView]);
+
+  // En móvil, abierta, la barra se comporta como un panel: el foco entra en ella, el contenido
+  // de detrás no se puede recorrer con el teclado (inert) y Esc la cierra devolviendo el foco al botón
+  useEffect(() => {
+    if (!isOpen || !narrow) return;
+    const main = document.getElementById("app-main");
+    const toggle = toggleRef.current;
+    if (main) main.inert = true;
+    asideRef.current?.querySelector<HTMLElement>("nav a, nav button")?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      // Al pasar a pantalla ancha el contenido se desbloquea aunque la barra siga abierta
+      if (main) main.inert = false;
+      // El foco solo vuelve al botón si se cerró la barra, no si cambió el ancho
+      if (isNarrow()) toggle?.focus();
+    };
+  }, [isOpen, narrow]);
+
   // Atajo para abrir y cerrar la barra: Ctrl + . (Cmd + . en Mac), también mientras se escribe
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -195,7 +225,12 @@ function Sidebar({
   }, []);
 
   return (
-    <div className={cn("group/sidebar relative shrink-0 transition-[width] duration-200", isOpen ? "w-60" : "w-0")}>
+    <div
+      className={cn(
+        "group/sidebar relative shrink-0 transition-[width] duration-200 max-md:fixed max-md:inset-y-0 max-md:left-0 max-md:z-40",
+        isOpen ? "w-60" : "w-0"
+      )}
+    >
       {/* Con la barra abierta el botón solo aparece al pasar el ratón; cerrada, siempre visible */}
       <IconButton
         label={isOpen ? "Cerrar barra lateral" : "Abrir barra lateral"}
@@ -209,15 +244,28 @@ function Sidebar({
         side={isOpen ? "bottom" : "right"}
         className={cn(
           "absolute top-2 z-20 [&_svg]:size-[18px]",
-          isOpen ? "right-2 opacity-0 group-hover/sidebar:opacity-100 focus-visible:opacity-100" : "-right-10"
+          isOpen
+            ? "right-2 opacity-0 group-hover/sidebar:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
+            : "-right-10"
         )}
+        ref={toggleRef}
+        aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
+        <SidebarSimpleIcon />
       </IconButton>
 
+      {/* Velo detrás de la barra en móvil: tocar fuera la cierra */}
       {isOpen && (
-        <aside className="sticky top-0 flex h-screen w-60 flex-col border-r border-sidebar-border bg-sidebar px-2 pb-4 pt-2.5 text-sidebar-foreground">
+        <div aria-hidden="true" className="fixed inset-0 -z-10 bg-black/30 md:hidden" onClick={() => setIsOpen(false)} />
+      )}
+
+      {isOpen && (
+        <aside
+          ref={asideRef}
+          aria-label="Barra lateral"
+          className="sticky top-0 flex h-screen w-60 flex-col border-r border-sidebar-border bg-sidebar px-2 pb-4 pt-2.5 text-sidebar-foreground"
+        >
           {/* Logo y nombre arriba, como el espacio de trabajo en Notion */}
           <div className="mb-3 flex h-8 items-center gap-2 px-2 pr-10 text-sm font-semibold">
             <img src="/favicon.svg" alt="" width={22} height={22} />
@@ -230,7 +278,7 @@ function Sidebar({
               <div key={linkPage}>
                 <div className="group/link relative">
                   <NavItem
-                    icon={<Icon />}
+                    icon={<Icon weight={page === linkPage ? "fill" : "regular"} />}
                     label={label}
                     isActive={page === linkPage}
                     onClick={() => (linkPage === "notes" ? onOpenFolder("all") : onNavigate(linkPage))}
@@ -245,7 +293,7 @@ function Sidebar({
                       className="absolute right-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover/link:opacity-100 focus-visible:opacity-100"
                       onClick={onCreateFolder}
                     >
-                      <Plus />
+                      <PlusIcon />
                     </IconButton>
                   )}
                 </div>
@@ -291,7 +339,7 @@ function Sidebar({
                         onClick={onCreateFolder}
                         className="flex items-center gap-1.5 rounded-md px-1.5 py-1.5 text-left text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
                       >
-                        <Plus className="size-3.5" />
+                        <PlusIcon className="size-3.5" />
                         <span>Nueva carpeta</span>
                       </button>
                     )}
@@ -303,7 +351,7 @@ function Sidebar({
 
           {/* Ajustes y cuenta abajo */}
           <div className="flex flex-col gap-2">
-            <NavItem icon={<Settings />} label="Ajustes" isActive={page === "settings"} onClick={() => onNavigate("settings")} />
+            <NavItem icon={<GearSixIcon weight={page === "settings" ? "fill" : "regular"} />} label="Ajustes" isActive={page === "settings"} onClick={() => onNavigate("settings")} />
             <Separator />
             <div className="flex items-center gap-2.5 pl-2.5 pr-1">
               <Avatar className="size-7">
@@ -317,7 +365,7 @@ function Sidebar({
                 )}
               </div>
               <IconButton label="Cerrar sesión" side="top" onClick={onSignOut}>
-                <LogOut />
+                <SignOutIcon />
               </IconButton>
             </div>
           </div>

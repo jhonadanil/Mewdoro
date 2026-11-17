@@ -6,8 +6,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* Fuente del sistema, como Notion (Segoe UI en Windows, SF en Mac) */
-  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  /* Figtree (variable, empaquetada en main.tsx); la fuente del sistema queda de respaldo */
+  --font-sans: "Figtree Variable", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --font-heading: var(--font-sans);
   --font-mono: Consolas, "SFMono-Regular", Menlo, "Courier New", monospace;
 
@@ -45,69 +45,91 @@
   --radius-2xl: calc(var(--radius) * 1.8);
 }
 
-/* Tema claro: colores de Notion */
+/* Paleta "Violeta nocturno": neutros con un toque violeta y un acento lavanda */
+
+/* Tema claro */
 :root {
   --radius: 0.5rem;
-  --background: #ffffff;
-  --foreground: #37352f;
-  --card: #f7f6f3;
-  --card-foreground: #37352f;
-  --popover: #ffffff;
-  --popover-foreground: #37352f;
-  --primary: #37352f;
+  --background: #fcfbfe;
+  --foreground: #2e2a38;
+  --card: rgb(255 255 255 / 0.62);
+  --card-foreground: #2e2a38;
+  --popover: rgb(255 255 255 / 0.78);
+  --popover-foreground: #2e2a38;
+  --primary: #2e2a38;
   --primary-foreground: #ffffff;
-  --secondary: #efefed;
-  --secondary-foreground: #37352f;
-  --muted: #f1f1ef;
-  /* Un poco más oscuro que el de Notion (#787774) para cumplir el contraste WCAG AA (4.5:1) en todos los fondos */
-  --muted-foreground: #6b6a66;
-  --accent: #efefed;
-  --accent-foreground: #37352f;
+  --secondary: #eeebf4;
+  --secondary-foreground: #2e2a38;
+  --muted: #f1eff6;
+  /* Suficientemente oscuro para cumplir el contraste WCAG AA (4.5:1) en todos los fondos claros */
+  --muted-foreground: #6a6478;
+  --accent: #eeebf4;
+  --accent-foreground: #2e2a38;
   --destructive: #e03e3e;
-  --border: #e9e9e7;
-  --input: #e3e3e1;
-  --ring: #2383e2;
-  /* Azul de Notion: casillas marcadas, barras de progreso, interruptores */
-  --brand: #2383e2;
-  --sidebar: #f7f7f5;
-  --sidebar-foreground: #37352f;
-  --sidebar-primary: #37352f;
+  --border: rgb(46 42 56 / 0.09);
+  --input: rgb(46 42 56 / 0.14);
+  --ring: #7a5af8;
+  /* Lavanda: casillas marcadas, barras de progreso, interruptores y foco.
+     Más oscuro que en el tema oscuro para que destaque sobre fondo claro */
+  --brand: #7a5af8;
+  --sidebar: rgb(255 255 255 / 0.42);
+  --sidebar-foreground: #2e2a38;
+  --sidebar-primary: #2e2a38;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #ebebea;
-  --sidebar-accent-foreground: #37352f;
-  --sidebar-border: #e9e9e7;
-  --sidebar-ring: #2383e2;
+  --sidebar-accent: rgb(122 90 248 / 0.1);
+  --sidebar-accent-foreground: #2e2a38;
+  --sidebar-border: rgb(46 42 56 / 0.08);
+  --sidebar-ring: #7a5af8;
+
+  /* Acrílico: fondo de color difuminado que se ve a través de las superficies */
+  /* Tonos apagados de la misma familia lila, para que el fondo acompañe y no llame la atención */
+  --backdrop-base: #f5f3f8;
+  --backdrop-1: rgb(150 130 210 / 0.16);
+  --backdrop-2: rgb(190 170 200 / 0.14);
+  --backdrop-3: rgb(160 170 195 / 0.14);
+  --acrylic-blur: blur(16px) saturate(1.15);
+  --acrylic-edge: inset 0 1px 0 rgb(255 255 255 / 0.7);
+  --acrylic-shadow: 0 1px 2px rgb(46 42 56 / 0.04), 0 8px 24px -8px rgb(76 56 140 / 0.14);
+  --grain-opacity: 0.035;
 }
 
-/* Tema oscuro: colores de Notion */
+/* Tema oscuro */
 .dark {
-  --background: #191919;
-  --foreground: #e6e6e5;
-  --card: #202020;
-  --card-foreground: #e6e6e5;
-  --popover: #252525;
-  --popover-foreground: #e6e6e5;
-  --primary: #e6e6e5;
-  --primary-foreground: #191919;
-  --secondary: #2c2c2c;
-  --secondary-foreground: #e6e6e5;
-  --muted: #252525;
-  --muted-foreground: #9b9a97;
-  --accent: #2c2c2c;
-  --accent-foreground: #e6e6e5;
+  --background: #16141b;
+  --foreground: #e7e3ee;
+  --card: rgb(36 31 48 / 0.52);
+  --card-foreground: #e7e3ee;
+  --popover: rgb(34 30 44 / 0.82);
+  --popover-foreground: #e7e3ee;
+  --primary: #e7e3ee;
+  --primary-foreground: #16141b;
+  --secondary: #2a2633;
+  --secondary-foreground: #e7e3ee;
+  --muted: #221f2a;
+  --muted-foreground: #a29bb0;
+  --accent: #2a2633;
+  --accent-foreground: #e7e3ee;
   --destructive: #eb5757;
-  --border: #2f2f2f;
-  --input: #373737;
-  --ring: #2383e2;
-  --brand: #2383e2;
-  --sidebar: #202020;
-  --sidebar-foreground: #e6e6e5;
-  --sidebar-primary: #e6e6e5;
-  --sidebar-primary-foreground: #191919;
-  --sidebar-accent: #2c2c2c;
-  --sidebar-accent-foreground: #e6e6e5;
-  --sidebar-border: #2f2f2f;
-  --sidebar-ring: #2383e2;
+  --border: rgb(231 227 238 / 0.08);
+  --input: rgb(231 227 238 / 0.14);
+  --ring: #9b7bff;
+  --brand: #9b7bff;
+  --sidebar: rgb(30 26 40 / 0.45);
+  --sidebar-foreground: #e7e3ee;
+  --sidebar-primary: #e7e3ee;
+  --sidebar-primary-foreground: #16141b;
+  --sidebar-accent: rgb(155 123 255 / 0.14);
+  --sidebar-accent-foreground: #e7e3ee;
+  --sidebar-border: rgb(231 227 238 / 0.07);
+  --sidebar-ring: #9b7bff;
+
+  --backdrop-base: #121016;
+  --backdrop-1: rgb(110 90 170 / 0.16);
+  --backdrop-2: rgb(120 90 130 / 0.1);
+  --backdrop-3: rgb(70 80 110 / 0.12);
+  --acrylic-edge: inset 0 1px 0 rgb(255 255 255 / 0.06);
+  --acrylic-shadow: 0 1px 2px rgb(0 0 0 / 0.2), 0 10px 30px -10px rgb(0 0 0 / 0.5);
+  --grain-opacity: 0.05;
 }
 
 @layer base {
@@ -115,9 +137,91 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply text-foreground antialiased;
+    background-color: var(--backdrop-base);
+  }
+  /* Fondo del acrílico: manchas de color fijas, más un grano fino como en Fluent */
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  body::before {
+    background:
+      radial-gradient(60vmax 50vmax at 8% 0%, var(--backdrop-1), transparent 70%),
+      radial-gradient(50vmax 45vmax at 100% 30%, var(--backdrop-2), transparent 70%),
+      radial-gradient(55vmax 50vmax at 40% 110%, var(--backdrop-3), transparent 70%);
+  }
+  body::after {
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--brand) 28%, transparent);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--foreground) 22%, transparent) transparent;
   }
   html {
     @apply font-sans;
   }
 }
+
+/* Superficies de acrílico. Tarjetas y barra lateral solo son translúcidas: debajo solo hay el fondo liso,
+   así que desenfocarlo no se notaba y costaba repintar en cada scroll. El desenfoque queda para las capas
+   flotantes (menús, diálogos, avisos), que sí tienen contenido detrás. */
+@layer components {
+  [data-slot="dropdown-menu-content"],
+  [data-slot="dropdown-menu-sub-content"],
+  [data-slot="select-content"],
+  [data-slot="popover-content"],
+  [data-slot="alert-dialog-content"],
+  .acrylic {
+    -webkit-backdrop-filter: var(--acrylic-blur);
+    backdrop-filter: var(--acrylic-blur);
+  }
+  /* --tw-shadow se suma al anillo de Tailwind en vez de pisarlo */
+  [data-slot="card"] {
+    --tw-shadow: var(--acrylic-edge), var(--acrylic-shadow);
+  }
+  /* Sin soporte de desenfoque, las superficies se vuelven casi opacas para que el texto se lea */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :root { --card: #f6f4fa; --popover: #ffffff; --sidebar: #f8f6fb; }
+    .dark { --card: #1d1a24; --popover: #221f2a; --sidebar: #1d1a24; }
+  }
+}
+
+/* Título de Inicio que recorre sus frases una vez: las dos frases se apilan en la misma celda para que el texto no salte */
+.rotating-title {
+  display: inline-grid;
+  vertical-align: top;
+}
+.rotating-title__phrase {
+  grid-area: 1 / 1;
+}
+.rotating-title__phrase--in {
+  animation: rotating-title-in 700ms cubic-bezier(0.16, 1, 0.3, 1) 90ms both;
+}
+.rotating-title__phrase--out {
+  animation: rotating-title-out 320ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+@keyframes rotating-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+    filter: blur(10px);
+  }
+}
+@keyframes rotating-title-out {
+  to {
+    opacity: 0;
+    transform: translateY(-0.3em);
+    filter: blur(8px);
+  }
+}
+/* Con movimiento reducido RotatingTitle muestra directamente la frase final, sin animación */
+

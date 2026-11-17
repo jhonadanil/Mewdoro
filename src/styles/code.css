@@ -28,17 +28,19 @@
   --code-caret: #000000;
 }
 
-/* Tema oscuro: Dark+ de VS Code */
+/* Tema oscuro: colores de sintaxis de Dark+ de VS Code sobre un fondo violeta oscuro
+   (el #1e1e1e original quedaba demasiado negro junto al resto de la app) */
 .dark {
-  --code-bg: #1e1e1e;
-  --code-border: #2b2b2b;
+  --code-bg: #252130;
+  --code-border: #342f40;
   --code-text: #d4d4d4;
   --code-variable: #9cdcfe;
   --code-comment: #6a9955;
   --code-keyword: #569cd6;
   --code-control: #c586c0;
   --code-string: #ce9178;
-  --code-regex: #d16969;
+  /* Un punto más claros que en Dark+ para mantener 4.5:1 sobre el fondo violeta */
+  --code-regex: #d67272;
   --code-number: #b5cea8;
   --code-function: #dcdcaa;
   --code-class: #4ec9b0;
@@ -48,7 +50,7 @@
   --code-bracket-0: #ffd700;
   --code-bracket-1: #da70d6;
   --code-bracket-2: #179fff;
-  --code-gutter: #858585;
+  --code-gutter: #8f8b98;
   --code-active-line: rgba(255, 255, 255, 0.05);
   --code-selection: rgba(38, 79, 120, 0.85);
   --code-caret: #aeafad;

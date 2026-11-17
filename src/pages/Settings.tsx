@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { LogOut } from 'lucide-react'
+import { SignOutIcon } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -181,7 +181,7 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
       <Section>Cuenta</Section>
       <SettingRow label="Sesión iniciada como" hint={email ?? undefined}>
         <Button variant="outline" onClick={onSignOut}>
-          <LogOut />
+          <SignOutIcon />
           Cerrar sesión
         </Button>
       </SettingRow>

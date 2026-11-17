@@ -28,7 +28,7 @@ export function PageHeader({ children, actions }: { children: ReactNode; actions
 }
 
 export function PageTitle({ children, className }: { children: ReactNode; className?: string }) {
-  return <h2 className={cn('text-3xl font-bold tracking-tight', className)}>{children}</h2>
+  return <h1 className={cn('text-3xl font-bold tracking-tight', className)}>{children}</h1>
 }
 
 export function PageText({ children }: { children: ReactNode }) {

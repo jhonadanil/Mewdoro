@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { FolderPlus, Plus, Trash2 } from 'lucide-react'
+import { FolderPlusIcon, PlusIcon, TrashIcon } from '@phosphor-icons/react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -120,7 +120,7 @@ export default function Notes({
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="ghost" className="text-muted-foreground">
-                    <Trash2 />
+                    <TrashIcon />
                     Eliminar carpeta
                   </Button>
                 </AlertDialogTrigger>
@@ -143,7 +143,7 @@ export default function Notes({
               </AlertDialog>
             )}
             <Button onClick={onCreate}>
-              <Plus />
+              <PlusIcon />
               Nueva nota
             </Button>
           </>
@@ -180,7 +180,7 @@ export default function Notes({
           </FolderTab>
         )}
         <Button size="sm" variant="ghost" className="rounded-full border border-dashed font-normal text-muted-foreground" onClick={onCreateFolder}>
-          <FolderPlus />
+          <FolderPlusIcon />
           Nueva carpeta
         </Button>
       </div>

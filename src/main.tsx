@@ -1,5 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+// Figtree empaquetada con la app (sin Google Fonts), así funciona también sin conexión
+import '@fontsource-variable/figtree'
 import './index.css'
 import App from './App.tsx'
 import { TooltipProvider } from '@/components/ui/tooltip'

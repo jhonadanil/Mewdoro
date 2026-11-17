@@ -1,4 +1,4 @@
-import { Pause, Play, RotateCcw } from 'lucide-react'
+import { ArrowCounterClockwiseIcon, PauseIcon, PlayIcon } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
@@ -35,11 +35,11 @@ export default function PomodoroTimer({ pomodoro }: PomodoroTimerProps) {
 
       <div className="flex gap-2.5">
         <Button size="lg" onClick={toggle}>
-          {isRunning ? <Pause /> : <Play />}
+          {isRunning ? <PauseIcon /> : <PlayIcon />}
           {isRunning ? 'Pausar' : 'Iniciar'}
         </Button>
         <Button size="lg" variant="outline" onClick={reset}>
-          <RotateCcw />
+          <ArrowCounterClockwiseIcon />
           Reiniciar
         </Button>
       </div>

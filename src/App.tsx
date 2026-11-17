@@ -2,20 +2,32 @@ import { Card } from "@/components/ui/card";
 import { isFirebaseConfigured } from "./firebase";
 import { useAuth } from "./hooks/useAuth";
 import Login from "./pages/Login";
-import Workspace from "./Workspace";
+import { lazy, Suspense } from "react";
+
+// La app con sesión (Firestore, editor, páginas) va en un archivo aparte. Se empieza a descargar
+// en cuanto carga la página, en paralelo, así el login aparece antes y la app no espera de más.
+const loadWorkspace = () => import("./Workspace");
+void loadWorkspace();
+const Workspace = lazy(loadWorkspace);
+
+const loading = <div className="flex min-h-screen items-center justify-center text-muted-foreground">Cargando…</div>;
 
 function AuthGate() {
   const user = useAuth();
 
   // Firebase todavía está comprobando si hay una sesión guardada
   if (user === undefined) {
-    return <div className="flex min-h-screen items-center justify-center text-muted-foreground">Cargando…</div>;
+    return loading;
   }
 
   if (!user) return <Login />;
 
   // key: al cambiar de usuario se empieza de cero
-  return <Workspace key={user.uid} user={user} />;
+  return (
+    <Suspense fallback={loading}>
+      <Workspace key={user.uid} user={user} />
+    </Suspense>
+  );
 }
 
 function App() {

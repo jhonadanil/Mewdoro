@@ -1,5 +1,7 @@
 export const WEEK_DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
 export const WEEK_DAYS_SHORT = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
+// Nombres completos para lectores de pantalla
+export const WEEK_DAYS_LONG = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
 
 export function getMonthStart(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1)

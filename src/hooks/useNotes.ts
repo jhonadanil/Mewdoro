@@ -12,8 +12,9 @@ import {
   updateDoc,
   writeBatch,
 } from 'firebase/firestore'
-import { db } from '../firebase'
+import { db } from '../db'
 import type { Note } from '../types'
+import { persist, reloadAction, showError } from '../utils/toast'
 
 export type NoteChanges = Partial<Pick<Note, 'title' | 'content' | 'type' | 'pinned' | 'folderId'>>
 
@@ -47,6 +48,8 @@ async function importLocalNotes(uid: string) {
 // Notas del usuario en users/{uid}/notes, sincronizadas en tiempo real
 export function useNotes(uid: string) {
   const [savedNotes, setSavedNotes] = useState<Note[]>([])
+  // Hasta la primera respuesta de Firestore no se sabe si hay notas o no
+  const [loaded, setLoaded] = useState(false)
   // Cambios escritos pero todavía sin guardar; se muestran encima de los guardados
   const [pending, setPending] = useState<Record<string, NoteChanges & { updatedAt: string }>>({})
   const pendingRef = useRef(pending)
@@ -62,6 +65,7 @@ export function useNotes(uid: string) {
       (snapshot) => {
         const saved = snapshot.docs.map((item) => item.data() as Note)
         setSavedNotes(saved)
+        setLoaded(true)
 
         // Un cambio pendiente solo se quita cuando Firestore ya tiene esa misma versión.
         // Si se quitara antes, el editor mostraría un instante el texto viejo y el cursor saltaría al final
@@ -77,7 +81,10 @@ export function useNotes(uid: string) {
           return next
         })
       },
-      (error) => console.error('No se pudieron cargar las notas', error),
+      (error) => {
+        setLoaded(true)
+        showError('No se pudieron cargar las notas', error, reloadAction)
+      },
     )
     importLocalNotes(uid).catch((error) => console.error('No se pudieron importar las notas locales', error))
     return unsubscribe
@@ -96,8 +103,10 @@ export function useNotes(uid: string) {
       if (!changes) return
 
       // El cambio pendiente se quita en onSnapshot, cuando Firestore devuelve esta versión
-      updateDoc(doc(notesCollection(uid), id), changes).catch((error) =>
-        console.error('No se pudo guardar la nota', error),
+      // Al reintentar se envía lo último que hay pendiente, no esta versión: si se siguió escribiendo,
+      // reenviar la antigua pisaría lo nuevo
+      persist('No se pudo guardar la nota', () =>
+        updateDoc(doc(notesCollection(uid), id), pendingRef.current[id] ?? changes),
       )
     },
     [uid],
@@ -115,9 +124,7 @@ export function useNotes(uid: string) {
   }, [flushAll])
 
   const createNote = (note: Note) => {
-    setDoc(doc(notesCollection(uid), note.id), note).catch((error) =>
-      console.error('No se pudo crear la nota', error),
-    )
+    persist('No se pudo crear la nota', () => setDoc(doc(notesCollection(uid), note.id), note))
   }
 
   const updateNote = (id: string, changes: NoteChanges) => {
@@ -137,17 +144,16 @@ export function useNotes(uid: string) {
       delete rest[id]
       return rest
     })
-    deleteDoc(doc(notesCollection(uid), id)).catch((error) => console.error('No se pudo eliminar la nota', error))
+    persist('No se pudo eliminar la nota', () => deleteDoc(doc(notesCollection(uid), id)))
   }
 
   // Fijar no cambia la fecha de edición, así que se guarda directamente
   const togglePin = (id: string) => {
     const note = notes.find((item) => item.id === id)
     if (!note) return
-    updateDoc(doc(notesCollection(uid), id), { pinned: !note.pinned }).catch((error) =>
-      console.error('No se pudo fijar la nota', error),
-    )
+    const pinned = !note.pinned
+    persist('No se pudo fijar la nota', () => updateDoc(doc(notesCollection(uid), id), { pinned }))
   }
 
-  return { notes, createNote, updateNote, deleteNote, togglePin, flush, flushAll }
+  return { notes, loaded, createNote, updateNote, deleteNote, togglePin, flush, flushAll }
 }

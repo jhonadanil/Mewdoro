@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowDownToLine, ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
+import { ArrowLineDownIcon, CaretLeftIcon, CaretRightIcon, PushPinIcon, PushPinSlashIcon } from '@phosphor-icons/react'
 import { IconButton } from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -37,7 +37,7 @@ export default function Tasks({ tasks, isPinned, onTogglePin, onAdd, onUpdate, o
       <PageHeader
         actions={
           <Button variant="outline" onClick={onTogglePin}>
-            {isPinned ? <PinOff /> : <Pin />}
+            {isPinned ? <PushPinSlashIcon /> : <PushPinIcon />}
             {isPinned ? 'Quitar de inicio' : 'Fijar en inicio'}
           </Button>
         }
@@ -48,11 +48,11 @@ export default function Tasks({ tasks, isPinned, onTogglePin, onAdd, onUpdate, o
       {/* Selector de día */}
       <div className="mb-3 mt-5 flex items-center gap-1">
         <IconButton label="Día anterior" onClick={() => setDay(shiftDateKey(day, -1))}>
-          <ChevronLeft />
+          <CaretLeftIcon />
         </IconButton>
         <span className="min-w-[90px] text-center text-lg font-semibold first-letter:uppercase">{formatDayLabel(day)}</span>
         <IconButton label="Día siguiente" onClick={() => setDay(shiftDateKey(day, 1))}>
-          <ChevronRight />
+          <CaretRightIcon />
         </IconButton>
         {day !== today && (
           <Button variant="ghost" className="text-muted-foreground" onClick={() => setDay(today)}>
@@ -63,7 +63,7 @@ export default function Tasks({ tasks, isPinned, onTogglePin, onAdd, onUpdate, o
 
       {dayTasks.length > 0 && (
         <div className="mb-3 flex items-center gap-3 whitespace-nowrap text-[13px] text-muted-foreground">
-          <Progress value={progress * 100} className="h-1.5 **:data-[slot=progress-indicator]:bg-brand" />
+          <Progress value={progress * 100} className="h-1.5" />
           <span>
             {doneTasks.length} de {dayTasks.length}
           </span>
@@ -91,14 +91,14 @@ export default function Tasks({ tasks, isPinned, onTogglePin, onAdd, onUpdate, o
       {overdue.length > 0 && (
         <div className="mt-7">
           <div className="flex items-end justify-between gap-3 border-b pb-1">
-            <h3 className="pb-1 text-sm font-semibold">Pendientes de días anteriores</h3>
+            <h2 className="pb-1 text-sm font-semibold">Pendientes de días anteriores</h2>
             <Button
               variant="ghost"
               size="sm"
               className="text-muted-foreground"
               onClick={() => onMove(overdue.map((task) => task.id), today)}
             >
-              <ArrowDownToLine />
+              <ArrowLineDownIcon />
               Pasar todas a hoy
             </Button>
           </div>
@@ -112,7 +112,7 @@ export default function Tasks({ tasks, isPinned, onTogglePin, onAdd, onUpdate, o
                 meta={formatShortDay(task.date)}
                 actions={
                   <IconButton label="Pasar a hoy" size="icon-xs" onClick={() => onMove([task.id], today)}>
-                    <ArrowDownToLine />
+                    <ArrowLineDownIcon />
                   </IconButton>
                 }
               />

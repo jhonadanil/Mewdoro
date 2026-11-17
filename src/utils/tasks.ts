@@ -14,13 +14,18 @@ export function shiftDateKey(key: string, days: number) {
   return toDateKey(date)
 }
 
+// "lunes, 17 de noviembre"
+export function formatLongDay(key: string) {
+  return fromDateKey(key).toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long' })
+}
+
 // "Hoy", "Mañana", "Ayer" o "lunes, 17 de noviembre"
 export function formatDayLabel(key: string) {
   const today = todayKey()
   if (key === today) return 'Hoy'
   if (key === shiftDateKey(today, 1)) return 'Mañana'
   if (key === shiftDateKey(today, -1)) return 'Ayer'
-  return fromDateKey(key).toLocaleDateString('es', { weekday: 'long', day: 'numeric', month: 'long' })
+  return formatLongDay(key)
 }
 
 // Fecha corta para las tareas pendientes: "15 nov"

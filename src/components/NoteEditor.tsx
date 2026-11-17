@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
-import { ArrowLeft, Check, Copy, Pin, PinOff, Trash2 } from 'lucide-react'
+import { ArrowLeftIcon, CheckIcon, CopyIcon, PushPinIcon, PushPinSlashIcon, TrashIcon } from '@phosphor-icons/react'
 import { IconButton } from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -66,7 +66,7 @@ export default function NoteEditor({ note, folders, onChange, onClose, onDelete,
       <div className="mb-12 flex min-h-8 items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-1">
           <IconButton label="Volver a las notas" onClick={onClose}>
-            <ArrowLeft />
+            <ArrowLeftIcon />
           </IconButton>
           <Dropdown
             label="Mover a carpeta"
@@ -99,10 +99,10 @@ export default function NoteEditor({ note, folders, onChange, onClose, onDelete,
             className={cn(note.pinned && 'text-foreground')}
             onClick={onTogglePin}
           >
-            {note.pinned ? <PinOff /> : <Pin />}
+            {note.pinned ? <PushPinSlashIcon /> : <PushPinIcon />}
           </IconButton>
           <IconButton label="Eliminar nota" onClick={onDelete}>
-            <Trash2 />
+            <TrashIcon />
           </IconButton>
         </div>
       </div>
@@ -131,7 +131,7 @@ export default function NoteEditor({ note, folders, onChange, onClose, onDelete,
                 onClick={copyContent}
                 disabled={!note.content}
               >
-                {isCopied ? <Check /> : <Copy />}
+                {isCopied ? <CheckIcon /> : <CopyIcon />}
                 {isCopied ? 'Copiado' : 'Copiar'}
               </Button>
             </div>
