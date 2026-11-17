@@ -253,7 +253,7 @@ export default function Home({
           <h2 id="pinned-notes" className="mb-3 text-sm font-semibold text-muted-foreground">
             Notas fijadas
           </h2>
-          <div className={PINNED_GRID}>{pinnedNotes.map((note) => renderNote(note, 'pinned'))}</div>
+          <div className={PINNED_GRID}>{pinnedNotes.map((note) => renderNote(note, 'large'))}</div>
         </section>
       )}
     </Page>

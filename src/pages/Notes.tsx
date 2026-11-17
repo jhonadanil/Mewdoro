@@ -190,17 +190,22 @@ export default function Notes({
           <PageText>{emptyText}</PageText>
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] items-start gap-3">
-          {notes.map((note) => (
-            <NoteCard
-              key={note.id}
-              note={note}
-              folder={view === 'all' ? getNoteFolder(note, folders) : undefined}
-              onOpen={onOpen}
-              onTogglePin={onTogglePin}
-              onDelete={onDelete}
-            />
-          ))}
+        // Igual que las notas fijadas de Inicio: tarjetas grandes con el contenido desplazable,
+        // una columna en estrecho y dos en cuanto caben (container query), sin huecos entre alturas distintas
+        <div className="@container mt-6">
+          <div className="columns-1 gap-4 @xl:columns-2 *:mb-4 *:break-inside-avoid">
+            {notes.map((note) => (
+              <NoteCard
+                key={note.id}
+                note={note}
+                folder={view === 'all' ? getNoteFolder(note, folders) : undefined}
+                onOpen={onOpen}
+                onTogglePin={onTogglePin}
+                onDelete={onDelete}
+                variant="large"
+              />
+            ))}
+          </div>
         </div>
       )}
     </Page>

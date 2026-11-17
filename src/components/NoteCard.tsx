@@ -8,9 +8,9 @@ import type { Folder, Note } from '../types'
 import { highlightCode } from '../utils/code'
 import { isCodeNote } from '../utils/notes'
 
-// default: página de Notas · compact: resultados de búsqueda · pinned: notas fijadas en Inicio,
-// más grandes y sin adornos para que se lea el contenido
-export type NoteCardVariant = 'default' | 'compact' | 'pinned'
+// default: extracto recortado · compact: resultados de búsqueda · large: notas fijadas en Inicio y página de Notas,
+// grandes, sin adornos y con el contenido desplazable para que se lea entero
+export type NoteCardVariant = 'default' | 'compact' | 'large'
 
 interface NoteCardProps {
   note: Note
@@ -22,13 +22,13 @@ interface NoteCardProps {
   variant?: NoteCardVariant
 }
 
-// Tamaños de las tarjetas que muestran un extracto recortado (las fijadas se desplazan, ver abajo)
+// Tamaños de las tarjetas que muestran un extracto recortado (las grandes se desplazan, ver abajo)
 const TITLE = { default: 'text-base', compact: 'text-sm' }
 const CODE = { default: 'line-clamp-6 text-[13px]', compact: 'line-clamp-3 text-xs' }
 const TEXT = { default: 'line-clamp-6 text-sm', compact: 'line-clamp-3 text-xs' }
 
 export default function NoteCard({ note, folder, onOpen, onTogglePin, onDelete, variant = 'default' }: NoteCardProps) {
-  const pinned = variant === 'pinned'
+  const large = variant === 'large'
 
   return (
     <Card
@@ -37,12 +37,12 @@ export default function NoteCard({ note, folder, onOpen, onTogglePin, onDelete, 
         'group relative px-(--card-spacing) transition-shadow hover:ring-foreground/25',
         variant === 'compact' && 'gap-2',
         // Sin borde en reposo: el panel translúcido basta; el anillo aparece al pasar el ratón
-        pinned && 'gap-3 px-5 py-5 ring-transparent'
+        large && 'gap-3 px-5 py-5 ring-transparent'
       )}
     >
       {folder &&
-        (pinned ? (
-          // En Inicio la carpeta es una línea discreta, no un chip
+        (large ? (
+          // En las tarjetas grandes la carpeta es una línea discreta, no un chip
           <span className="-mb-1 truncate pr-14 text-xs text-muted-foreground">
             {folder.icon} {folder.name || 'Sin título'}
           </span>
@@ -71,8 +71,8 @@ export default function NoteCard({ note, folder, onOpen, onTogglePin, onDelete, 
         )}
       </div>
 
-      {variant === 'pinned' ? (
-        <PinnedNoteBody note={note} onOpen={onOpen} />
+      {large ? (
+        <LargeNoteBody note={note} onOpen={onOpen} />
       ) : (
         <ExcerptBody note={note} onOpen={onOpen} size={variant} />
       )}
@@ -80,7 +80,7 @@ export default function NoteCard({ note, folder, onOpen, onTogglePin, onDelete, 
   )
 }
 
-// Página de Notas y búsqueda: toda la tarjeta es un botón y el contenido se recorta
+// Extracto: toda la tarjeta es un botón y el contenido se recorta
 function ExcerptBody({ note, onOpen, size }: { note: Note; onOpen: (id: string) => void; size: 'default' | 'compact' }) {
   return (
     <button type="button" className="flex w-full flex-col gap-2 text-left" onClick={() => onOpen(note.id)}>
@@ -107,9 +107,9 @@ function ExcerptBody({ note, onOpen, size }: { note: Note; onOpen: (id: string) 
   )
 }
 
-// Nota fijada en Inicio: el título abre la nota y el contenido tiene altura fija y se desplaza con
-// la rueda (o con las flechas, tras enfocarlo con Tab) para leerla entera sin salir de Inicio.
-function PinnedNoteBody({ note, onOpen }: { note: Note; onOpen: (id: string) => void }) {
+// Tarjeta grande (Inicio y Notas): el título abre la nota y el contenido tiene altura fija y se desplaza con
+// la rueda (o con las flechas, tras enfocarlo con Tab) para leerla entera sin abrirla.
+function LargeNoteBody({ note, onOpen }: { note: Note; onOpen: (id: string) => void }) {
   const title = note.title || 'Sin título'
   const content = {
     watch: note.content,

@@ -19,6 +19,17 @@ const GROUPS: { title: string; items: { keys: string[]; label: ReactNode }[] }[]
     ],
   },
   {
+    title: 'Ir a',
+    items: [
+      { keys: ['Alt', '1'], label: 'Inicio' },
+      { keys: ['Alt', '2'], label: 'Notas' },
+      { keys: ['Alt', '3'], label: 'Pomodoro' },
+      { keys: ['Alt', '4'], label: 'Tareas' },
+      { keys: ['Alt', '5'], label: 'Calendario' },
+      { keys: ['Alt', '6'], label: 'Ajustes' },
+    ],
+  },
+  {
     title: 'Inicio',
     items: [
       { keys: ['Alt', 'N'], label: 'Añadir tarea' },

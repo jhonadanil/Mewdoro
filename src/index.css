@@ -68,8 +68,9 @@
   --destructive: #e03e3e;
   --border: rgb(46 42 56 / 0.09);
   --input: rgb(46 42 56 / 0.14);
-  --ring: #7a5af8;
-  /* Lavanda: casillas marcadas, barras de progreso, interruptores y foco.
+  /* Foco: gris neutro, sin el lila de marca */
+  --ring: #a29bb0;
+  /* Lavanda: casillas marcadas, barras de progreso, interruptores.
      Más oscuro que en el tema oscuro para que destaque sobre fondo claro */
   --brand: #7a5af8;
   --sidebar: rgb(255 255 255 / 0.42);
@@ -79,7 +80,7 @@
   --sidebar-accent: rgb(122 90 248 / 0.1);
   --sidebar-accent-foreground: #2e2a38;
   --sidebar-border: rgb(46 42 56 / 0.08);
-  --sidebar-ring: #7a5af8;
+  --sidebar-ring: #a29bb0;
 
   /* Acrílico: fondo de color difuminado que se ve a través de las superficies */
   /* Tonos apagados de la misma familia lila, para que el fondo acompañe y no llame la atención */
@@ -112,7 +113,7 @@
   --destructive: #eb5757;
   --border: rgb(231 227 238 / 0.08);
   --input: rgb(231 227 238 / 0.14);
-  --ring: #9b7bff;
+  --ring: #6a6478;
   --brand: #9b7bff;
   --sidebar: rgb(30 26 40 / 0.45);
   --sidebar-foreground: #e7e3ee;
@@ -121,7 +122,7 @@
   --sidebar-accent: rgb(155 123 255 / 0.14);
   --sidebar-accent-foreground: #e7e3ee;
   --sidebar-border: rgb(231 227 238 / 0.07);
-  --sidebar-ring: #9b7bff;
+  --sidebar-ring: #6a6478;
 
   --backdrop-base: #121016;
   --backdrop-1: rgb(110 90 170 / 0.16);
