@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 import {
@@ -15,7 +14,6 @@ function Sidebar() {
 
   return (
     <div className={`sidebar-container ${isOpen ? "sidebar-container--open" : "sidebar-container--closed"}`}>
-
       <button
         className="sidebar__toggle"
         onClick={() => setIsOpen(!isOpen)}
@@ -29,10 +27,8 @@ function Sidebar() {
 
       {isOpen && (
         <aside className="sidebar">
-
           {/* Navegación principal */}
           <div className="sidebar__menu">
-
             <a href="#inicio" className="sidebar__link sidebar__link--active">
               <House size={20} />
               <span>Inicio</span>
@@ -47,7 +43,6 @@ function Sidebar() {
               <Timer size={20} />
               <span>Pomodoro</span>
             </a>
-
           </div>
 
           {/* Ajustes abajo */}
@@ -57,10 +52,8 @@ function Sidebar() {
               <span>Ajustes</span>
             </a>
           </div>
-
         </aside>
       )}
-
     </div>
   );
 }
