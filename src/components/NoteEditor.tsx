@@ -1,6 +1,10 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import { ArrowLeft, Check, Copy, Pin, PinOff, Trash2 } from 'lucide-react'
+import { IconButton } from '@/components/IconButton'
+import { Button } from '@/components/ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { cn } from '@/lib/utils'
 import CodeEditor from './CodeEditor'
 import Dropdown from './Dropdown'
 import type { Folder, Note, NoteType } from '../types'
@@ -57,52 +61,56 @@ export default function NoteEditor({ note, folders, onChange, onClose, onDelete,
   ]
 
   return (
-    <div className="editor">
+    <div>
       {/* Barra superior: ruta a la izquierda, propiedades pequeñas a la derecha */}
-      <div className="editor__topbar">
-        <div className="editor__breadcrumb">
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Volver a las notas" title="Volver">
-            <ArrowLeft size={16} />
-          </button>
+      <div className="mb-12 flex min-h-8 items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-1">
+          <IconButton label="Volver a las notas" onClick={onClose}>
+            <ArrowLeft />
+          </IconButton>
           <Dropdown
             label="Mover a carpeta"
             value={folder?.id ?? ''}
             options={folderOptions}
             onChange={(folderId) => onChange({ folderId: folderId || null })}
           />
-          <span className="editor__breadcrumb-separator">/</span>
-          <span className="editor__breadcrumb-title">{note.title || 'Sin título'}</span>
+          <span className="text-[13px] text-muted-foreground">/</span>
+          <span className="truncate px-1 text-[13px]">{note.title || 'Sin título'}</span>
         </div>
 
-        <div className="editor__topbar-actions">
-          <span className="editor__edited" title={formatDate(note.updatedAt)}>
-            Editado {formatRelative(note.updatedAt)}
-          </span>
+        <div className="flex shrink-0 items-center gap-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="mr-1 whitespace-nowrap text-xs text-muted-foreground">
+                Editado {formatRelative(note.updatedAt)}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>{formatDate(note.updatedAt)}</TooltipContent>
+          </Tooltip>
           <Dropdown
             label="Tipo de nota"
             value={note.type}
             options={NOTE_TYPES}
             onChange={(type: NoteType) => onChange({ type })}
-            align="right"
+            align="end"
           />
-          <button
-            type="button"
-            className={`icon-btn ${note.pinned ? 'icon-btn--active' : ''}`}
+          <IconButton
+            label={note.pinned ? 'Quitar de inicio' : 'Fijar en inicio'}
+            className={cn(note.pinned && 'text-foreground')}
             onClick={onTogglePin}
-            aria-label={note.pinned ? 'Quitar de inicio' : 'Fijar en inicio'}
-            title={note.pinned ? 'Quitar de inicio' : 'Fijar en inicio'}
           >
-            {note.pinned ? <PinOff size={16} /> : <Pin size={16} />}
-          </button>
-          <button type="button" className="icon-btn" onClick={onDelete} aria-label="Eliminar nota" title="Eliminar nota">
-            <Trash2 size={16} />
-          </button>
+            {note.pinned ? <PinOff /> : <Pin />}
+          </IconButton>
+          <IconButton label="Eliminar nota" onClick={onDelete}>
+            <Trash2 />
+          </IconButton>
         </div>
       </div>
 
-      <div className="editor__page">
+      {/* Columna de lectura centrada, con el ancho de Notion */}
+      <div className="mx-auto max-w-[708px]">
         <input
-          className="editor__title"
+          className="mb-3 w-full bg-transparent text-[40px] font-bold leading-tight outline-none placeholder:text-muted-foreground/30"
           type="text"
           placeholder="Sin título"
           value={note.title}
@@ -112,14 +120,20 @@ export default function NoteEditor({ note, folders, onChange, onClose, onDelete,
         />
 
         {isCode ? (
-          // Bloque de código como en Notion: lenguaje y botón de copiar en la cabecera
-          <div className="code-block">
-            <div className="code-block__header">
+          // Bloque de código como en VS Code: lenguaje y botón de copiar en la cabecera
+          <div className="overflow-hidden rounded-md border bg-(--code-bg)">
+            <div className="flex items-center justify-between border-b border-(--code-border) py-1 pl-3.5 pr-1.5 text-xs text-(--code-gutter)">
               <span>{getNoteTypeLabel(note.type)}</span>
-              <button type="button" className="code-block__button" onClick={copyContent} disabled={!note.content}>
-                {isCopied ? <Check size={13} /> : <Copy size={13} />}
+              <Button
+                variant="ghost"
+                size="xs"
+                className="font-normal text-(--code-gutter) hover:bg-(--code-active-line) hover:text-(--code-text)"
+                onClick={copyContent}
+                disabled={!note.content}
+              >
+                {isCopied ? <Check /> : <Copy />}
                 {isCopied ? 'Copiado' : 'Copiar'}
-              </button>
+              </Button>
             </div>
             <CodeEditor
               value={note.content}
@@ -132,7 +146,7 @@ export default function NoteEditor({ note, folders, onChange, onClose, onDelete,
         ) : (
           <textarea
             ref={contentRef}
-            className="editor__content"
+            className="min-h-60 w-full resize-none overflow-hidden bg-transparent text-base leading-relaxed outline-none placeholder:text-muted-foreground"
             placeholder="Escribe algo..."
             value={note.content}
             onChange={(event) => onChange({ content: event.target.value })}

@@ -1,4 +1,8 @@
 import { Pause, Play, RotateCcw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MODE_LABELS, formatTime } from '../hooks/usePomodoro'
 import type { Pomodoro } from '../hooks/usePomodoro'
 import type { PomodoroMode } from '../types'
@@ -14,38 +18,33 @@ export default function PomodoroTimer({ pomodoro }: PomodoroTimerProps) {
   const progress = 1 - secondsLeft / duration
 
   return (
-    <div className="pomodoro">
-      <div className="pomodoro__modes">
-        {MODES.map((item) => (
-          <button
-            key={item}
-            type="button"
-            className={`pomodoro__mode ${mode === item ? 'pomodoro__mode--active' : ''}`}
-            onClick={() => changeMode(item)}
-          >
-            {MODE_LABELS[item]}
-          </button>
-        ))}
-      </div>
+    <Card className="mx-auto mt-6 max-w-[420px] items-center gap-5 px-8 py-8">
+      <Tabs value={mode} onValueChange={(value) => changeMode(value as PomodoroMode)}>
+        <TabsList>
+          {MODES.map((item) => (
+            <TabsTrigger key={item} value={item} className="px-3">
+              {MODE_LABELS[item]}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
-      <p className="pomodoro__time">{formatTime(secondsLeft)}</p>
+      <p className="text-7xl font-bold tabular-nums">{formatTime(secondsLeft)}</p>
 
-      <div className="pomodoro__progress">
-        <div className="pomodoro__progress-bar" style={{ width: `${progress * 100}%` }} />
-      </div>
+      <Progress value={progress * 100} className="h-1.5 bg-background" />
 
-      <div className="pomodoro__actions">
-        <button type="button" className="btn btn--primary" onClick={toggle}>
-          {isRunning ? <Pause size={16} /> : <Play size={16} />}
+      <div className="flex gap-2.5">
+        <Button size="lg" onClick={toggle}>
+          {isRunning ? <Pause /> : <Play />}
           {isRunning ? 'Pausar' : 'Iniciar'}
-        </button>
-        <button type="button" className="btn" onClick={reset}>
-          <RotateCcw size={16} />
+        </Button>
+        <Button size="lg" variant="outline" onClick={reset}>
+          <RotateCcw />
           Reiniciar
-        </button>
+        </Button>
       </div>
 
-      <p className="pomodoro__count">Pomodoros completados: {completedWork}</p>
-    </div>
+      <p className="text-[13px] text-muted-foreground">Pomodoros completados: {completedWork}</p>
+    </Card>
   )
 }

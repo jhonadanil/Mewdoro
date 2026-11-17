@@ -1,5 +1,6 @@
-
 import { Search, Sun, Moon } from "lucide-react";
+import { IconButton } from "@/components/IconButton";
+import { Input } from "@/components/ui/input";
 import type { Theme } from "../types";
 
 interface SearchBarProps {
@@ -12,35 +13,29 @@ interface SearchBarProps {
 
 function SearchBar({ query, onQueryChange, showSearch, theme, onToggleTheme }: SearchBarProps) {
   return (
-    <header className="searchbar">
-
+    <header className="relative flex min-h-[74px] items-center justify-center px-16 py-4">
       {/* El buscador solo se muestra en Inicio y Notas */}
       {showSearch && (
-        <div className="searchbar__search">
-          <Search size={20} />
-
-          <input
+        <div className="relative w-full max-w-md">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
             type="text"
             placeholder="Buscar notas..."
-            className="searchbar__input"
+            className="h-9 bg-muted/60 pl-9 focus-visible:border-muted-foreground/40 focus-visible:ring-0"
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
           />
         </div>
       )}
 
-      <button
-        className="searchbar__theme"
+      <IconButton
+        label={theme === "dark" ? "Tema claro" : "Tema oscuro"}
+        size="icon"
+        className="absolute right-6 top-1/2 -translate-y-1/2"
         onClick={onToggleTheme}
-        aria-label="Cambiar tema"
       >
-        {theme === "dark" ? (
-          <Sun size={20} />
-        ) : (
-          <Moon size={20} />
-        )}
-      </button>
-
+        {theme === "dark" ? <Sun /> : <Moon />}
+      </IconButton>
     </header>
   );
 }

@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { Check, Trash2 } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
+import { IconButton } from '@/components/IconButton'
+import { Checkbox } from '@/components/ui/checkbox'
+import { cn } from '@/lib/utils'
 import type { TaskChanges } from '../hooks/useTasks'
 import type { Task } from '../types'
 
@@ -14,18 +17,15 @@ interface TaskItemProps {
   actions?: ReactNode
 }
 
+// Casilla de shadcn con el azul de Notion al marcarla
 export function TaskCheckbox({ checked, onChange }: { checked: boolean; onChange: () => void }) {
   return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={checked}
+    <Checkbox
+      checked={checked}
+      onCheckedChange={onChange}
       aria-label={checked ? 'Marcar como pendiente' : 'Marcar como hecha'}
-      className={`task-checkbox ${checked ? 'task-checkbox--checked' : ''}`}
-      onClick={onChange}
-    >
-      {checked && <Check size={12} strokeWidth={3} />}
-    </button>
+      className="size-[18px] rounded-[4px] border-muted-foreground/60 data-checked:border-brand data-checked:bg-brand data-checked:text-white dark:data-checked:bg-brand"
+    />
   )
 }
 
@@ -41,28 +41,25 @@ export default function TaskItem({ task, onUpdate, onDelete, meta, actions }: Ta
   }
 
   return (
-    <div className={`task-item ${task.done ? 'task-item--done' : ''}`}>
+    <div className="group flex min-h-9 items-center gap-2.5 rounded-md px-1.5 hover:bg-muted/70">
       <TaskCheckbox checked={task.done} onChange={() => onUpdate(task.id, { done: !task.done })} />
       <input
-        className="task-item__text"
+        className={cn(
+          'min-w-0 flex-1 bg-transparent py-1.5 text-[15px] outline-none',
+          task.done && 'text-muted-foreground line-through'
+        )}
         value={text}
         onChange={(event) => setText(event.target.value)}
         onBlur={commit}
         onKeyDown={(event) => event.key === 'Enter' && event.currentTarget.blur()}
         aria-label="Texto de la tarea"
       />
-      {meta && <span className="task-item__meta">{meta}</span>}
-      <div className="task-item__actions">
+      {meta && <span className="whitespace-nowrap text-xs text-muted-foreground">{meta}</span>}
+      <div className="flex gap-0.5 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100">
         {actions}
-        <button
-          type="button"
-          className="icon-btn"
-          onClick={() => onDelete(task.id)}
-          aria-label="Eliminar tarea"
-          title="Eliminar tarea"
-        >
-          <Trash2 size={14} />
-        </button>
+        <IconButton label="Eliminar tarea" size="icon-xs" onClick={() => onDelete(task.id)}>
+          <Trash2 />
+        </IconButton>
       </div>
     </div>
   )

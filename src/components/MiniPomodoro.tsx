@@ -1,4 +1,7 @@
-import { Pause, Play, PinOff } from 'lucide-react'
+import { Pause, Play } from 'lucide-react'
+import { IconButton } from '@/components/IconButton'
+import { MiniCard } from '@/components/MiniCard'
+import { Progress } from '@/components/ui/progress'
 import { MODE_LABELS, formatTime } from '../hooks/usePomodoro'
 import type { Pomodoro } from '../hooks/usePomodoro'
 
@@ -14,37 +17,22 @@ export default function MiniPomodoro({ pomodoro, onOpen, onUnpin }: MiniPomodoro
   const progress = 1 - secondsLeft / duration
 
   return (
-    <article className="mini-card">
-      <div className="mini-card__header">
-        <span className="note-tag">Pomodoro · {MODE_LABELS[mode]}</span>
-        <button
-          type="button"
-          className="icon-btn"
-          onClick={onUnpin}
-          aria-label="Quitar de inicio"
-          title="Quitar de inicio"
-        >
-          <PinOff size={15} />
-        </button>
-      </div>
-
-      <div className="mini-pomodoro">
-        <button type="button" className="mini-pomodoro__time" onClick={onOpen}>
+    <MiniCard label={`Pomodoro · ${MODE_LABELS[mode]}`} onOpen={onOpen} onUnpin={onUnpin}>
+      <div className="flex items-center justify-between">
+        <button type="button" onClick={onOpen} className="text-[28px] font-bold tabular-nums">
           {formatTime(secondsLeft)}
         </button>
-        <button
-          type="button"
-          className="icon-btn icon-btn--filled"
+        <IconButton
+          label={isRunning ? 'Pausar' : 'Iniciar'}
+          variant="default"
+          size="icon"
+          className="text-primary-foreground hover:text-primary-foreground"
           onClick={toggle}
-          aria-label={isRunning ? 'Pausar' : 'Iniciar'}
         >
-          {isRunning ? <Pause size={16} /> : <Play size={16} />}
-        </button>
+          {isRunning ? <Pause /> : <Play />}
+        </IconButton>
       </div>
-
-      <div className="pomodoro__progress pomodoro__progress--small">
-        <div className="pomodoro__progress-bar" style={{ width: `${progress * 100}%` }} />
-      </div>
-    </article>
+      <Progress value={progress * 100} />
+    </MiniCard>
   )
 }

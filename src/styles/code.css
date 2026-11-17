@@ -1,0 +1,223 @@
+/* Editor de código al estilo VS Code y colores de sintaxis (Prism).
+   Va aparte de Tailwind porque el texto coloreado y el textarea transparente
+   tienen que coincidir al píxel. */
+
+/* Tema claro: Light+ de VS Code */
+:root {
+  --code-bg: #ffffff;
+  --code-border: #e5e5e5;
+  --code-text: #1f1f1f;
+  --code-variable: #001080;
+  --code-comment: #008000;
+  --code-keyword: #0000ff;
+  --code-control: #af00db;
+  --code-string: #a31515;
+  --code-regex: #811f3f;
+  --code-number: #098658;
+  --code-function: #795e26;
+  --code-class: #267f99;
+  --code-attr: #e50000;
+  --code-tag: #800000;
+  --code-selector: #800000;
+  --code-bracket-0: #0431fa;
+  --code-bracket-1: #319331;
+  --code-bracket-2: #7b3814;
+  --code-gutter: #6e7681;
+  --code-active-line: rgba(0, 0, 0, 0.04);
+  --code-selection: rgba(173, 214, 255, 0.9);
+  --code-caret: #000000;
+}
+
+/* Tema oscuro: Dark+ de VS Code */
+.dark {
+  --code-bg: #1e1e1e;
+  --code-border: #2b2b2b;
+  --code-text: #d4d4d4;
+  --code-variable: #9cdcfe;
+  --code-comment: #6a9955;
+  --code-keyword: #569cd6;
+  --code-control: #c586c0;
+  --code-string: #ce9178;
+  --code-regex: #d16969;
+  --code-number: #b5cea8;
+  --code-function: #dcdcaa;
+  --code-class: #4ec9b0;
+  --code-attr: #9cdcfe;
+  --code-tag: #569cd6;
+  --code-selector: #d7ba7d;
+  --code-bracket-0: #ffd700;
+  --code-bracket-1: #da70d6;
+  --code-bracket-2: #179fff;
+  --code-gutter: #858585;
+  --code-active-line: rgba(255, 255, 255, 0.05);
+  --code-selection: rgba(38, 79, 120, 0.85);
+  --code-caret: #aeafad;
+}
+
+/* Editor: el texto coloreado (pre) y el textarea transparente van en la misma celda,
+   con exactamente la misma tipografía.
+   El line-height (20px) y el padding superior (10px) se usan también en CodeEditor.tsx */
+
+.code-editor__scroll {
+  overflow-x: auto;
+}
+
+.code-editor__inner {
+  position: relative;
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+}
+
+.code-editor__active-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 20px;
+
+  background-color: var(--code-active-line);
+  pointer-events: none;
+}
+
+.code-editor__highlight,
+.code-editor__input {
+  grid-area: 1 / 1;
+
+  margin: 0;
+  min-height: 160px;
+  padding: 10px 24px 16px 14px;
+
+  border: none;
+
+  font-family: Consolas, "SFMono-Regular", Menlo, "Courier New", monospace;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: normal;
+  tab-size: 4;
+  white-space: pre;
+}
+
+.code-editor__highlight {
+  position: relative;
+  color: var(--code-text);
+  pointer-events: none;
+}
+
+.code-editor__input {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  resize: none;
+
+  background: transparent;
+  color: transparent;
+  caret-color: var(--code-caret);
+  outline: none;
+}
+
+.code-editor__input::placeholder {
+  color: var(--code-gutter);
+}
+
+.code-editor__input::selection {
+  background-color: var(--code-selection);
+  color: transparent;
+}
+
+/* Colores de sintaxis de VS Code (clases que genera Prism) */
+
+.code-tokens.lang-python,
+.code-tokens.lang-javascript,
+.code-tokens.lang-typescript {
+  color: var(--code-variable);
+}
+
+.code-tokens .token.comment,
+.code-tokens .token.prolog,
+.code-tokens .token.doctype,
+.code-tokens .token.cdata {
+  color: var(--code-comment);
+}
+
+.code-tokens .token.punctuation,
+.code-tokens .token.operator {
+  color: var(--code-text);
+}
+
+.code-tokens .token.keyword,
+.code-tokens .token.boolean,
+.code-tokens .token.atrule,
+.code-tokens .token.important {
+  color: var(--code-keyword);
+}
+
+.code-tokens .token.keyword.control {
+  color: var(--code-control);
+}
+
+.code-tokens .token.string,
+.code-tokens .token.char,
+.code-tokens .token.attr-value,
+.code-tokens .token.inserted {
+  color: var(--code-string);
+}
+
+.code-tokens .token.regex {
+  color: var(--code-regex);
+}
+
+.code-tokens .token.number,
+.code-tokens .token.constant,
+.code-tokens .token.symbol {
+  color: var(--code-number);
+}
+
+.code-tokens .token.function,
+.code-tokens .token.builtin,
+.code-tokens .token.decorator {
+  color: var(--code-function);
+}
+
+.code-tokens .token.class-name {
+  color: var(--code-class);
+}
+
+.code-tokens .token.property,
+.code-tokens .token.variable,
+.code-tokens .token.parameter {
+  color: var(--code-variable);
+}
+
+.code-tokens .token.attr-name {
+  color: var(--code-attr);
+}
+
+.code-tokens .token.tag,
+.code-tokens .token.deleted {
+  color: var(--code-tag);
+}
+
+.code-tokens .token.selector {
+  color: var(--code-selector);
+}
+
+.code-tokens .token.title,
+.code-tokens .token.bold {
+  color: var(--code-keyword);
+  font-weight: 700;
+}
+
+/* Corchetes de colores según el nivel de anidación */
+
+.code-tokens .token.punctuation.bracket-0 {
+  color: var(--code-bracket-0);
+}
+
+.code-tokens .token.punctuation.bracket-1 {
+  color: var(--code-bracket-1);
+}
+
+.code-tokens .token.punctuation.bracket-2 {
+  color: var(--code-bracket-2);
+}

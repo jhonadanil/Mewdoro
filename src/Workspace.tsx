@@ -105,7 +105,7 @@ function Workspace({ user }: WorkspaceProps) {
   };
 
   return (
-    <div className="app">
+    <div className="flex min-h-screen bg-background">
       <Sidebar
         page={page}
         onNavigate={navigate}
@@ -121,7 +121,7 @@ function Workspace({ user }: WorkspaceProps) {
         onCreateFolder={addFolder}
       />
 
-      <main className="app__content">
+      <main className="min-w-0 flex-1">
         <SearchBar
           query={query}
           onQueryChange={changeQuery}

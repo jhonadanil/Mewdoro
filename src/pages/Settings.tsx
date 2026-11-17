@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { LogOut } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Page, PageText, PageTitle } from '../components/Page'
 import { DEFAULT_SETTINGS } from '../hooks/useUserData'
 import type { NoteType, Settings as SettingsType, Theme } from '../types'
 import { NOTE_TYPES } from '../utils/notes'
@@ -12,6 +17,10 @@ interface SettingsProps {
   onSignOut: () => void
 }
 
+function Section({ children }: { children: ReactNode }) {
+  return <h3 className="mb-1 mt-8 border-b pb-2 text-sm font-semibold">{children}</h3>
+}
+
 interface RowProps {
   label: string
   hint?: string
@@ -20,10 +29,10 @@ interface RowProps {
 
 function SettingRow({ label, hint, children }: RowProps) {
   return (
-    <div className="settings__row">
+    <div className="flex items-center justify-between gap-4 py-3">
       <div>
-        <p className="settings__label">{label}</p>
-        {hint && <p className="settings__hint">{hint}</p>}
+        <p className="text-sm">{label}</p>
+        {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
       </div>
       {children}
     </div>
@@ -34,11 +43,12 @@ interface NumberFieldProps {
   value: number
   min: number
   max: number
+  label: string
   onChange: (value: number) => void
 }
 
 // Se guarda al salir del campo, para poder borrar y escribir otro número
-function NumberField({ value, min, max, onChange }: NumberFieldProps) {
+function NumberField({ value, min, max, label, onChange }: NumberFieldProps) {
   const [draft, setDraft] = useState(String(value))
 
   const commit = () => {
@@ -51,11 +61,12 @@ function NumberField({ value, min, max, onChange }: NumberFieldProps) {
   }
 
   return (
-    <input
-      className="input settings__number"
+    <Input
+      className="w-20 shrink-0"
       type="number"
       min={min}
       max={max}
+      aria-label={label}
       value={draft}
       onChange={(event) => setDraft(event.target.value)}
       onBlur={commit}
@@ -64,31 +75,22 @@ function NumberField({ value, min, max, onChange }: NumberFieldProps) {
   )
 }
 
-function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (value: boolean) => void; label: string }) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      aria-label={label}
-      className={`toggle ${checked ? 'toggle--on' : ''}`}
-      onClick={() => onChange(!checked)}
-    >
-      <span className="toggle__thumb" />
-    </button>
-  )
+// Interruptor con el azul de Notion cuando está activado
+function Toggle({ checked, label, onChange }: { checked: boolean; label: string; onChange: (value: boolean) => void }) {
+  return <Switch checked={checked} onCheckedChange={onChange} aria-label={label} className="data-[state=checked]:bg-brand" />
 }
 
 export default function Settings({ settings, email, onChange, onSignOut }: SettingsProps) {
   return (
-    <section className="page page--compact">
-      <h2 className="page__title">Ajustes</h2>
-      <p className="page__text">Los cambios se guardan en tu cuenta automáticamente.</p>
+    <Page narrow>
+      <PageTitle>Ajustes</PageTitle>
+      <PageText>Los cambios se guardan en tu cuenta automáticamente.</PageText>
 
-      <h3 className="settings__section">Pomodoro</h3>
+      <Section>Pomodoro</Section>
       <SettingRow label="Trabajo" hint="Minutos de cada pomodoro">
         <NumberField
           key={settings.workMinutes}
+          label="Minutos de trabajo"
           value={settings.workMinutes}
           min={1}
           max={120}
@@ -98,6 +100,7 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
       <SettingRow label="Descanso corto" hint="Minutos">
         <NumberField
           key={settings.shortBreakMinutes}
+          label="Minutos de descanso corto"
           value={settings.shortBreakMinutes}
           min={1}
           max={60}
@@ -107,6 +110,7 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
       <SettingRow label="Descanso largo" hint="Minutos">
         <NumberField
           key={settings.longBreakMinutes}
+          label="Minutos de descanso largo"
           value={settings.longBreakMinutes}
           min={1}
           max={90}
@@ -116,6 +120,7 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
       <SettingRow label="Descanso largo cada" hint="Número de pomodoros">
         <NumberField
           key={settings.longBreakInterval}
+          label="Pomodoros entre descansos largos"
           value={settings.longBreakInterval}
           min={2}
           max={10}
@@ -129,9 +134,8 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
         <Toggle label="Sonido" checked={settings.sound} onChange={(value) => onChange({ sound: value })} />
       </SettingRow>
       <SettingRow label="Restablecer" hint="Vuelve a 25 / 5 / 15 minutos">
-        <button
-          type="button"
-          className="btn"
+        <Button
+          variant="outline"
           onClick={() =>
             onChange({
               workMinutes: DEFAULT_SETTINGS.workMinutes,
@@ -142,43 +146,45 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
           }
         >
           Restablecer
-        </button>
+        </Button>
       </SettingRow>
 
-      <h3 className="settings__section">Notas</h3>
+      <Section>Notas</Section>
       <SettingRow label="Tipo de nota por defecto" hint="El tipo con el que se crean las notas nuevas">
-        <select
-          className="editor__select"
-          value={settings.defaultNoteType}
-          onChange={(event) => onChange({ defaultNoteType: event.target.value as NoteType })}
-        >
-          {NOTE_TYPES.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.label}
-            </option>
-          ))}
-        </select>
+        <Select value={settings.defaultNoteType} onValueChange={(value) => onChange({ defaultNoteType: value as NoteType })}>
+          <SelectTrigger className="w-36" aria-label="Tipo de nota por defecto">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {NOTE_TYPES.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </SettingRow>
 
-      <h3 className="settings__section">Apariencia</h3>
+      <Section>Apariencia</Section>
       <SettingRow label="Tema">
-        <select
-          className="editor__select"
-          value={settings.theme}
-          onChange={(event) => onChange({ theme: event.target.value as Theme })}
-        >
-          <option value="dark">Oscuro</option>
-          <option value="light">Claro</option>
-        </select>
+        <Select value={settings.theme} onValueChange={(value) => onChange({ theme: value as Theme })}>
+          <SelectTrigger className="w-36" aria-label="Tema">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="dark">Oscuro</SelectItem>
+            <SelectItem value="light">Claro</SelectItem>
+          </SelectContent>
+        </Select>
       </SettingRow>
 
-      <h3 className="settings__section">Cuenta</h3>
+      <Section>Cuenta</Section>
       <SettingRow label="Sesión iniciada como" hint={email ?? undefined}>
-        <button type="button" className="btn" onClick={onSignOut}>
-          <LogOut size={16} />
+        <Button variant="outline" onClick={onSignOut}>
+          <LogOut />
           Cerrar sesión
-        </button>
+        </Button>
       </SettingRow>
-    </section>
+    </Page>
   )
 }

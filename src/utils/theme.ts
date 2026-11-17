@@ -9,8 +9,9 @@ export function getSavedTheme(): Theme {
   }
 }
 
+// shadcn/ui activa el modo oscuro con la clase "dark" en <html>
 export function applyTheme(theme: Theme) {
-  document.documentElement.setAttribute('data-theme', theme)
+  document.documentElement.classList.toggle('dark', theme === 'dark')
   try {
     localStorage.setItem('theme', theme)
   } catch {

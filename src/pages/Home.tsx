@@ -2,10 +2,14 @@ import MiniCalendar from '../components/MiniCalendar'
 import MiniPomodoro from '../components/MiniPomodoro'
 import MiniTasks from '../components/MiniTasks'
 import NoteCard from '../components/NoteCard'
+import { Page, PageText, PageTitle } from '../components/Page'
 import type { Pomodoro } from '../hooks/usePomodoro'
 import type { TaskChanges } from '../hooks/useTasks'
-import type { Folder, Note, Page, Task } from '../types'
+import type { Folder, Note, Page as PageName, Task } from '../types'
 import { getNoteFolder } from '../utils/notes'
+
+// Tarjetas pequeñas de Inicio
+const GRID = 'mt-4 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] items-start gap-2.5'
 
 interface HomeProps {
   notes: Note[]
@@ -22,7 +26,7 @@ interface HomeProps {
   onUnpinTasks: () => void
   onAddTask: (text: string, date: string) => void
   onUpdateTask: (id: string, changes: TaskChanges) => void
-  onNavigate: (page: Page) => void
+  onNavigate: (page: PageName) => void
   onOpenNote: (id: string) => void
   onTogglePinNote: (id: string) => void
 }
@@ -46,21 +50,28 @@ export default function Home({
   onOpenNote,
   onTogglePinNote,
 }: HomeProps) {
+  const renderNote = (note: Note) => (
+    <NoteCard
+      key={note.id}
+      note={note}
+      folder={getNoteFolder(note, folders)}
+      onOpen={onOpenNote}
+      onTogglePin={onTogglePinNote}
+      compact
+    />
+  )
+
   // Mientras se busca, Inicio muestra los resultados
   if (query.trim()) {
     return (
-      <section className="page">
-        <h2 className="page__title">Resultados</h2>
+      <Page>
+        <PageTitle>Resultados</PageTitle>
         {searchResults.length === 0 ? (
-          <p className="page__text">No hay notas que coincidan con "{query.trim()}".</p>
+          <PageText>No hay notas que coincidan con "{query.trim()}".</PageText>
         ) : (
-          <div className="pinned-grid">
-            {searchResults.map((note) => (
-              <NoteCard key={note.id} note={note} folder={getNoteFolder(note, folders)} onOpen={onOpenNote} onTogglePin={onTogglePinNote} compact />
-            ))}
-          </div>
+          <div className={GRID}>{searchResults.map(renderNote)}</div>
         )}
-      </section>
+      </Page>
     )
   }
 
@@ -70,26 +81,22 @@ export default function Home({
   // La bienvenida solo se muestra mientras no haya nada fijado
   if (!hasPinned) {
     return (
-      <section className="page">
-        <h2 className="page__title">Bienvenido</h2>
-        <p className="page__text">
+      <Page>
+        <PageTitle>Bienvenido</PageTitle>
+        <PageText>
           Organiza tus ideas y mantén la concentración con el temporizador Pomodoro.
           Fija una nota, tus tareas, el Pomodoro o el calendario para tenerlos a mano aquí.
-        </p>
-      </section>
+        </PageText>
+      </Page>
     )
   }
 
   return (
-    <section className="page">
-      <h2 className="page__title">Fijados</h2>
-      <div className="pinned-grid">
+    <Page>
+      <PageTitle>Fijados</PageTitle>
+      <div className={GRID}>
         {isPomodoroPinned && (
-          <MiniPomodoro
-            pomodoro={pomodoro}
-            onOpen={() => onNavigate('pomodoro')}
-            onUnpin={onUnpinPomodoro}
-          />
+          <MiniPomodoro pomodoro={pomodoro} onOpen={() => onNavigate('pomodoro')} onUnpin={onUnpinPomodoro} />
         )}
         {isTasksPinned && (
           <MiniTasks
@@ -100,13 +107,9 @@ export default function Home({
             onUpdate={onUpdateTask}
           />
         )}
-        {isCalendarPinned && (
-          <MiniCalendar onOpen={() => onNavigate('calendar')} onUnpin={onUnpinCalendar} />
-        )}
-        {pinnedNotes.map((note) => (
-          <NoteCard key={note.id} note={note} folder={getNoteFolder(note, folders)} onOpen={onOpenNote} onTogglePin={onTogglePinNote} compact />
-        ))}
+        {isCalendarPinned && <MiniCalendar onOpen={() => onNavigate('calendar')} onUnpin={onUnpinCalendar} />}
+        {pinnedNotes.map(renderNote)}
       </div>
-    </section>
+    </Page>
   )
 }

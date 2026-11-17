@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Ejecutable del detector de Impeccable (se descarga solo; ~24 MB)
+.claude/skills/impeccable/scripts/bin/

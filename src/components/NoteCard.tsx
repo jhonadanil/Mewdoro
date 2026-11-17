@@ -1,4 +1,8 @@
 import { Pin, PinOff, Trash2 } from 'lucide-react'
+import { IconButton } from '@/components/IconButton'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 import type { Folder, Note } from '../types'
 import { highlightCode } from '../utils/code'
 import { isCodeNote } from '../utils/notes'
@@ -14,52 +18,58 @@ interface NoteCardProps {
 }
 
 export default function NoteCard({ note, folder, onOpen, onTogglePin, onDelete, compact = false }: NoteCardProps) {
-  const pinLabel = note.pinned ? 'Quitar de inicio' : 'Fijar en inicio'
-
   return (
-    <article className={`note-card ${compact ? 'note-card--compact' : ''}`}>
+    <Card
+      size={compact ? 'sm' : 'default'}
+      className={cn('group relative px-(--card-spacing) transition-shadow hover:ring-foreground/25', compact && 'gap-2')}
+    >
       {folder && (
-        <div className="note-card__tags">
-          <span className="note-tag">{folder.icon} {folder.name || 'Sin título'}</span>
+        <div>
+          <Badge variant="secondary">
+            {folder.icon} {folder.name || 'Sin título'}
+          </Badge>
         </div>
       )}
 
-      {/* Fijar y borrar flotan arriba a la derecha y aparecen al pasar el ratón */}
-      <div className="note-card__actions">
-        <button
-          type="button"
-          className={`icon-btn ${note.pinned ? 'icon-btn--active' : ''}`}
+      {/* Fijar y borrar flotan arriba a la derecha y aparecen al pasar el ratón (en táctil, siempre) */}
+      <div className="absolute right-2 top-2 flex gap-0.5 rounded-md bg-card opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100">
+        <IconButton
+          label={note.pinned ? 'Quitar de inicio' : 'Fijar en inicio'}
+          size="icon-xs"
+          className={cn(note.pinned && 'text-foreground')}
           onClick={() => onTogglePin(note.id)}
-          aria-label={pinLabel}
-          title={pinLabel}
         >
-          {note.pinned ? <PinOff size={15} /> : <Pin size={15} />}
-        </button>
+          {note.pinned ? <PinOff /> : <Pin />}
+        </IconButton>
         {onDelete && (
-          <button
-            type="button"
-            className="icon-btn"
-            onClick={() => onDelete(note.id)}
-            aria-label="Eliminar nota"
-            title="Eliminar nota"
-          >
-            <Trash2 size={15} />
-          </button>
+          <IconButton label="Eliminar nota" size="icon-xs" onClick={() => onDelete(note.id)}>
+            <Trash2 />
+          </IconButton>
         )}
       </div>
 
-      <button type="button" className="note-card__body" onClick={() => onOpen(note.id)}>
-        <span className="note-card__title">{note.title || 'Sin título'}</span>
+      <button type="button" className="flex w-full flex-col gap-2 text-left" onClick={() => onOpen(note.id)}>
+        <span className={cn('pr-14 font-semibold', compact ? 'text-sm' : 'text-base')}>{note.title || 'Sin título'}</span>
         {note.content &&
           (isCodeNote(note) ? (
             <span
-              className="note-card__code code-tokens"
+              className={cn(
+                'code-tokens overflow-hidden whitespace-pre-wrap break-words rounded-md border border-(--code-border) bg-(--code-bg) px-2.5 py-2 font-mono leading-normal text-(--code-text)',
+                compact ? 'line-clamp-3 text-xs' : 'line-clamp-6 text-[13px]'
+              )}
               dangerouslySetInnerHTML={{ __html: highlightCode(note.content, note.type) }}
             />
           ) : (
-            <span className="note-card__content">{note.content}</span>
+            <span
+              className={cn(
+                'whitespace-pre-wrap break-words leading-normal text-muted-foreground',
+                compact ? 'line-clamp-3 text-xs' : 'line-clamp-6 text-sm'
+              )}
+            >
+              {note.content}
+            </span>
           ))}
       </button>
-    </article>
+    </Card>
   )
 }

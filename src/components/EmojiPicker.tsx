@@ -1,5 +1,9 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 import { FOLDER_ICON_GROUPS } from '../hooks/useFolders'
 
 interface EmojiPickerProps {
@@ -31,57 +35,47 @@ export default function EmojiPicker({ value, onChange }: EmojiPickerProps) {
   }
 
   return (
-    <div className="emoji-picker">
-      <button
-        type="button"
-        className="emoji-picker__button"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Cambiar icono"
-        title="Cambiar icono"
-      >
-        {value}
-      </button>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="ghost" className="size-11 p-0 text-3xl" aria-label="Cambiar icono">
+          {value}
+        </Button>
+      </PopoverTrigger>
 
-      {isOpen && (
-        <>
-          {/* Capa transparente: un clic fuera cierra el selector */}
-          <div className="emoji-picker__backdrop" onClick={() => setIsOpen(false)} />
-          <div className="emoji-picker__panel">
-            <form className="emoji-picker__custom" onSubmit={handleCustomSubmit}>
-              <input
-                className="input"
-                placeholder="Pega o escribe un emoji (Win + .)"
-                value={custom}
-                onChange={(event) => setCustom(event.target.value)}
-                autoFocus
-              />
-              <button type="submit" className="btn" disabled={!firstEmoji(custom)}>
-                Usar
-              </button>
-            </form>
+      <PopoverContent align="start" className="w-[340px] gap-2 p-2.5">
+        <form className="flex gap-1.5" onSubmit={handleCustomSubmit}>
+          <Input
+            className="h-8 text-[13px]"
+            placeholder="Pega o escribe un emoji (Win + .)"
+            value={custom}
+            onChange={(event) => setCustom(event.target.value)}
+            autoFocus
+          />
+          <Button type="submit" variant="outline" disabled={!firstEmoji(custom)}>
+            Usar
+          </Button>
+        </form>
 
-            <div className="emoji-picker__groups">
-              {FOLDER_ICON_GROUPS.map((group) => (
-                <div key={group.name}>
-                  <p className="emoji-picker__group-name">{group.name}</p>
-                  <div className="emoji-picker__grid">
-                    {group.icons.map((icon) => (
-                      <button
-                        key={icon}
-                        type="button"
-                        className={`emoji-picker__option ${icon === value ? 'emoji-picker__option--active' : ''}`}
-                        onClick={() => choose(icon)}
-                      >
-                        {icon}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
+        <div className="max-h-[300px] overflow-y-auto overflow-x-hidden">
+          {FOLDER_ICON_GROUPS.map((group) => (
+            <div key={group.name}>
+              <p className="mx-1 mb-1 mt-1.5 text-xs font-semibold text-muted-foreground">{group.name}</p>
+              <div className="grid grid-cols-10 gap-0.5">
+                {group.icons.map((icon) => (
+                  <button
+                    key={icon}
+                    type="button"
+                    onClick={() => choose(icon)}
+                    className={cn('aspect-square rounded-md text-lg hover:bg-accent', icon === value && 'bg-accent')}
+                  >
+                    {icon}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        </>
-      )}
-    </div>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   )
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 
 import {
   House,
@@ -16,6 +17,11 @@ import {
 } from "lucide-react";
 import type { User } from "firebase/auth";
 
+import { IconButton } from "@/components/IconButton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 import type { Folder, FolderView, Note, Page } from "../types";
 import { filterByFolder } from "../utils/notes";
 
@@ -43,6 +49,29 @@ const LINKS = [
 ] as const;
 
 const IS_MAC = /Mac|iPhone|iPad/.test(navigator.userAgent);
+
+interface NavItemProps {
+  icon: ReactNode;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+function NavItem({ icon, label, isActive, onClick }: NavItemProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground [&_svg]:size-[18px]",
+        isActive && "bg-sidebar-accent font-medium text-foreground"
+      )}
+    >
+      {icon}
+      <span>{label}</span>
+    </button>
+  );
+}
 
 interface FolderRowProps {
   icon: string;
@@ -72,47 +101,52 @@ function FolderRow({
 }: FolderRowProps) {
   return (
     <div>
-      <div className={`tree-row ${isActive ? "tree-row--active" : ""}`}>
+      <div className={cn("group/row flex items-center rounded-md hover:bg-sidebar-accent", isActive && "bg-sidebar-accent")}>
+        <IconButton label={isExpanded ? "Contraer carpeta" : "Desplegar carpeta"} size="icon-xs" side="right" onClick={onToggle}>
+          {isExpanded ? <ChevronDown /> : <ChevronRight />}
+        </IconButton>
         <button
           type="button"
-          className="tree-row__chevron"
-          onClick={onToggle}
-          aria-label={isExpanded ? "Contraer carpeta" : "Desplegar carpeta"}
+          onClick={onOpen}
+          className={cn(
+            "flex min-w-0 flex-1 items-center gap-1.5 px-1 py-1.5 text-left text-[13px] text-muted-foreground group-hover/row:text-foreground",
+            isActive && "text-foreground"
+          )}
         >
-          {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          <span className="shrink-0 text-sm">{icon}</span>
+          <span className="truncate">{name}</span>
         </button>
-        <button type="button" className="tree-row__label" onClick={onOpen}>
-          <span className="tree-row__icon">{icon}</span>
-          <span className="tree-row__name">{name}</span>
-        </button>
-        <button
-          type="button"
-          className="tree-row__add"
+        {/* El + solo aparece al pasar el ratón, como en Notion */}
+        <IconButton
+          label="Nueva nota en esta carpeta"
+          size="icon-xs"
+          side="right"
+          className="mr-0.5 opacity-0 group-hover/row:opacity-100 focus-visible:opacity-100"
           onClick={onCreateNote}
-          aria-label="Nueva nota en esta carpeta"
-          title="Nueva nota en esta carpeta"
         >
-          <Plus size={14} />
-        </button>
+          <Plus />
+        </IconButton>
       </div>
 
-      {isExpanded && (
-        notes.length === 0 ? (
-          <p className="tree-empty">Sin notas</p>
+      {isExpanded &&
+        (notes.length === 0 ? (
+          <p className="py-1 pl-8 pr-2 text-xs italic text-muted-foreground">Sin notas</p>
         ) : (
           notes.map((note) => (
             <button
               key={note.id}
               type="button"
-              className={`tree-note ${openNoteId === note.id ? "tree-note--active" : ""}`}
               onClick={() => onOpenNote(note.id)}
               title={note.title || "Sin título"}
+              className={cn(
+                "block w-full truncate rounded-md py-1 pl-8 pr-2 text-left text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
+                openNoteId === note.id && "bg-sidebar-accent text-foreground"
+              )}
             >
               {note.title || "Sin título"}
             </button>
           ))
-        )
-      )}
+        ))}
     </div>
   );
 }
@@ -132,11 +166,9 @@ function Sidebar({
   onCreateFolder,
 }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(true);
-  const [hasPhotoError, setHasPhotoError] = useState(false);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 
   const name = user.displayName || user.email || "Mi cuenta";
-  const initial = name.charAt(0).toUpperCase();
   const notesWithoutFolder = filterByFolder(notes, folders, "none");
 
   const toggleExpanded = (id: string) => {
@@ -162,70 +194,65 @@ function Sidebar({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const toggleLabel = isOpen ? "Cerrar barra lateral" : "Abrir barra lateral";
-
   return (
-    <div className={`sidebar-container ${isOpen ? "sidebar-container--open" : "sidebar-container--closed"}`}>
-      <button
-        className="sidebar__toggle"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label={toggleLabel}
+    <div className={cn("group/sidebar relative shrink-0 transition-[width] duration-200", isOpen ? "w-60" : "w-0")}>
+      {/* Con la barra abierta el botón solo aparece al pasar el ratón; cerrada, siempre visible */}
+      <IconButton
+        label={isOpen ? "Cerrar barra lateral" : "Abrir barra lateral"}
         aria-keyshortcuts="Control+Period"
-      >
-        {isOpen ? (
-          <PanelLeftClose size={18} />
-        ) : (
-          <PanelLeftOpen size={18} />
+        shortcut={
+          <KbdGroup>
+            <Kbd>{IS_MAC ? "⌘" : "Ctrl"}</Kbd>
+            <Kbd>.</Kbd>
+          </KbdGroup>
+        }
+        side={isOpen ? "bottom" : "right"}
+        className={cn(
+          "absolute top-2 z-20 [&_svg]:size-[18px]",
+          isOpen ? "right-2 opacity-0 group-hover/sidebar:opacity-100 focus-visible:opacity-100" : "-right-10"
         )}
-
-        {/* Aviso con el atajo al pasar el ratón, como en Notion */}
-        <span className="tooltip" role="tooltip">
-          {toggleLabel}
-          <span className="tooltip__keys">
-            <kbd>{IS_MAC ? "⌘" : "Ctrl"}</kbd>
-            <kbd>.</kbd>
-          </span>
-        </span>
-      </button>
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? <PanelLeftClose /> : <PanelLeftOpen />}
+      </IconButton>
 
       {isOpen && (
-        <aside className="sidebar">
-          <div className="sidebar__brand">
+        <aside className="sticky top-0 flex h-screen w-60 flex-col border-r border-sidebar-border bg-sidebar px-2 pb-4 pt-2.5 text-sidebar-foreground">
+          {/* Logo y nombre arriba, como el espacio de trabajo en Notion */}
+          <div className="mb-3 flex h-8 items-center gap-2 px-2 pr-10 text-sm font-semibold">
             <img src="/favicon.svg" alt="" width={22} height={22} />
             <span>SnapNote</span>
           </div>
 
           {/* Navegación principal */}
-          <nav className="sidebar__menu">
+          <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto">
             {LINKS.map(({ page: linkPage, label, Icon }) => (
               <div key={linkPage}>
-                <div className="sidebar__link-row">
-                  <button
-                    type="button"
-                    className={`sidebar__link ${page === linkPage ? "sidebar__link--active" : ""}`}
+                <div className="group/link relative">
+                  <NavItem
+                    icon={<Icon />}
+                    label={label}
+                    isActive={page === linkPage}
                     onClick={() => (linkPage === "notes" ? onOpenFolder("all") : onNavigate(linkPage))}
-                  >
-                    <Icon size={18} />
-                    <span>{label}</span>
-                  </button>
+                  />
 
                   {/* Como en Notion: el + para crear carpeta aparece al pasar el ratón */}
                   {linkPage === "notes" && (
-                    <button
-                      type="button"
-                      className="sidebar__link-add"
+                    <IconButton
+                      label="Nueva carpeta"
+                      size="icon-xs"
+                      side="right"
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover/link:opacity-100 focus-visible:opacity-100"
                       onClick={onCreateFolder}
-                      aria-label="Nueva carpeta"
-                      title="Nueva carpeta"
                     >
-                      <Plus size={15} />
-                    </button>
+                      <Plus />
+                    </IconButton>
                   )}
                 </div>
 
                 {/* Árbol de carpetas debajo de Notas */}
                 {linkPage === "notes" && (
-                  <div className="sidebar__tree">
+                  <div className="mb-2 ml-3.5 mt-0.5 flex flex-col">
                     {folders.map((folder) => (
                       <FolderRow
                         key={folder.id}
@@ -259,8 +286,12 @@ function Sidebar({
 
                     {/* Sin carpetas, se muestra el atajo para que se sepa cómo crear una */}
                     {folders.length === 0 && (
-                      <button type="button" className="tree-new" onClick={onCreateFolder}>
-                        <Plus size={14} />
+                      <button
+                        type="button"
+                        onClick={onCreateFolder}
+                        className="flex items-center gap-1.5 rounded-md px-1.5 py-1.5 text-left text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                      >
+                        <Plus className="size-3.5" />
                         <span>Nueva carpeta</span>
                       </button>
                     )}
@@ -271,45 +302,23 @@ function Sidebar({
           </nav>
 
           {/* Ajustes y cuenta abajo */}
-          <div className="sidebar__bottom">
-            <button
-              type="button"
-              className={`sidebar__link ${page === "settings" ? "sidebar__link--active" : ""}`}
-              onClick={() => onNavigate("settings")}
-            >
-              <Settings size={18} />
-              <span>Ajustes</span>
-            </button>
-
-            <div className="sidebar__account">
-              {user.photoURL && !hasPhotoError ? (
-                <img
-                  className="sidebar__avatar"
-                  src={user.photoURL}
-                  alt=""
-                  referrerPolicy="no-referrer"
-                  onError={() => setHasPhotoError(true)}
-                />
-              ) : (
-                <span className="sidebar__avatar">{initial}</span>
-              )}
-
-              <div className="sidebar__account-info">
-                <span className="sidebar__account-name" title={name}>{name}</span>
+          <div className="flex flex-col gap-2">
+            <NavItem icon={<Settings />} label="Ajustes" isActive={page === "settings"} onClick={() => onNavigate("settings")} />
+            <Separator />
+            <div className="flex items-center gap-2.5 pl-2.5 pr-1">
+              <Avatar className="size-7">
+                <AvatarImage src={user.photoURL ?? undefined} alt="" referrerPolicy="no-referrer" />
+                <AvatarFallback className="text-xs font-semibold">{name.charAt(0).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="truncate text-[13px]" title={name}>{name}</span>
                 {user.displayName && user.email && (
-                  <span className="sidebar__account-email" title={user.email}>{user.email}</span>
+                  <span className="truncate text-xs text-muted-foreground" title={user.email}>{user.email}</span>
                 )}
               </div>
-
-              <button
-                type="button"
-                className="icon-btn"
-                onClick={onSignOut}
-                aria-label="Cerrar sesión"
-                title="Cerrar sesión"
-              >
-                <LogOut size={16} />
-              </button>
+              <IconButton label="Cerrar sesión" side="top" onClick={onSignOut}>
+                <LogOut />
+              </IconButton>
             </div>
           </div>
         </aside>

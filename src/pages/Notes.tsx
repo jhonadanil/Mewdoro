@@ -1,9 +1,23 @@
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import { FolderPlus, Plus, Trash2 } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 import EmojiPicker from '../components/EmojiPicker'
 import NoteCard from '../components/NoteCard'
 import NoteEditor from '../components/NoteEditor'
 import type { NoteChanges } from '../components/NoteEditor'
+import { Page, PageHeader, PageText, PageTitle } from '../components/Page'
 import type { Folder, FolderView, Note } from '../types'
 import { getNoteFolder } from '../utils/notes'
 
@@ -36,7 +50,7 @@ function FolderTitle({ folder, onRename }: { folder: Folder; onRename: (name: st
 
   return (
     <input
-      className="folder-title"
+      className="min-w-0 flex-1 bg-transparent text-3xl font-bold tracking-tight outline-none placeholder:text-muted-foreground/30"
       placeholder="Sin título"
       value={name}
       onChange={(event) => setName(event.target.value)}
@@ -44,6 +58,15 @@ function FolderTitle({ folder, onRename }: { folder: Folder; onRename: (name: st
       onKeyDown={(event) => event.key === 'Enter' && event.currentTarget.blur()}
       autoFocus={!folder.name}
     />
+  )
+}
+
+// Pestaña de carpeta (filtro) con forma de píldora
+function FolderTab({ isActive, onClick, children }: { isActive: boolean; onClick: () => void; children: ReactNode }) {
+  return (
+    <Button size="sm" variant={isActive ? 'default' : 'outline'} className="rounded-full font-normal" onClick={onClick}>
+      {children}
+    </Button>
   )
 }
 
@@ -67,7 +90,7 @@ export default function Notes({
 }: NotesProps) {
   if (openNote) {
     return (
-      <section className="page">
+      <Page>
         <NoteEditor
           note={openNote}
           folders={folders}
@@ -76,19 +99,11 @@ export default function Notes({
           onDelete={() => onDelete(openNote.id)}
           onTogglePin={() => onTogglePin(openNote.id)}
         />
-      </section>
+      </Page>
     )
   }
 
   const currentFolder = folders.find((folder) => folder.id === view)
-
-  const deleteCurrentFolder = () => {
-    if (!currentFolder) return
-    const name = currentFolder.name || 'Sin título'
-    if (window.confirm(`¿Eliminar la carpeta "${name}"? Sus notas pasarán a "Sin carpeta".`)) {
-      onDeleteFolder(currentFolder.id)
-    }
-  }
 
   const emptyText = query.trim()
     ? `No hay notas que coincidan con "${query.trim()}".`
@@ -97,10 +112,45 @@ export default function Notes({
       : 'Todavía no tienes notas.'
 
   return (
-    <section className="page">
-      <div className="page__header">
+    <Page>
+      <PageHeader
+        actions={
+          <>
+            {currentFolder && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" className="text-muted-foreground">
+                    <Trash2 />
+                    Eliminar carpeta
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      ¿Eliminar la carpeta "{currentFolder.name || 'Sin título'}"?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Las notas no se borran: pasarán a "Sin carpeta".
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction variant="destructive" onClick={() => onDeleteFolder(currentFolder.id)}>
+                      Eliminar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+            <Button onClick={onCreate}>
+              <Plus />
+              Nueva nota
+            </Button>
+          </>
+        }
+      >
         {currentFolder ? (
-          <div className="folder-header">
+          <div className="flex min-w-52 flex-1 items-center gap-2">
             <EmojiPicker value={currentFolder.icon} onChange={(icon) => onUpdateFolder(currentFolder.id, { icon })} />
             <FolderTitle
               key={currentFolder.id}
@@ -109,62 +159,38 @@ export default function Notes({
             />
           </div>
         ) : (
-          <h2 className="page__title">{view === 'none' ? 'Sin carpeta' : 'Todas las notas'}</h2>
+          <PageTitle>{view === 'none' ? 'Sin carpeta' : 'Todas las notas'}</PageTitle>
         )}
-
-        <div className="page__actions">
-          {currentFolder && (
-            <button type="button" className="btn btn--ghost" onClick={deleteCurrentFolder}>
-              <Trash2 size={16} />
-              Eliminar carpeta
-            </button>
-          )}
-          <button type="button" className="btn btn--primary" onClick={onCreate}>
-            <Plus size={16} />
-            Nueva nota
-          </button>
-        </div>
-      </div>
+      </PageHeader>
 
       {/* Pestañas de carpetas */}
-      <div className="folder-tabs">
-        <button
-          type="button"
-          className={`folder-tab ${view === 'all' ? 'folder-tab--active' : ''}`}
-          onClick={() => onChangeView('all')}
-        >
+      <div className="mt-5 flex flex-wrap gap-1.5">
+        <FolderTab isActive={view === 'all'} onClick={() => onChangeView('all')}>
           Todas
-        </button>
+        </FolderTab>
         {folders.map((folder) => (
-          <button
-            key={folder.id}
-            type="button"
-            className={`folder-tab ${view === folder.id ? 'folder-tab--active' : ''}`}
-            onClick={() => onChangeView(folder.id)}
-          >
+          <FolderTab key={folder.id} isActive={view === folder.id} onClick={() => onChangeView(folder.id)}>
             {folder.icon} {folder.name || 'Sin título'}
-          </button>
+          </FolderTab>
         ))}
         {/* Filtro para las notas que no están en ninguna carpeta; solo si hay alguna */}
         {(hasNotesWithoutFolder || view === 'none') && (
-          <button
-            type="button"
-            className={`folder-tab ${view === 'none' ? 'folder-tab--active' : ''}`}
-            onClick={() => onChangeView('none')}
-          >
+          <FolderTab isActive={view === 'none'} onClick={() => onChangeView('none')}>
             Sin carpeta
-          </button>
+          </FolderTab>
         )}
-        <button type="button" className="folder-tab folder-tab--add" onClick={onCreateFolder}>
-          <FolderPlus size={14} />
+        <Button size="sm" variant="ghost" className="rounded-full border border-dashed font-normal text-muted-foreground" onClick={onCreateFolder}>
+          <FolderPlus />
           Nueva carpeta
-        </button>
+        </Button>
       </div>
 
       {notes.length === 0 ? (
-        <p className="page__text">{emptyText}</p>
+        <div className="mt-6">
+          <PageText>{emptyText}</PageText>
+        </div>
       ) : (
-        <div className="notes-grid">
+        <div className="mt-6 grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] items-start gap-3">
           {notes.map((note) => (
             <NoteCard
               key={note.id}
@@ -177,6 +203,6 @@ export default function Notes({
           ))}
         </div>
       )}
-    </section>
+    </Page>
   )
 }

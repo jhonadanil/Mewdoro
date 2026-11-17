@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { ArrowDownToLine, ChevronLeft, ChevronRight, Pin, PinOff } from 'lucide-react'
+import { IconButton } from '@/components/IconButton'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import AddTask from '../components/AddTask'
+import { Page, PageHeader, PageTitle } from '../components/Page'
 import TaskItem from '../components/TaskItem'
 import type { TaskChanges } from '../hooks/useTasks'
 import type { Task } from '../types'
@@ -29,43 +33,44 @@ export default function Tasks({ tasks, isPinned, onTogglePin, onAdd, onUpdate, o
   const overdue = day === today ? tasks.filter((task) => task.date < today && !task.done) : []
 
   return (
-    <section className="page page--compact">
-      <div className="page__header">
-        <h2 className="page__title">Tareas</h2>
-        <button type="button" className="btn" onClick={onTogglePin}>
-          {isPinned ? <PinOff size={16} /> : <Pin size={16} />}
-          {isPinned ? 'Quitar de inicio' : 'Fijar en inicio'}
-        </button>
-      </div>
+    <Page narrow>
+      <PageHeader
+        actions={
+          <Button variant="outline" onClick={onTogglePin}>
+            {isPinned ? <PinOff /> : <Pin />}
+            {isPinned ? 'Quitar de inicio' : 'Fijar en inicio'}
+          </Button>
+        }
+      >
+        <PageTitle>Tareas</PageTitle>
+      </PageHeader>
 
       {/* Selector de día */}
-      <div className="tasks-day">
-        <button type="button" className="icon-btn" onClick={() => setDay(shiftDateKey(day, -1))} aria-label="Día anterior">
-          <ChevronLeft size={18} />
-        </button>
-        <span className="tasks-day__label">{formatDayLabel(day)}</span>
-        <button type="button" className="icon-btn" onClick={() => setDay(shiftDateKey(day, 1))} aria-label="Día siguiente">
-          <ChevronRight size={18} />
-        </button>
+      <div className="mb-3 mt-5 flex items-center gap-1">
+        <IconButton label="Día anterior" onClick={() => setDay(shiftDateKey(day, -1))}>
+          <ChevronLeft />
+        </IconButton>
+        <span className="min-w-[90px] text-center text-lg font-semibold first-letter:uppercase">{formatDayLabel(day)}</span>
+        <IconButton label="Día siguiente" onClick={() => setDay(shiftDateKey(day, 1))}>
+          <ChevronRight />
+        </IconButton>
         {day !== today && (
-          <button type="button" className="btn btn--ghost" onClick={() => setDay(today)}>
+          <Button variant="ghost" className="text-muted-foreground" onClick={() => setDay(today)}>
             Volver a hoy
-          </button>
+          </Button>
         )}
       </div>
 
       {dayTasks.length > 0 && (
-        <div className="tasks-progress">
-          <div className="pomodoro__progress">
-            <div className="pomodoro__progress-bar" style={{ width: `${progress * 100}%` }} />
-          </div>
+        <div className="mb-3 flex items-center gap-3 whitespace-nowrap text-[13px] text-muted-foreground">
+          <Progress value={progress * 100} className="h-1.5 **:data-[slot=progress-indicator]:bg-brand" />
           <span>
             {doneTasks.length} de {dayTasks.length}
           </span>
         </div>
       )}
 
-      <div className="task-list">
+      <div className="flex flex-col">
         {dayTasks.map((task) => (
           <TaskItem key={`${task.id}-${task.text}`} task={task} onUpdate={onUpdate} onDelete={onDelete} />
         ))}
@@ -73,21 +78,31 @@ export default function Tasks({ tasks, isPinned, onTogglePin, onAdd, onUpdate, o
       </div>
 
       {doneTasks.length > 0 && (
-        <button type="button" className="btn btn--ghost tasks-clear" onClick={() => onDeleteMany(doneTasks.map((task) => task.id))}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mt-2 text-muted-foreground"
+          onClick={() => onDeleteMany(doneTasks.map((task) => task.id))}
+        >
           Borrar completadas
-        </button>
+        </Button>
       )}
 
       {overdue.length > 0 && (
-        <div className="tasks-overdue">
-          <div className="tasks-overdue__header">
-            <h3 className="settings__section">Pendientes de días anteriores</h3>
-            <button type="button" className="btn btn--ghost" onClick={() => onMove(overdue.map((task) => task.id), today)}>
-              <ArrowDownToLine size={16} />
+        <div className="mt-7">
+          <div className="flex items-end justify-between gap-3 border-b pb-1">
+            <h3 className="pb-1 text-sm font-semibold">Pendientes de días anteriores</h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
+              onClick={() => onMove(overdue.map((task) => task.id), today)}
+            >
+              <ArrowDownToLine />
               Pasar todas a hoy
-            </button>
+            </Button>
           </div>
-          <div className="task-list">
+          <div className="flex flex-col">
             {overdue.map((task) => (
               <TaskItem
                 key={`${task.id}-${task.text}`}
@@ -96,21 +111,15 @@ export default function Tasks({ tasks, isPinned, onTogglePin, onAdd, onUpdate, o
                 onDelete={onDelete}
                 meta={formatShortDay(task.date)}
                 actions={
-                  <button
-                    type="button"
-                    className="icon-btn"
-                    onClick={() => onMove([task.id], today)}
-                    aria-label="Pasar a hoy"
-                    title="Pasar a hoy"
-                  >
-                    <ArrowDownToLine size={14} />
-                  </button>
+                  <IconButton label="Pasar a hoy" size="icon-xs" onClick={() => onMove([task.id], today)}>
+                    <ArrowDownToLine />
+                  </IconButton>
                 }
               />
             ))}
           </div>
         </div>
       )}
-    </section>
+    </Page>
   )
 }

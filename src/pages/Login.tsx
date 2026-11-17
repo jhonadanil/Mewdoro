@@ -7,6 +7,10 @@ import {
   signInWithPopup,
 } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Separator } from '@/components/ui/separator'
 import { auth, googleProvider } from '../firebase'
 
 type Mode = 'login' | 'register'
@@ -75,19 +79,19 @@ export default function Login() {
   }
 
   return (
-    <div className="login">
-      <div className="login__card">
-        <h1 className="login__brand">
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="w-full max-w-sm gap-3.5 px-7 py-8">
+        <h1 className="flex items-center gap-3 text-2xl font-bold">
           <img src="/favicon.svg" alt="" width={36} height={36} />
           SnapNote
         </h1>
-        <p className="login__subtitle">
+        <p className="mb-1 text-sm text-muted-foreground">
           {isRegister ? 'Crea una cuenta para guardar tus notas y ajustes.' : 'Inicia sesión para ver tus notas.'}
         </p>
 
-        <form className="login__form" onSubmit={handleSubmit}>
-          <input
-            className="input"
+        <form className="flex flex-col gap-2.5" onSubmit={handleSubmit}>
+          <Input
+            className="h-9 bg-background"
             type="email"
             placeholder="Email"
             autoComplete="email"
@@ -95,8 +99,8 @@ export default function Login() {
             onChange={(event) => setEmail(event.target.value)}
             required
           />
-          <input
-            className="input"
+          <Input
+            className="h-9 bg-background"
             type="password"
             placeholder="Contraseña"
             autoComplete={isRegister ? 'new-password' : 'current-password'}
@@ -105,36 +109,40 @@ export default function Login() {
             required
           />
 
-          {error && <p className="login__error">{error}</p>}
-          {info && <p className="login__info">{info}</p>}
+          {error && <p className="text-[13px] text-destructive">{error}</p>}
+          {info && <p className="text-[13px]">{info}</p>}
 
-          <button type="submit" className="btn btn--primary btn--block" disabled={isLoading}>
+          <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
             {isRegister ? 'Crear cuenta' : 'Iniciar sesión'}
-          </button>
+          </Button>
         </form>
 
         {!isRegister && (
-          <button type="button" className="login__link" onClick={resetPassword} disabled={isLoading}>
+          <Button variant="link" size="sm" className="self-center text-[13px]" onClick={resetPassword} disabled={isLoading}>
             ¿Olvidaste tu contraseña?
-          </button>
+          </Button>
         )}
 
-        <div className="login__divider">o</div>
+        <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
+          <Separator className="flex-1" />o<Separator className="flex-1" />
+        </div>
 
-        <button
-          type="button"
-          className="btn btn--block"
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full"
           onClick={() => run(() => signInWithPopup(auth, googleProvider))}
           disabled={isLoading}
         >
           Continuar con Google
-        </button>
+        </Button>
 
-        <p className="login__switch">
+        <p className="mt-1 text-center text-[13px] text-muted-foreground">
           {isRegister ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}{' '}
-          <button
-            type="button"
-            className="login__link"
+          <Button
+            variant="link"
+            size="sm"
+            className="h-auto p-0 text-[13px] text-foreground"
             onClick={() => {
               setMode(isRegister ? 'login' : 'register')
               setError('')
@@ -142,9 +150,9 @@ export default function Login() {
             }}
           >
             {isRegister ? 'Inicia sesión' : 'Crea una'}
-          </button>
+          </Button>
         </p>
-      </div>
+      </Card>
     </div>
   )
 }

@@ -133,7 +133,8 @@ export function useNotes(uid: string) {
     window.clearTimeout(timers.current.get(id))
     timers.current.delete(id)
     setPending((current) => {
-      const { [id]: _deleted, ...rest } = current
+      const rest = { ...current }
+      delete rest[id]
       return rest
     })
     deleteDoc(doc(notesCollection(uid), id)).catch((error) => console.error('No se pudo eliminar la nota', error))
