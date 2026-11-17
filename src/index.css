@@ -225,3 +225,18 @@
 }
 /* Con movimiento reducido RotatingTitle muestra directamente la frase final, sin animación */
 
+
+/* Zonas desplazables de Inicio (notas fijadas y tareas): barra fina que solo aparece al pasar
+   el ratón (el difuminado inferior de ScrollArea ya avisa de que hay más contenido).
+   Se usan las propiedades estándar y no ::-webkit-scrollbar: Chrome no repinta el thumb de
+   ::-webkit-scrollbar al cambiar :hover hasta que se desplaza, y la barra aparecía tarde o se quedaba.
+   El hueco de la barra existe siempre, así que el contenido no se mueve al aparecer. */
+@layer components {
+  .scroll-area {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .scroll-area:hover {
+    scrollbar-color: color-mix(in srgb, var(--foreground) 30%, transparent) transparent;
+  }
+}

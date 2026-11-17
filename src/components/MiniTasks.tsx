@@ -1,15 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { ArrowLineDownIcon } from '@phosphor-icons/react'
 import { IconButton } from '@/components/IconButton'
 import { MiniCard } from '@/components/MiniCard'
+import { ScrollArea } from '@/components/ScrollArea'
 import { cn } from '@/lib/utils'
 import AddTask from './AddTask'
 import { TaskCheckbox } from './TaskItem'
 import type { TaskChanges } from '../hooks/useTasks'
 import type { Task } from '../types'
 import { formatShortDay, todayKey } from '../utils/tasks'
-
-const MAX_VISIBLE = 6
 
 interface MiniTasksProps {
   tasks: Task[]
@@ -23,20 +22,15 @@ interface MiniTasksProps {
 // Versión pequeña de las tareas de hoy para fijarla en Inicio
 export default function MiniTasks({ tasks, onOpen, onUnpin, onAdd, onUpdate, className }: MiniTasksProps) {
   const addInput = useRef<HTMLInputElement>(null)
-  // "+N más" despliega la lista aquí mismo en vez de llevar a la página de Tareas
-  const [expanded, setExpanded] = useState(false)
   const today = todayKey()
   const todayTasks = tasks.filter((task) => task.date === today)
   // Pendientes de días anteriores, como en la página de Tareas
   const overdue = tasks.filter((task) => task.date < today && !task.done)
   const done = todayTasks.filter((task) => task.done).length
 
-  // Si caben todas, se quedan en su orden: así una tarea no salta bajo el cursor al marcarla.
-  // Si no caben, primero las pendientes, para que se vea lo que falta
-  const all = [...overdue, ...todayTasks]
-  const fits = expanded || all.length <= MAX_VISIBLE
-  const visible = fits ? all : [...overdue, ...[...todayTasks].sort((a, b) => Number(a.done) - Number(b.done))].slice(0, MAX_VISIBLE)
-  const hidden = all.length - visible.length
+  // Primero las atrasadas y luego las de hoy, siempre en su orden: así una tarea no salta bajo
+  // el cursor al marcarla. Todas están en la lista; si no caben, se baja con la rueda
+  const visible = [...overdue, ...todayTasks]
 
   // Alt + N enfoca "Añadir tarea" desde cualquier sitio de Inicio
   useEffect(() => {
@@ -55,7 +49,13 @@ export default function MiniTasks({ tasks, onOpen, onUnpin, onAdd, onUpdate, cla
 
   return (
     <MiniCard label={label} onOpen={onOpen} openLabel="Abrir Tareas" onUnpin={onUnpin} className={className}>
-      <div className="flex flex-col gap-1.5">
+      {/* Unas 7 filas a la vista; el relleno (compensado con margen negativo) deja sitio a los
+          anillos de foco y a los botones, que si no quedarían recortados por el desplazamiento */}
+      <ScrollArea
+        watch={visible.length}
+        scrollToEndWhenGrows={todayTasks.length}
+        className="-mx-1 -my-1 flex max-h-52 flex-col gap-1.5 px-1 py-1"
+      >
         {visible.length === 0 && <p className="text-[13px] text-muted-foreground">No hay tareas para hoy.</p>}
         {visible.map((task) => {
           const isOverdue = task.date < today
@@ -81,17 +81,7 @@ export default function MiniTasks({ tasks, onOpen, onUnpin, onAdd, onUpdate, cla
             </div>
           )
         })}
-        {(hidden > 0 || (expanded && all.length > MAX_VISIBLE)) && (
-          <button
-            type="button"
-            onClick={() => setExpanded(!expanded)}
-            aria-expanded={expanded}
-            className="self-start rounded-sm text-xs text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            {expanded ? 'Ver menos' : `+${hidden} más`}
-          </button>
-        )}
-      </div>
+      </ScrollArea>
 
       <AddTask
         onAdd={(text) => onAdd(text, today)}

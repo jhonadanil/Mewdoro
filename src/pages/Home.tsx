@@ -7,6 +7,7 @@ import MiniCalendar from '../components/MiniCalendar'
 import MiniPomodoro from '../components/MiniPomodoro'
 import MiniTasks from '../components/MiniTasks'
 import NoteCard from '../components/NoteCard'
+import type { NoteCardVariant } from '../components/NoteCard'
 import { Page, PageText, PageTitle } from '../components/Page'
 import { RotatingTitle } from '../components/RotatingTitle'
 import { usePomodoroContext } from '../hooks/PomodoroContext'
@@ -41,8 +42,11 @@ function pomodoroStatus(pomodoro: Pomodoro) {
   return null
 }
 
-// Notas: tarjetas pequeñas que se reparten solas
-const NOTES_GRID = 'grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] items-start gap-3'
+// Resultados de búsqueda: tarjetas pequeñas que se reparten solas
+const RESULTS_GRID = 'grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] items-start gap-3'
+// Notas fijadas: tarjetas grandes, una columna en estrecho y dos en cuanto caben (container query),
+// para que se lea el contenido y no solo el título. Columnas que fluyen, sin huecos entre tarjetas de distinta altura
+const PINNED_GRID = 'columns-1 gap-4 @xl:columns-2 *:mb-4 *:break-inside-avoid'
 // Herramientas: columnas según el ancho real del contenido (container queries), no de la ventana
 const TOOLS_GRID = 'grid grid-cols-1 items-start gap-3 @md:grid-cols-2 @3xl:grid-cols-3'
 // Tareas es lo principal del día: ocupa dos columnas para que su lista no se corte
@@ -151,14 +155,14 @@ export default function Home({
   const now = useClock()
   const today = toDateKey(now)
 
-  const renderNote = (note: Note) => (
+  const renderNote = (note: Note, variant: NoteCardVariant) => (
     <NoteCard
       key={note.id}
       note={note}
       folder={getNoteFolder(note, folders)}
       onOpen={onOpenNote}
       onTogglePin={onTogglePinNote}
-      compact
+      variant={variant}
     />
   )
 
@@ -179,7 +183,7 @@ export default function Home({
             </Button>
           </>
         ) : (
-          <div className={cn(NOTES_GRID, 'mt-5')}>{searchResults.map(renderNote)}</div>
+          <div className={cn(RESULTS_GRID, 'mt-5')}>{searchResults.map((note) => renderNote(note, 'compact'))}</div>
         )}
       </Page>
     )
@@ -245,11 +249,11 @@ export default function Home({
       )}
 
       {pinnedNotes.length > 0 && (
-        <section aria-labelledby="pinned-notes" className={hasTools ? 'mt-10' : 'mt-6'}>
+        <section aria-labelledby="pinned-notes" className={cn('@container', hasTools ? 'mt-10' : 'mt-6')}>
           <h2 id="pinned-notes" className="mb-3 text-sm font-semibold text-muted-foreground">
             Notas fijadas
           </h2>
-          <div className={NOTES_GRID}>{pinnedNotes.map(renderNote)}</div>
+          <div className={PINNED_GRID}>{pinnedNotes.map((note) => renderNote(note, 'pinned'))}</div>
         </section>
       )}
     </Page>
