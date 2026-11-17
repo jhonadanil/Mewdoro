@@ -1,58 +1,51 @@
-import { useEffect, useState } from 'react'
+import { Pause, Play, RotateCcw } from 'lucide-react'
+import { MODE_LABELS, formatTime } from '../hooks/usePomodoro'
+import type { Pomodoro } from '../hooks/usePomodoro'
+import type { PomodoroMode } from '../types'
 
-const WORK_MINUTES = 25
-const BREAK_MINUTES = 5
+const MODES: PomodoroMode[] = ['work', 'shortBreak', 'longBreak']
 
-type Mode = 'work' | 'break'
+interface PomodoroTimerProps {
+  pomodoro: Pomodoro
+}
 
-export default function PomodoroTimer() {
-  const [mode, setMode] = useState<Mode>('work')
-  const [secondsLeft, setSecondsLeft] = useState(WORK_MINUTES * 60)
-  const [isRunning, setIsRunning] = useState(false)
-
-  useEffect(() => {
-    if (!isRunning) return
-
-    const id = window.setInterval(() => {
-      setSecondsLeft((current) => {
-        if (current > 0) return current - 1
-
-        const nextMode: Mode = mode === 'work' ? 'break' : 'work'
-        setMode(nextMode)
-        return (nextMode === 'work' ? WORK_MINUTES : BREAK_MINUTES) * 60
-      })
-    }, 1000)
-
-    return () => window.clearInterval(id)
-  }, [isRunning, mode])
-
-  const minutes = Math.floor(secondsLeft / 60)
-  const seconds = secondsLeft % 60
-
-  const reset = () => {
-    setIsRunning(false)
-    setMode('work')
-    setSecondsLeft(WORK_MINUTES * 60)
-  }
+export default function PomodoroTimer({ pomodoro }: PomodoroTimerProps) {
+  const { mode, secondsLeft, duration, isRunning, completedWork, toggle, reset, changeMode } = pomodoro
+  const progress = 1 - secondsLeft / duration
 
   return (
     <div className="pomodoro">
-      <p className="pomodoro__mode">{mode === 'work' ? 'Trabajo' : 'Descanso'}</p>
-      <p className="pomodoro__time">
-        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
-      </p>
+      <div className="pomodoro__modes">
+        {MODES.map((item) => (
+          <button
+            key={item}
+            type="button"
+            className={`pomodoro__mode ${mode === item ? 'pomodoro__mode--active' : ''}`}
+            onClick={() => changeMode(item)}
+          >
+            {MODE_LABELS[item]}
+          </button>
+        ))}
+      </div>
+
+      <p className="pomodoro__time">{formatTime(secondsLeft)}</p>
+
+      <div className="pomodoro__progress">
+        <div className="pomodoro__progress-bar" style={{ width: `${progress * 100}%` }} />
+      </div>
+
       <div className="pomodoro__actions">
-        <button
-          type="button"
-          className="btn btn--primary"
-          onClick={() => setIsRunning((v) => !v)}
-        >
+        <button type="button" className="btn btn--primary" onClick={toggle}>
+          {isRunning ? <Pause size={16} /> : <Play size={16} />}
           {isRunning ? 'Pausar' : 'Iniciar'}
         </button>
         <button type="button" className="btn" onClick={reset}>
+          <RotateCcw size={16} />
           Reiniciar
         </button>
       </div>
+
+      <p className="pomodoro__count">Pomodoros completados: {completedWork}</p>
     </div>
   )
 }

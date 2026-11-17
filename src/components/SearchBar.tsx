@@ -1,38 +1,37 @@
 
-import { useState, useEffect } from "react";
 import { Search, Sun, Moon } from "lucide-react";
+import type { Theme } from "../types";
 
-function SearchBar() {
-  const [theme, setTheme] = useState<"dark" | "light">(() => {
-    const savedTheme = localStorage.getItem("theme");
-    return savedTheme === "light" ? "light" : "dark";
-  });
+interface SearchBarProps {
+  query: string;
+  onQueryChange: (query: string) => void;
+  showSearch: boolean;
+  theme: Theme;
+  onToggleTheme: () => void;
+}
 
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
+function SearchBar({ query, onQueryChange, showSearch, theme, onToggleTheme }: SearchBarProps) {
   return (
     <header className="searchbar">
 
-      <div className="searchbar__search">
-        <Search size={20} />
+      {/* El buscador solo se muestra en Inicio y Notas */}
+      {showSearch && (
+        <div className="searchbar__search">
+          <Search size={20} />
 
-        <input
-          type="text"
-          placeholder="Buscar notas..."
-          className="searchbar__input"
-        />
-      </div>
+          <input
+            type="text"
+            placeholder="Buscar notas..."
+            className="searchbar__input"
+            value={query}
+            onChange={(event) => onQueryChange(event.target.value)}
+          />
+        </div>
+      )}
 
       <button
         className="searchbar__theme"
-        onClick={toggleTheme}
+        onClick={onToggleTheme}
         aria-label="Cambiar tema"
       >
         {theme === "dark" ? (

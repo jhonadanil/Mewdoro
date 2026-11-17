@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SnapNote">
+  <!-- Nota adhesiva con la esquina doblada y la S de SnapNote -->
+  <path d="M12 8h40a2 2 0 0 1 2 2v30L40 56H12a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2Z" fill="#ffd43b"/>
+  <path d="M54 40H42a2 2 0 0 0-2 2v14Z" fill="#e0a800"/>
+  <path d="M40 23.5c-2-2-5-3-8-3-5 0-8 2.5-8 6s3 5 8 6 8 2.5 8 6-3 6-8.5 6c-3.5 0-6.5-1.2-8.5-3.5" fill="none" stroke="#191919" stroke-width="5" stroke-linecap="round"/>
+</svg>
