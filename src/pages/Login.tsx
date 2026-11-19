@@ -140,6 +140,7 @@ export default function Login({ mode }: LoginProps) {
               </label>
               <Input
                 id={ids.email}
+                className="focus-visible:border-foreground/40 focus-visible:ring-0"
                 type="email"
                 placeholder="tu@email.com"
                 autoComplete="email"
@@ -169,7 +170,7 @@ export default function Login({ mode }: LoginProps) {
               <div className="relative">
                 <Input
                   id={ids.password}
-                  className="pr-11"
+                  className="pr-11 focus-visible:border-foreground/40 focus-visible:ring-0"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete={isRegister ? 'new-password' : 'current-password'}
                   aria-describedby={isRegister ? ids.hint : undefined}

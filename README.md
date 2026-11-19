@@ -30,6 +30,9 @@
 - **Pomodoro**: trabajo, descanso corto y descanso largo configurables, con sonido opcional y la opción de empezar el siguiente bloque solo.
 - **Calendario** con vista semanal y mensual: cada día muestra sus tareas flash y sus rutinas. También se puede fijar en Inicio.
 - **Búsqueda** de notas por título, contenido o tipo.
+- **Landing y acceso**
+  - Sin sesión, una página de presentación con una demo viva de Inicio (tareas, Pomodoro y rutinas con datos de ejemplo, sin guardar nada) y el editor de código de verdad.
+  - Pantalla de inicio de sesión y de registro con etiquetas visibles, mostrar u ocultar la contraseña y botón para volver. Se navega con `#entrar` y `#registro`, así que el botón Atrás funciona.
 - **Cuentas** con email y contraseña o con Google. Notas, tareas, rutinas y ajustes se guardan en la nube y funcionan sin conexión.
 - **Tema claro y oscuro** con la paleta [Catppuccin](https://catppuccin.com/) (Latte y Mocha), formas redondeadas y superficies planas con borde fino, al estilo de la interfaz de Ollama.
 
@@ -113,7 +116,7 @@ SnapNote/
 │   └── favicon.svg          # Logo
 ├── src/
 │   ├── main.tsx             # Punto de entrada
-│   ├── App.tsx              # Login o app según la sesión
+│   ├── App.tsx              # Landing, login o app según la sesión
 │   ├── Workspace.tsx        # App con la sesión iniciada: estado y navegación
 │   ├── firebase.ts          # Configuración de Firebase
 │   ├── index.css            # Tailwind, tema de shadcn/ui con la paleta Catppuccin
@@ -124,8 +127,9 @@ SnapNote/
 │   │   ├── SideBar.tsx      # Barra lateral con el árbol de carpetas
 │   │   ├── NoteEditor.tsx   # Editor de notas estilo Notion
 │   │   ├── CodeEditor.tsx   # Editor de código estilo VS Code
-│   │   └── …                # Tarjetas, tareas, Pomodoro, menús…
-│   ├── pages/               # Inicio, Notas, Tareas flash, Pomodoro, Calendario, Rutinas, Ajustes, Login
+│   │   ├── landing/         # Demo viva de la landing (cabina, semana, editor) y sus datos de ejemplo
+│   │   └── …                # Tarjetas, tareas, rutinas, Pomodoro, menús…
+│   ├── pages/               # Landing, Login, Inicio, Notas, Tareas flash, Pomodoro, Calendario, Rutinas, Ajustes
 │   ├── hooks/               # Datos de Firebase (notas, carpetas, tareas, rutinas, ajustes) y Pomodoro
 │   ├── utils/               # Lógica sin interfaz: fechas, rutinas (rachas, progreso), búsqueda, resaltado, atajos de código
 │   ├── lib/utils.ts         # cn() para combinar clases de Tailwind (shadcn/ui)

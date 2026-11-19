@@ -240,6 +240,8 @@ Home reads in three bands: **the day** (date title and a one-line status), **the
 
 **Rutinas** reads top-down: a "Hoy" checklist (wide screens), week navigation with a Semana / Mes switch, the week table (routines by days) or the month calendar, then a Seguimiento list with streak, weekly count and 30-day adherence. Below 768px the table becomes a 7-day strip plus the chosen day's list with 44px checks. **Calendario** has the same Semana / Mes switch: seven day cards or a month grid, each showing the day's flash tasks and routines.
 
+**Landing and login** (logged-out only, chosen by the URL hash: none, `#entrar`, `#registro`). The landing uses the same 960px column and reads top-down: a slim bar (logo, theme toggle, Entrar, Crear cuenta), a left-aligned headline with the two actions, **Inicio running with example data** (the real Tareas flash, Pomodoro and Rutinas cards on the app's own grid, labeled as a demo), then two text-plus-live-fragment sections (the real code editor; the week table, full width and stacked) and a closing call to action. Login is two columns from 768px (a quiet support column on the Mantle color, the form on Base) and a single form column below, with a back link and visible labels.
+
 Rhythm is tight inside a band and generous between bands, on Tailwind's 4px grid. Density is moderate: more air than a dev tool, less than a marketing page.
 
 ## Elevation & Depth
@@ -288,6 +290,9 @@ A pill with a 1px border and 2px padding holding two or three pill buttons (Sema
 
 ### Day check (signature)
 The 28px circle used by routines (44px on touch). Unchecked: a 1px border at 80% Subtext. Done: filled Mauve with a bold check. Days when the routine does not apply are a quiet 6px dot; future days are disabled at 50% opacity; a mark that already exists is always shown and can always be undone. Checks are real buttons with `aria-pressed` and a label that names routine and date.
+
+### Landing demo (signature)
+The landing proves the product by running it. Demo cards are the real Mini-Card look (chip label, 21.6px flat card) without the unpin button, and use the real components (task checkbox, day check, routine list, code editor) over synthetic data relative to today, labeled "Demo con datos de ejemplo. Pruébala: nada se guarda". The routine card and the week table share one state, so marking one updates the other. Motion is one moment: the demo cards rise in once, staggered 90ms, and not at all under `prefers-reduced-motion`. Nested bordered cards are avoided: routine rows inside a card are plain rows (`variant="plain"`).
 
 ### Pinned Mini-Card
 A compact card with a chip label top-left (opens the full page) and an unpin icon top-right, holding a live miniature of a tool: today's flash tasks, today's routines, the month, or the running timer in 28px tabular numerals. A running Pomodoro lights its border Mauve.
