@@ -11,6 +11,7 @@ import type { NoteType } from '../types'
 // Nombre del lenguaje en Prism para cada tipo de nota
 const PRISM_LANGUAGES: Record<NoteType, string | null> = {
   text: null,
+  checklist: null,
   bash: 'bash',
   python: 'python',
   html: 'markup',
@@ -66,6 +67,7 @@ export function highlightCode(code: string, type: NoteType) {
 // Comentarios de cada lenguaje: de línea (#, //, --) o de bloque (/* */, <!-- -->)
 const COMMENT_SYNTAX: Record<NoteType, { line?: string; block?: [string, string] }> = {
   text: {},
+  checklist: {},
   bash: { line: '#' },
   python: { line: '#' },
   html: { block: ['<!--', '-->'] },

@@ -2,6 +2,7 @@ export type Page = 'home' | 'notes' | 'pomodoro' | 'tasks' | 'calendar' | 'routi
 
 export type NoteType =
   | 'text'
+  | 'checklist'
   | 'bash'
   | 'python'
   | 'html'

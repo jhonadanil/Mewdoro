@@ -5,6 +5,7 @@ import { IconButton } from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
+import ChecklistEditor from './ChecklistEditor'
 import CodeEditor from './CodeEditor'
 import Dropdown from './Dropdown'
 import type { Folder, Note, NoteType } from '../types'
@@ -25,6 +26,7 @@ interface NoteEditorProps {
 export default function NoteEditor({ note, folders, onChange, onClose, onDelete, onTogglePin }: NoteEditorProps) {
   const folder = getNoteFolder(note, folders)
   const contentRef = useRef<HTMLTextAreaElement>(null)
+  const checklistRef = useRef<HTMLInputElement>(null)
   const [isCopied, setIsCopied] = useState(false)
   const isCode = isCodeNote(note)
 
@@ -40,7 +42,7 @@ export default function NoteEditor({ note, folders, onChange, onClose, onDelete,
   const handleTitleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key !== 'Enter') return
     event.preventDefault()
-    contentRef.current?.focus()
+    ;(contentRef.current ?? checklistRef.current)?.focus()
   }
 
   const changeContent = (content: string) => onChange({ content })
@@ -119,7 +121,9 @@ export default function NoteEditor({ note, folders, onChange, onClose, onDelete,
           autoFocus={!note.title && !note.content}
         />
 
-        {isCode ? (
+        {note.type === 'checklist' ? (
+          <ChecklistEditor value={note.content} onChange={changeContent} firstInputRef={checklistRef} />
+        ) : isCode ? (
           // Bloque de código como en VS Code: lenguaje y botón de copiar en la cabecera
           <div className="overflow-hidden rounded-md border bg-(--code-bg)">
             <div className="flex items-center justify-between border-b border-(--code-border) py-1 pl-3.5 pr-1.5 text-xs text-(--code-gutter)">

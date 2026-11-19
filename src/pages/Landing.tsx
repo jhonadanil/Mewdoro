@@ -53,7 +53,7 @@ export default function Landing() {
       <header className={`${SECTION} flex items-center justify-between py-4`}>
         <a href="#" className="flex items-center gap-2.5 rounded-full text-lg font-bold focus-visible:outline-2 focus-visible:outline-offset-4">
           <img src="/favicon.svg" alt="" width={28} height={28} />
-          SnapNote
+          Mewdoro
         </a>
         <nav aria-label="Cuenta" className="flex items-center gap-1.5">
           <IconButton label={theme === 'dark' ? 'Tema claro' : 'Tema oscuro'} onClick={toggleTheme}>
@@ -146,7 +146,7 @@ export default function Landing() {
 
         <section className={`${SECTION} py-16`}>
           <div className="rounded-2xl border p-8 sm:p-12">
-            <h2 className="max-w-[20ch] text-3xl font-bold tracking-tight text-balance">Empieza tu día en SnapNote</h2>
+            <h2 className="max-w-[20ch] text-3xl font-bold tracking-tight text-balance">Empieza tu día en Mewdoro</h2>
             <p className="mt-3 max-w-md text-muted-foreground">Crea una cuenta con tu email o con Google y fija en Inicio lo que usas cada día.</p>
             <div className="mt-6 flex flex-wrap gap-2">
               <Button size="lg" onClick={() => goToAuthRoute('register')}>
@@ -161,7 +161,7 @@ export default function Landing() {
       </main>
 
       <footer className={SECTION}>
-        <p className="border-t py-6 text-[13px] text-muted-foreground">SnapNote</p>
+        <p className="border-t py-6 text-[13px] text-muted-foreground">Mewdoro</p>
       </footer>
     </div>
   )

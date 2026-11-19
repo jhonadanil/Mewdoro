@@ -12,11 +12,11 @@ Students and developers who study or write code and want their notes, code snipp
 
 ## Product Purpose
 
-SnapNote is a personal workspace for the daily study or coding routine. It brings together Notion-style notes, a VS Code-style code editor inside notes, daily tasks, a Pomodoro timer and a monthly calendar. It succeeds when a user opens it at the start of a session and runs the whole day from it, without switching between a notes app, an editor, a to-do list and a timer.
+Mewdoro is a personal workspace for the daily study or coding routine. It brings together Notion-style notes, a VS Code-style code editor inside notes, daily tasks, a Pomodoro timer and a monthly calendar. It succeeds when a user opens it at the start of a session and runs the whole day from it, without switching between a notes app, an editor, a to-do list and a timer.
 
 ## Positioning
 
-SnapNote is built around the daily ritual, not around documents. Home is a dashboard the user arranges: pinned notes, today's tasks (including overdue ones from earlier days), the calendar and the Pomodoro timer are all on one screen. Notion, VS Code and a separate Pomodoro app each cover one part of the day; SnapNote covers the whole day for students and developers.
+Mewdoro is built around the daily ritual, not around documents. Home is a dashboard the user arranges: pinned notes, today's tasks (including overdue ones from earlier days), the calendar and the Pomodoro timer are all on one screen. Notion, VS Code and a separate Pomodoro app each cover one part of the day; Mewdoro covers the whole day for students and developers.
 
 ## Operating Context
 
@@ -41,7 +41,7 @@ SnapNote is built around the daily ritual, not around documents. Home is a dashb
 
 ## Brand Commitments
 
-- Name: SnapNote. Logo at `public/favicon.svg`.
+- Name: Mewdoro. Logo at `public/favicon.svg`.
 - The product openly references Notion (notes feel, light/dark palette) and VS Code (code editor feel). Neither is a binding brand asset.
 
 ## Evidence on Hand

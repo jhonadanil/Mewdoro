@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import type { Folder, Note } from '../types'
 import { highlightCode } from '../utils/code'
-import { isCodeNote } from '../utils/notes'
+import { getNotePreview, isCodeNote } from '../utils/notes'
 
 // default: extracto recortado · compact: resultados de búsqueda · large: notas fijadas en Inicio y página de Notas,
 // grandes, sin adornos y con el contenido desplazable para que se lea entero
@@ -100,7 +100,7 @@ function ExcerptBody({ note, onOpen, size }: { note: Note; onOpen: (id: string) 
           </span>
         ) : (
           <span className={cn('whitespace-pre-wrap break-words leading-normal text-muted-foreground', TEXT[size])}>
-            {note.content}
+            {getNotePreview(note)}
           </span>
         ))}
     </button>
@@ -149,7 +149,7 @@ function LargeNoteBody({ note, onOpen }: { note: Note; onOpen: (id: string) => v
               '-mr-2 max-h-48 whitespace-pre-wrap break-words pr-2 text-sm leading-relaxed text-foreground/80'
             )}
           >
-            {note.content}
+            {getNotePreview(note)}
           </ScrollArea>
         ))}
     </div>

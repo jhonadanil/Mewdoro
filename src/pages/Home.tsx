@@ -197,7 +197,7 @@ export default function Home({
     return (
       <Page>
         <RotatingTitle key="welcome" phrases={[greeting(now)]} />
-        <PageText>Fija aquí lo que usas cada día para tenerlo a mano al abrir SnapNote.</PageText>
+        <PageText>Fija aquí lo que usas cada día para tenerlo a mano al abrir Mewdoro.</PageText>
         <div className="flex flex-wrap gap-2">
           <Button onClick={onCreateNote}>
             <NotebookIcon />

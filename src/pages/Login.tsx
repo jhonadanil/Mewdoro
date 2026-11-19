@@ -103,7 +103,7 @@ export default function Login({ mode }: LoginProps) {
       <aside className="hidden flex-col justify-between border-r bg-sidebar p-12 md:flex">
         <a href="#" className="flex w-fit items-center gap-2.5 rounded-full text-lg font-bold focus-visible:outline-2 focus-visible:outline-offset-4">
           <img src="/favicon.svg" alt="" width={28} height={28} />
-          SnapNote
+          Mewdoro
         </a>
         <div>
           <p className="max-w-[16ch] text-4xl font-bold leading-[1.1] tracking-tight text-balance">Tu día entero, en una sola pantalla.</p>

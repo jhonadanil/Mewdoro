@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="public/favicon.svg" alt="SnapNote" width="80" height="80" />
+  <img src="public/favicon.svg" alt="Mewdoro" width="80" height="80" />
 </p>
 
-<h1 align="center">SnapNote</h1>
+<h1 align="center">Mewdoro</h1>
 
 <p align="center">
   Notas al estilo Notion, editor de código como VS Code, tareas flash, rutinas con seguimiento, calendario y temporizador Pomodoro, todo en una app web.
@@ -74,6 +74,8 @@ cp .env.example .env.local
 
 > `.env.local` está en `.gitignore`: tus claves no se suben al repositorio.
 
+> Firebase solo deja iniciar sesión desde dominios autorizados. `localhost` viene autorizado; al publicar la app añade tu dominio (ver [Publicar](#publicar)).
+
 ### 3. Arrancar
 
 ```bash
@@ -81,6 +83,13 @@ npm run dev
 ```
 
 Abre la URL que aparece en la terminal (por defecto `http://localhost:5173`).
+
+## Publicar
+
+1. Genera la versión de producción con `npm run build` (queda en `dist/`) y súbela a tu hosting estático (Firebase Hosting, Vercel, Netlify…).
+2. Configura en el hosting las mismas variables de `.env.example` que usas en `.env.local`: Vite las incorpora al compilar.
+3. En la consola de Firebase, ve a **Authentication → Configuración → Dominios autorizados** y añade el dominio de producción (por ejemplo `tuapp.web.app` o `mewdoro.com`, sin `https://`). Si falta, el inicio de sesión falla con `auth/unauthorized-domain`.
+4. Comprueba que las reglas de Firestore sean las de [`firestore.rules`](firestore.rules) y no el modo de prueba, que caduca solo.
 
 ## Scripts
 
@@ -111,7 +120,7 @@ En Mac, `Ctrl` es `⌘`.
 ## Estructura del proyecto
 
 ```
-SnapNote/
+Mewdoro/
 ├── public/
 │   └── favicon.svg          # Logo
 ├── src/
@@ -119,6 +128,7 @@ SnapNote/
 │   ├── App.tsx              # Landing, login o app según la sesión
 │   ├── Workspace.tsx        # App con la sesión iniciada: estado y navegación
 │   ├── firebase.ts          # Configuración de Firebase
+│   ├── db.ts                # Acceso a Firestore
 │   ├── index.css            # Tailwind, tema de shadcn/ui con la paleta Catppuccin
 │   ├── styles/
 │   │   └── code.css         # Editor de código y colores de VS Code
@@ -135,6 +145,8 @@ SnapNote/
 │   ├── lib/utils.ts         # cn() para combinar clases de Tailwind (shadcn/ui)
 │   └── types/               # Tipos compartidos
 ├── firestore.rules          # Reglas de seguridad de Firestore
+├── PRODUCT.md               # Producto: público, tono y principios
+├── DESIGN.md                # Sistema de diseño
 ├── components.json          # Configuración de shadcn/ui
 ├── eslint.config.js
 └── vite.config.ts

@@ -7,13 +7,13 @@ related_targets: ["src/pages/Login.tsx"]
 
 # Landing (logged-out home) and login
 
-Mode: Persuade (landing) with an Operate form (login). Visitors: students and developers who have not seen SnapNote. Action: create an account (primary), or sign in (secondary). Proof: the product itself, running with clearly labeled example data; no invented users, metrics or testimonials. Constraints: Spanish copy; Catppuccin Mocha/Latte, pill controls, flat bordered cards (DESIGN.md); no router (hash routes #entrar, #registro); must not pull Firestore or the Workspace into the landing; offline-safe fonts.
+Mode: Persuade (landing) with an Operate form (login). Visitors: students and developers who have not seen Mewdoro. Action: create an account (primary), or sign in (secondary). Proof: the product itself, running with clearly labeled example data; no invented users, metrics or testimonials. Constraints: Spanish copy; Catppuccin Mocha/Latte, pill controls, flat bordered cards (DESIGN.md); no router (hash routes #entrar, #registro); must not pull Firestore or the Workspace into the landing; offline-safe fonts.
 
 ## Direction contract
 
 THESIS: The page is the product, not a picture of it: the first viewport is Inicio itself running with example data. It refuses the category default of a headline over subcopy plus a row of equal icon cards, and a screenshot in a device frame.
 
-OWN-WORLD: SnapNote's established world, unchanged: Mocha/Latte neutrals, Mauve only on done/active and the single primary button, 21.6px flat 1px-bordered cards, pill controls, system sans, the real mini-card, day-check and code-editor components. Recognizable with all copy removed by the cockpit grid of tasks, routines and timer.
+OWN-WORLD: Mewdoro's established world, unchanged: Mocha/Latte neutrals, Mauve only on done/active and the single primary button, 21.6px flat 1px-bordered cards, pill controls, system sans, the real mini-card, day-check and code-editor components. Recognizable with all copy removed by the cockpit grid of tasks, routines and timer.
 
 STORY: A student or dev understands in one look that a whole study day (tasks, focus, routines, code notes) fits on one screen, tries it by checking a task, ticking a routine and starting the timer with no account, then creates one.
 

@@ -1,7 +1,9 @@
 import type { Folder, FolderView, Note, NoteType } from '../types'
+import { checklistPreview, isChecklistEmpty } from './checklist'
 
 export const NOTE_TYPES: { value: NoteType; label: string }[] = [
   { value: 'text', label: 'Texto' },
+  { value: 'checklist', label: 'Casillas' },
   { value: 'bash', label: 'Bash' },
   { value: 'python', label: 'Python' },
   { value: 'html', label: 'HTML' },
@@ -18,7 +20,12 @@ export function getNoteTypeLabel(type: NoteType) {
 }
 
 export function isCodeNote(note: Note) {
-  return note.type !== 'text'
+  return note.type !== 'text' && note.type !== 'checklist'
+}
+
+// Lo que se enseña del contenido en las tarjetas (las casillas como ☐ y ☑)
+export function getNotePreview(note: Note) {
+  return note.type === 'checklist' ? checklistPreview(note.content) : note.content
 }
 
 export function createNote(type: NoteType = 'text', folderId: string | null = null): Note {
@@ -36,6 +43,7 @@ export function createNote(type: NoteType = 'text', folderId: string | null = nu
 }
 
 export function isEmptyNote(note: Note) {
+  if (note.type === 'checklist') return !note.title.trim() && isChecklistEmpty(note.content)
   return !note.title.trim() && !note.content.trim()
 }
 

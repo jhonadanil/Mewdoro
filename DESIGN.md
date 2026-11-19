@@ -1,5 +1,5 @@
 ---
-name: SnapNote
+name: Mewdoro
 description: The day's cockpit for students and developers: notes, code, flash tasks, routines and focus on one calm screen.
 colors:
   mauve-mocha: "#cba6f7"
@@ -162,13 +162,13 @@ components:
     rounded: "{rounded.pill}"
 ---
 
-# Design System: SnapNote
+# Design System: Mewdoro
 
 ## Overview
 
 **Creative North Star: "La cabina del día"**
 
-SnapNote is the screen a student or developer keeps open all day. Home works like a cockpit: pinned notes, today's flash tasks, today's routines, the calendar and the running Pomodoro sit together as small instruments you can read at a glance and use without leaving the page. Every other page (Notas, Tareas flash, Pomodoro, Calendario, Rutinas, Ajustes) is the full-size version of one of those instruments.
+Mewdoro is the screen a student or developer keeps open all day. Home works like a cockpit: pinned notes, today's flash tasks, today's routines, the calendar and the running Pomodoro sit together as small instruments you can read at a glance and use without leaving the page. Every other page (Notas, Tareas flash, Pomodoro, Calendario, Rutinas, Ajustes) is the full-size version of one of those instruments.
 
 The cockpit is calm and flat. Colors come from Catppuccin: Mocha in dark (the default theme) and Latte in light. Surfaces are flat panes separated by 1px borders, never by shadow or blur, and every control is a pill or a generously rounded card, in the manner of Ollama's interface. One accent, Mauve, lights up only when something is done, active or focused. The one place with full color is code, which renders in VS Code's Dark+ and Light+ token palettes because code notes are first-class.
 
@@ -331,4 +331,4 @@ Bottom-center pane with a 1px border, at most two at a time. Each has its own ti
 - **Don't** add a second UI font or CDN-loaded fonts.
 - **Don't** mix icon families; interface icons come from Phosphor (routine and folder icons are user-chosen emoji).
 - **Don't** let a view switch, a header action or "today" borrow the Mauve reserved for done.
-- **Don't** turn SnapNote into a pixel copy of Notion or Ollama; the cockpit structure, mini-cards, day-based tools and code surfaces carry the identity.
+- **Don't** turn Mewdoro into a pixel copy of Notion or Ollama; the cockpit structure, mini-cards, day-based tools and code surfaces carry the identity.

@@ -331,7 +331,7 @@ function Sidebar({
           {/* Logo y nombre arriba, como el espacio de trabajo en Notion */}
           <div className="mb-3 flex h-8 items-center gap-2 px-2 pr-10 text-sm font-semibold">
             <img src="/favicon.svg" alt="" width={22} height={22} />
-            <span>SnapNote</span>
+            <span>Mewdoro</span>
           </div>
 
           {/* Navegación principal */}
