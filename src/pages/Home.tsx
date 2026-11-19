@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
-import { CalendarDotsIcon, ListChecksIcon, NotebookIcon, PlusIcon, TimerIcon } from '@phosphor-icons/react'
+import { CalendarDotsIcon, ListChecksIcon, NotebookIcon, PlusIcon, RepeatIcon, TimerIcon } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import MiniCalendar from '../components/MiniCalendar'
+import MiniRoutines from '../components/MiniRoutines'
 import MiniPomodoro from '../components/MiniPomodoro'
 import MiniTasks from '../components/MiniTasks'
 import NoteCard from '../components/NoteCard'
@@ -14,7 +15,7 @@ import { usePomodoroContext } from '../hooks/PomodoroContext'
 import type { Pomodoro } from '../hooks/usePomodoro'
 import { useClock } from '../hooks/useClock'
 import type { TaskChanges } from '../hooks/useTasks'
-import type { Folder, Note, Page as PageName, Pinned, Task } from '../types'
+import type { Folder, Note, Page as PageName, Pinned, Routine, Task } from '../types'
 import { getNoteFolder, toDateKey } from '../utils/notes'
 
 function greeting(now: Date) {
@@ -52,36 +53,22 @@ const TOOLS_GRID = 'grid grid-cols-1 items-start gap-3 @md:grid-cols-2 @3xl:grid
 // Tareas es lo principal del día: ocupa dos columnas para que su lista no se corte
 const TASKS_SPAN = '@md:col-span-2'
 const STATUS = 'mt-1.5 text-sm text-muted-foreground tabular-nums'
-const STATUS_LINK =
-  'rounded-sm underline decoration-muted-foreground/40 underline-offset-[3px] hover:text-foreground hover:decoration-foreground/50 focus-visible:outline-2 focus-visible:outline-offset-2'
-
 interface DayStatusProps {
   tasks: Task[]
   today: string
-  onOpenTasks: () => void
 }
 
 // Línea bajo la fecha con el estado real del día. Es el único trozo de Inicio que lee el Pomodoro
 // cada segundo, así el resto de la página no se vuelve a dibujar mientras corre.
-function DayStatus({ tasks, today, onOpenTasks }: DayStatusProps) {
+function DayStatus({ tasks, today }: DayStatusProps) {
   const pomodoro = usePomodoroContext()
   const todayTasks = tasks.filter((task) => task.date === today)
   const done = todayTasks.filter((task) => task.done).length
-  const overdue = tasks.filter((task) => task.date < today && !task.done).length
   const parts: ReactNode[] = []
 
-  if (todayTasks.length === 0) parts.push('Sin tareas para hoy')
-  else if (done === todayTasks.length) parts.push('Tareas de hoy terminadas')
-  else parts.push(`${done} de ${todayTasks.length} tareas hechas`)
-
-  // Las atrasadas llevan a la página de Tareas, donde se pueden pasar a hoy de golpe
-  if (overdue > 0) {
-    parts.push(
-      <button type="button" onClick={onOpenTasks} title="Ver en Tareas" className={STATUS_LINK}>
-        {plural(overdue, 'atrasada', 'atrasadas')}
-      </button>
-    )
-  }
+  if (todayTasks.length === 0) parts.push('Sin tareas flash para hoy')
+  else if (done === todayTasks.length) parts.push('Tareas flash de hoy terminadas')
+  else parts.push(`${done} de ${todayTasks.length} tareas flash hechas`)
 
   const timer = pomodoroStatus(pomodoro)
   if (timer) parts.push(timer)
@@ -119,6 +106,11 @@ interface HomeProps {
   tasks: Task[]
   isTasksPinned: boolean
   onUnpinTasks: () => void
+  routines: Routine[]
+  routineLogs: Set<string>
+  isRoutinesPinned: boolean
+  onUnpinRoutines: () => void
+  onSetRoutineDone: (routineId: string, date: string, done: boolean) => void
   onAddTask: (text: string, date: string) => void
   onUpdateTask: (id: string, changes: TaskChanges) => void
   onNavigate: (page: PageName) => void
@@ -142,6 +134,11 @@ export default function Home({
   tasks,
   isTasksPinned,
   onUnpinTasks,
+  routines,
+  routineLogs,
+  isRoutinesPinned,
+  onUnpinRoutines,
+  onSetRoutineDone,
   onAddTask,
   onUpdateTask,
   onNavigate,
@@ -193,7 +190,7 @@ export default function Home({
   if (!loaded) return <HomeSkeleton />
 
   const pinnedNotes = notes.filter((note) => note.pinned)
-  const hasTools = isTasksPinned || isPomodoroPinned || isCalendarPinned
+  const hasTools = isTasksPinned || isPomodoroPinned || isCalendarPinned || isRoutinesPinned
 
   // Sin nada fijado: una frase y los botones para fijar o crear desde aquí mismo
   if (!hasTools && pinnedNotes.length === 0) {
@@ -209,6 +206,10 @@ export default function Home({
           <Button variant="outline" onClick={() => onPinToHome('tasks')}>
             <ListChecksIcon />
             Fijar Tareas
+          </Button>
+          <Button variant="outline" onClick={() => onPinToHome('routines')}>
+            <RepeatIcon />
+            Fijar Rutinas
           </Button>
           <Button variant="outline" onClick={() => onPinToHome('pomodoro')}>
             <TimerIcon />
@@ -227,7 +228,7 @@ export default function Home({
   return (
     <Page>
       <RotatingTitle key="pinned" phrases={[greeting(now), todayTitle(now)]} />
-      <DayStatus tasks={tasks} today={today} onOpenTasks={() => onNavigate('tasks')} />
+      <DayStatus tasks={tasks} today={today} />
 
       {hasTools && (
         <div className="@container mt-6">
@@ -240,6 +241,15 @@ export default function Home({
                 onAdd={onAddTask}
                 onUpdate={onUpdateTask}
                 className={TASKS_SPAN}
+              />
+            )}
+            {isRoutinesPinned && (
+              <MiniRoutines
+                routines={routines}
+                logs={routineLogs}
+                onOpen={() => onNavigate('routines')}
+                onUnpin={onUnpinRoutines}
+                onSetDone={onSetRoutineDone}
               />
             )}
             {isPomodoroPinned && <MiniPomodoro onOpen={() => onNavigate('pomodoro')} onUnpin={onUnpinPomodoro} />}

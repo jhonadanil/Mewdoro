@@ -43,8 +43,8 @@ export default function MiniPomodoro({ onOpen, onUnpin }: MiniPomodoroProps) {
       onOpen={onOpen}
       openLabel="Abrir Pomodoro"
       onUnpin={onUnpin}
-      // En marcha, la tarjeta se enciende con un borde lavanda (Lit-When-Done)
-      className={cn('transition-shadow duration-300', isRunning && 'ring-brand/50 hover:ring-brand/70')}
+      // En marcha, la tarjeta se enciende con un borde oscuro (Lit-When-Done)
+      className={cn('transition-shadow duration-300', isRunning && 'border-brand/60 hover:border-brand')}
     >
       <div className="flex items-center justify-between">
         {/* El chip ya abre la página con el teclado; la hora es un atajo extra para el ratón.

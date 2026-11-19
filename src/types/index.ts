@@ -1,4 +1,4 @@
-export type Page = 'home' | 'notes' | 'pomodoro' | 'tasks' | 'calendar' | 'settings'
+export type Page = 'home' | 'notes' | 'pomodoro' | 'tasks' | 'calendar' | 'routines' | 'settings'
 
 export type NoteType =
   | 'text'
@@ -54,6 +54,7 @@ export interface Pinned {
   pomodoro: boolean
   calendar: boolean
   tasks: boolean
+  routines: boolean
 }
 
 export interface Task {
@@ -63,4 +64,36 @@ export interface Task {
   // Día al que pertenece, "AAAA-MM-DD" en hora local
   date: string
   createdAt: string
+}
+
+export interface Routine {
+  id: string
+  name: string
+  icon: string
+  // Días de la semana en que toca, 0 = lunes … 6 = domingo
+  days: number[]
+  createdAt: string
+}
+
+// Una rutina hecha en un día; su id es "{routineId}_{AAAA-MM-DD}" y que exista significa "hecha"
+export interface RoutineLog {
+  id: string
+  routineId: string
+  date: string
+}
+
+export interface Routine {
+  id: string
+  name: string
+  icon: string
+  // Días de la semana en que toca, 0 = lunes ... 6 = domingo
+  days: number[]
+  createdAt: string
+}
+
+// Una rutina hecha en un día; su id es "{routineId}_{AAAA-MM-DD}" y que exista significa "hecha"
+export interface RoutineLog {
+  id: string
+  routineId: string
+  date: string
 }

@@ -37,7 +37,7 @@ function SearchBar({ query, onQueryChange, showSearch, theme, onToggleTheme }: S
       {/* El buscador solo se muestra en Inicio y Notas */}
       {showSearch && (
         <div className="group relative w-full max-w-md">
-          <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <MagnifyingGlassIcon className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             ref={inputRef}
             type="search"
@@ -45,7 +45,7 @@ function SearchBar({ query, onQueryChange, showSearch, theme, onToggleTheme }: S
             aria-label="Buscar notas"
             aria-keyshortcuts={IS_MAC ? "Meta+K" : "Control+K"}
             // Al enfocar, solo se marca un poco el borde (sin el anillo de color de marca)
-            className="h-9 bg-muted/60 pl-9 pr-16 focus-visible:border-foreground/25 focus-visible:ring-0 [&::-webkit-search-cancel-button]:hidden"
+            className="h-10 bg-muted pl-10 pr-16 focus-visible:border-foreground/25 focus-visible:ring-0 [&::-webkit-search-cancel-button]:hidden"
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             // Enter deja de escribir (quita el foco) y conserva los resultados; Esc vacía la búsqueda y vuelve a Inicio

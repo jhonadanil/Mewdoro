@@ -20,7 +20,7 @@ interface MiniCardProps {
 export function MiniCard({ label, onOpen, openLabel, onUnpin, className, children }: MiniCardProps) {
   return (
     // Mismo realce al pasar el ratón que las tarjetas de nota
-    <Card size="sm" className={cn('gap-2.5 px-3 transition-shadow hover:ring-foreground/25', className)}>
+    <Card size="sm" className={cn('gap-2.5 px-3 transition-shadow hover:border-foreground/30', className)}>
       <div className="flex items-center justify-between gap-2">
         {/* La etiqueta es el encabezado de la tarjeta, así se puede saltar entre tarjetas con un lector de pantalla */}
         <h2 className="flex min-w-0">

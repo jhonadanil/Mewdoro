@@ -5,7 +5,7 @@
 <h1 align="center">SnapNote</h1>
 
 <p align="center">
-  Notas al estilo Notion, editor de código como VS Code, tareas diarias y temporizador Pomodoro, todo en una app web.
+  Notas al estilo Notion, editor de código como VS Code, tareas flash, rutinas con seguimiento, calendario y temporizador Pomodoro, todo en una app web.
 </p>
 
 ## Funcionalidades
@@ -20,14 +20,18 @@
   - `Ctrl + /` para comentar o descomentar.
   - Cierre automático de `( [ { " ' ``.
   - Indentación inteligente con Enter, Tab y Shift + Tab.
-- **Tareas diarias**
-  - Lista por día, con progreso y las pendientes de días anteriores.
+- **Tareas flash**
+  - Lista por día, con progreso. Duran poco: al empezar un día nuevo se borran las completadas de días anteriores y las pendientes pasan solas a hoy.
   - Se pueden fijar en Inicio para marcarlas desde ahí.
+- **Rutinas**
+  - Hábitos que se repiten los días de la semana que elijas, con emoji y nombre; se pueden editar y eliminar (con «Deshacer»).
+  - Seguimiento por semana o por mes: marca cada día lo que cumples, con racha (perdona un día fallado por semana), recuento de la semana y porcentaje de los últimos 30 días.
+  - Lista «Hoy» para marcar rápido, vista adaptada a pantallas estrechas y mini-tarjeta para fijarlas en Inicio.
 - **Pomodoro**: trabajo, descanso corto y descanso largo configurables, con sonido opcional y la opción de empezar el siguiente bloque solo.
-- **Calendario** mensual que también se puede fijar en Inicio.
+- **Calendario** con vista semanal y mensual: cada día muestra sus tareas flash y sus rutinas. También se puede fijar en Inicio.
 - **Búsqueda** de notas por título, contenido o tipo.
-- **Cuentas** con email y contraseña o con Google. Notas, tareas y ajustes se guardan en la nube y funcionan sin conexión.
-- **Tema claro y oscuro** con los colores de Notion.
+- **Cuentas** con email y contraseña o con Google. Notas, tareas, rutinas y ajustes se guardan en la nube y funcionan sin conexión.
+- **Tema claro y oscuro** con la paleta [Catppuccin](https://catppuccin.com/) (Latte y Mocha), formas redondeadas y superficies planas con borde fino, al estilo de la interfaz de Ollama.
 
 ## Tecnologías
 
@@ -36,7 +40,7 @@
 | Interfaz | [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) |
 | Herramienta de build | [Vite](https://vite.dev/) |
 | Estilos | [Tailwind CSS v4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) (Radix) |
-| Iconos | [Lucide](https://lucide.dev/) |
+| Iconos | [Phosphor](https://phosphoricons.com/) |
 | Cuentas y base de datos | [Firebase](https://firebase.google.com/) (Authentication + Cloud Firestore) |
 | Resaltado de código | [Prism](https://prismjs.com/) |
 | Calidad de código | ESLint + typescript-eslint |
@@ -88,7 +92,13 @@ Abre la URL que aparece en la terminal (por defecto `http://localhost:5173`).
 
 | Atajo | Acción |
 |---|---|
+| `Alt + 1` … `Alt + 7` | Ir a Inicio, Notas, Pomodoro, Tareas flash, Calendario, Rutinas o Ajustes |
 | `Ctrl + .` | Abrir o cerrar la barra lateral |
+| `Ctrl + K` | Buscar notas |
+| `Alt + N` | Añadir una tarea (en Inicio) |
+| `Alt + P` | Iniciar o pausar el Pomodoro (en Inicio) |
+| `Alt + R` | Marcar la siguiente rutina pendiente de hoy |
+| `?` | Ver todos los atajos |
 | `Ctrl + /` | Comentar o descomentar líneas (notas de código) |
 | `Tab` / `Shift + Tab` | Indentar o quitar indentación |
 | `Enter` en el título | Saltar al contenido de la nota |
@@ -106,7 +116,7 @@ SnapNote/
 │   ├── App.tsx              # Login o app según la sesión
 │   ├── Workspace.tsx        # App con la sesión iniciada: estado y navegación
 │   ├── firebase.ts          # Configuración de Firebase
-│   ├── index.css            # Tailwind, tema de shadcn/ui con los colores de Notion
+│   ├── index.css            # Tailwind, tema de shadcn/ui con la paleta Catppuccin
 │   ├── styles/
 │   │   └── code.css         # Editor de código y colores de VS Code
 │   ├── components/
@@ -115,9 +125,9 @@ SnapNote/
 │   │   ├── NoteEditor.tsx   # Editor de notas estilo Notion
 │   │   ├── CodeEditor.tsx   # Editor de código estilo VS Code
 │   │   └── …                # Tarjetas, tareas, Pomodoro, menús…
-│   ├── pages/               # Inicio, Notas, Tareas, Pomodoro, Calendario, Ajustes, Login
-│   ├── hooks/               # Datos de Firebase (notas, carpetas, tareas, ajustes) y Pomodoro
-│   ├── utils/               # Lógica sin interfaz: fechas, búsqueda, resaltado, atajos de código
+│   ├── pages/               # Inicio, Notas, Tareas flash, Pomodoro, Calendario, Rutinas, Ajustes, Login
+│   ├── hooks/               # Datos de Firebase (notas, carpetas, tareas, rutinas, ajustes) y Pomodoro
+│   ├── utils/               # Lógica sin interfaz: fechas, rutinas (rachas, progreso), búsqueda, resaltado, atajos de código
 │   ├── lib/utils.ts         # cn() para combinar clases de Tailwind (shadcn/ui)
 │   └── types/               # Tipos compartidos
 ├── firestore.rules          # Reglas de seguridad de Firestore
@@ -132,7 +142,9 @@ SnapNote/
 users/{uid}                 # Ajustes y elementos fijados
 users/{uid}/notes/{id}      # Notas
 users/{uid}/folders/{id}    # Carpetas
-users/{uid}/tasks/{id}      # Tareas
+users/{uid}/tasks/{id}      # Tareas flash
+users/{uid}/routines/{id}   # Rutinas
+users/{uid}/routineLogs/{id} # Días en que se cumplió cada rutina ({rutina}_{AAAA-MM-DD})
 ```
 
 ## Añadir componentes de shadcn/ui

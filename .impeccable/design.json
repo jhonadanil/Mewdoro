@@ -1,698 +1,30 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-17T16:58:00+00:00",
+  "generatedAt": "2026-11-19T22:40:00.000Z",
   "title": "Design System: SnapNote",
   "extensions": {
     "colorMeta": {
-      "lavanda-hecha": {
-        "role": "primary",
-        "displayName": "Lavanda Hecha",
-        "canonical": "#7a5af8",
-        "tonalRamp": [
-          "#1a123b",
-          "#291770",
-          "#3315ac",
-          "#3a0bf0",
-          "#6b4beb",
-          "#9b88e8",
-          "#c7beec",
-          "#efedf8"
-        ]
-      },
-      "lavanda-hecha-noche": {
-        "role": "primary",
-        "displayName": "Lavanda Hecha Noche",
-        "canonical": "#9b7bff",
-        "tonalRamp": [
-          "#1b103c",
-          "#2a1374",
-          "#360eb3",
-          "#3d01fa",
-          "#6e44f2",
-          "#9d84ec",
-          "#c8bcee",
-          "#efecf8"
-        ]
-      },
-      "tinta-violeta": {
-        "role": "neutral",
-        "displayName": "Tinta Violeta",
-        "canonical": "#2e2a38",
-        "tonalRamp": [
-          "#252329",
-          "#403c4a",
-          "#5b556c",
-          "#766c8f",
-          "#958ea7",
-          "#b5b1bf",
-          "#d4d2d9",
-          "#f2f1f3"
-        ]
-      },
-      "papel-lila": {
-        "role": "neutral",
-        "displayName": "Papel Lila",
-        "canonical": "#fcfbfe",
-        "tonalRamp": [
-          "#221934",
-          "#3a2660",
-          "#502f92",
-          "#6533c8",
-          "#8966cf",
-          "#ae99d7",
-          "#d0c6e4",
-          "#f1eff6"
-        ]
-      },
-      "blanco": {
-        "role": "neutral",
-        "displayName": "Blanco",
-        "canonical": "#ffffff",
-        "tonalRamp": [
-          "#262626",
-          "#434343",
-          "#616161",
-          "#7e7e7e",
-          "#9b9b9b",
-          "#b8b8b8",
-          "#d5d5d5",
-          "#f2f2f2"
-        ]
-      },
-      "lila-niebla": {
-        "role": "neutral",
-        "displayName": "Lila Niebla",
-        "canonical": "#f6f4fa",
-        "tonalRamp": [
-          "#231e2f",
-          "#3d3156",
-          "#56427f",
-          "#6e4fac",
-          "#907abc",
-          "#b1a4cc",
-          "#d2ccde",
-          "#f2f0f4"
-        ]
-      },
-      "lila-hueso": {
-        "role": "neutral",
-        "displayName": "Lila Hueso",
-        "canonical": "#eeebf4",
-        "tonalRamp": [
-          "#24202d",
-          "#3f3551",
-          "#594978",
-          "#725aa2",
-          "#9281b4",
-          "#b3a9c7",
-          "#d3cedc",
-          "#f2f1f4"
-        ]
-      },
-      "lila-bruma": {
-        "role": "neutral",
-        "displayName": "Lila Bruma",
-        "canonical": "#f1eff6",
-        "tonalRamp": [
-          "#24202c",
-          "#3e3651",
-          "#574978",
-          "#6f5ba1",
-          "#9082b3",
-          "#b2a9c7",
-          "#d2cedc",
-          "#f2f1f4"
-        ]
-      },
-      "lapiz-violeta": {
-        "role": "neutral",
-        "displayName": "Lápiz Violeta",
-        "canonical": "#6a6478",
-        "tonalRamp": [
-          "#252428",
-          "#423f48",
-          "#5e5968",
-          "#797289",
-          "#9893a3",
-          "#b6b3bd",
-          "#d4d3d7",
-          "#f2f2f3"
-        ]
-      },
-      "linea-lila": {
-        "role": "neutral",
-        "displayName": "Línea Lila",
-        "canonical": "#e8e5ef",
-        "tonalRamp": [
-          "#24212c",
-          "#3f384f",
-          "#594d74",
-          "#72609b",
-          "#9386b0",
-          "#b3acc4",
-          "#d3cfdb",
-          "#f2f1f4"
-        ]
-      },
-      "borde-campo": {
-        "role": "neutral",
-        "displayName": "Borde Campo",
-        "canonical": "#e0dcea",
-        "tonalRamp": [
-          "#24212c",
-          "#3e374f",
-          "#584c75",
-          "#705f9d",
-          "#9185b1",
-          "#b2abc5",
-          "#d2cfdb",
-          "#f2f1f4"
-        ]
-      },
-      "barra-lila": {
-        "role": "neutral",
-        "displayName": "Barra Lila",
-        "canonical": "#f8f6fb",
-        "tonalRamp": [
-          "#251e2f",
-          "#403156",
-          "#5a4180",
-          "#744eae",
-          "#9479bc",
-          "#b4a4cc",
-          "#d3cbdf",
-          "#f2f0f5"
-        ]
-      },
-      "rojo-aviso": {
-        "role": "error",
-        "displayName": "Rojo Aviso",
-        "canonical": "#e03e3e",
-        "tonalRamp": [
-          "#361616",
-          "#662020",
-          "#9c2525",
-          "#d82424",
-          "#da5c5c",
-          "#de9292",
-          "#e7c3c3",
-          "#f6eeee"
-        ]
-      },
-      "noche": {
-        "role": "neutral",
-        "displayName": "Noche",
-        "canonical": "#16141b",
-        "tonalRamp": [
-          "#25232a",
-          "#403c4b",
-          "#5b546d",
-          "#766b90",
-          "#958ea8",
-          "#b5b0c0",
-          "#d4d1d9",
-          "#f2f1f3"
-        ]
-      },
-      "noche-tarjeta": {
-        "role": "neutral",
-        "displayName": "Noche Tarjeta",
-        "canonical": "#1d1a24",
-        "tonalRamp": [
-          "#25232a",
-          "#403c4b",
-          "#5b536e",
-          "#766a92",
-          "#958da9",
-          "#b5b0c0",
-          "#d3d1d9",
-          "#f2f1f3"
-        ]
-      },
-      "noche-flotante": {
-        "role": "neutral",
-        "displayName": "Noche Flotante",
-        "canonical": "#221f2a",
-        "tonalRamp": [
-          "#25232a",
-          "#403c4b",
-          "#5b546d",
-          "#756b90",
-          "#958ea8",
-          "#b4b0c0",
-          "#d3d1d9",
-          "#f2f1f3"
-        ]
-      },
-      "noche-relieve": {
-        "role": "neutral",
-        "displayName": "Noche Relieve",
-        "canonical": "#2a2633",
-        "tonalRamp": [
-          "#252329",
-          "#413c4a",
-          "#5c546d",
-          "#776b90",
-          "#968ea8",
-          "#b5b0c0",
-          "#d4d1d9",
-          "#f2f1f3"
-        ]
-      },
-      "noche-linea": {
-        "role": "neutral",
-        "displayName": "Noche Línea",
-        "canonical": "#2d2937",
-        "tonalRamp": [
-          "#252329",
-          "#403c4a",
-          "#5b556d",
-          "#766c90",
-          "#958ea8",
-          "#b5b0c0",
-          "#d4d1d9",
-          "#f2f1f3"
-        ]
-      },
-      "noche-campo": {
-        "role": "neutral",
-        "displayName": "Noche Campo",
-        "canonical": "#3a3545",
-        "tonalRamp": [
-          "#252329",
-          "#413d4a",
-          "#5c566b",
-          "#786d8e",
-          "#978fa6",
-          "#b5b1bf",
-          "#d4d2d8",
-          "#f2f1f3"
-        ]
-      },
-      "tiza": {
-        "role": "neutral",
-        "displayName": "Tiza",
-        "canonical": "#e7e3ee",
-        "tonalRamp": [
-          "#25212c",
-          "#40384f",
-          "#5b4c75",
-          "#755f9c",
-          "#9585b0",
-          "#b4abc5",
-          "#d3cfdb",
-          "#f2f1f4"
-        ]
-      },
-      "ceniza": {
-        "role": "neutral",
-        "displayName": "Ceniza",
-        "canonical": "#a29bb0",
-        "tonalRamp": [
-          "#252429",
-          "#423e49",
-          "#5d576a",
-          "#796f8c",
-          "#9791a5",
-          "#b6b2be",
-          "#d4d2d8",
-          "#f2f2f3"
-        ]
-      },
-      "rojo-aviso-noche": {
-        "role": "error",
-        "displayName": "Rojo Aviso Noche",
-        "canonical": "#eb5757",
-        "tonalRamp": [
-          "#381515",
-          "#691d1d",
-          "#a12020",
-          "#e01c1c",
-          "#e05656",
-          "#e18f8f",
-          "#e9c1c1",
-          "#f7eeee"
-        ]
-      },
-      "codigo-fondo-noche": {
-        "role": "neutral",
-        "displayName": "Código Fondo Noche",
-        "canonical": "#252130",
-        "tonalRamp": [
-          "#1c1924",
-          "#332e42",
-          "#4d4564",
-          "#695e88",
-          "#8b80a8",
-          "#afa7c3",
-          "#d3cfde",
-          "#f4f3f7"
-        ]
-      },
-      "codigo-fondo": {
-        "role": "neutral",
-        "displayName": "Código Fondo",
-        "canonical": "#ffffff",
-        "tonalRamp": [
-          "#262626",
-          "#434343",
-          "#616161",
-          "#7e7e7e",
-          "#9b9b9b",
-          "#b8b8b8",
-          "#d5d5d5",
-          "#f2f2f2"
-        ]
-      },
-      "fondo-acrilico": {
-        "role": "neutral",
-        "displayName": "Fondo Acrílico",
-        "canonical": "#f5f3f8",
-        "tonalRamp": [
-          "#1d1727",
-          "#352947",
-          "#503e6a",
-          "#6d5591",
-          "#8e78b0",
-          "#b1a2c9",
-          "#d4cbe1",
-          "#f4f2f7"
-        ]
-      },
-      "fondo-acrilico-noche": {
-        "role": "neutral",
-        "displayName": "Fondo Acrílico Noche",
-        "canonical": "#121016",
-        "tonalRamp": [
-          "#1d1a23",
-          "#352f41",
-          "#504761",
-          "#6d6185",
-          "#8e83a5",
-          "#b1a9c1",
-          "#d4d0dd",
-          "#f4f3f6"
-        ]
-      },
-      "mancha-lavanda": {
-        "role": "tertiary",
-        "displayName": "Mancha Lavanda",
-        "canonical": "#9682d2",
-        "tonalRamp": [
-          "#17102d",
-          "#2b1e52",
-          "#402d7c",
-          "#583da9",
-          "#7b62c6",
-          "#a492d8",
-          "#cdc3e9",
-          "#f2f0fa"
-        ]
-      },
-      "mancha-violeta-noche": {
-        "role": "tertiary",
-        "displayName": "Mancha Violeta Noche",
-        "canonical": "#6e5aaa",
-        "tonalRamp": [
-          "#1a1528",
-          "#2f264a",
-          "#47396f",
-          "#604e97",
-          "#8372b6",
-          "#a99dcd",
-          "#d0c9e3",
-          "#f3f2f8"
-        ]
-      },
-      "mancha-ciruela-noche": {
-        "role": "tertiary",
-        "displayName": "Mancha Ciruela Noche",
-        "canonical": "#785a82",
-        "tonalRamp": [
-          "#211924",
-          "#3d2e42",
-          "#5c4563",
-          "#7d5e88",
-          "#9e80a7",
-          "#bca8c2",
-          "#dacfde",
-          "#f6f3f7"
-        ]
-      },
-      "acrilico-tarjeta": {
-        "role": "neutral",
-        "displayName": "Acrílico Tarjeta",
-        "canonical": "#ffffff9e",
-        "tonalRamp": [
-          "#1f1f1f",
-          "#383838",
-          "#545454",
-          "#737373",
-          "#949494",
-          "#b5b5b5",
-          "#d6d6d6",
-          "#f5f5f5"
-        ]
-      },
-      "acrilico-tarjeta-noche": {
-        "role": "neutral",
-        "displayName": "Acrílico Tarjeta Noche",
-        "canonical": "#241f3085",
-        "tonalRamp": [
-          "#1c1825",
-          "#332c44",
-          "#4d4266",
-          "#695a8b",
-          "#8a7dab",
-          "#aea5c5",
-          "#d3cddf",
-          "#f4f3f7"
-        ]
-      },
-      "acrilico-flotante": {
-        "role": "neutral",
-        "displayName": "Acrílico Flotante",
-        "canonical": "#ffffffc7",
-        "tonalRamp": [
-          "#1f1f1f",
-          "#383838",
-          "#545454",
-          "#737373",
-          "#949494",
-          "#b5b5b5",
-          "#d6d6d6",
-          "#f5f5f5"
-        ]
-      },
-      "acrilico-flotante-noche": {
-        "role": "neutral",
-        "displayName": "Acrílico Flotante Noche",
-        "canonical": "#221e2cd1",
-        "tonalRamp": [
-          "#1c1924",
-          "#342d43",
-          "#4d4464",
-          "#695d88",
-          "#8b80a8",
-          "#afa7c3",
-          "#d3cede",
-          "#f4f3f7"
-        ]
-      },
-      "acrilico-barra": {
-        "role": "neutral",
-        "displayName": "Acrílico Barra",
-        "canonical": "#ffffff6b",
-        "tonalRamp": [
-          "#1f1f1f",
-          "#383838",
-          "#545454",
-          "#737373",
-          "#949494",
-          "#b5b5b5",
-          "#d6d6d6",
-          "#f5f5f5"
-        ]
-      },
-      "acrilico-barra-noche": {
-        "role": "neutral",
-        "displayName": "Acrílico Barra Noche",
-        "canonical": "#1e1a2873",
-        "tonalRamp": [
-          "#1c1825",
-          "#332c44",
-          "#4d4266",
-          "#685a8b",
-          "#8a7dab",
-          "#aea5c5",
-          "#d2cedf",
-          "#f4f3f7"
-        ]
-      },
-      "velo-lavanda": {
-        "role": "primary",
-        "displayName": "Velo Lavanda",
-        "canonical": "#7a5af81a",
-        "tonalRamp": [
-          "#0e023b",
-          "#19056c",
-          "#2607a1",
-          "#3409dc",
-          "#5932f6",
-          "#8d71f9",
-          "#c0b1fc",
-          "#efebfe"
-        ]
-      },
-      "mancha-malva": {
-        "role": "tertiary",
-        "displayName": "Mancha Malva",
-        "canonical": "#beaac8",
-        "tonalRamp": [
-          "#211825",
-          "#3c2c44",
-          "#5a4266",
-          "#7b5a8b",
-          "#9c7dab",
-          "#baa5c5",
-          "#d9cddf",
-          "#f6f3f7"
-        ]
-      },
-      "mancha-pizarra": {
-        "role": "tertiary",
-        "displayName": "Mancha Pizarra",
-        "canonical": "#a0aac3",
-        "tonalRamp": [
-          "#181c26",
-          "#2b3345",
-          "#414c67",
-          "#59688d",
-          "#7c8aac",
-          "#a4aec6",
-          "#cdd2df",
-          "#f2f4f7"
-        ]
-      },
-      "mancha-pizarra-noche": {
-        "role": "tertiary",
-        "displayName": "Mancha Pizarra Noche",
-        "canonical": "#46506e",
-        "tonalRamp": [
-          "#181b25",
-          "#2c3245",
-          "#414b67",
-          "#59668c",
-          "#7c88ac",
-          "#a5adc5",
-          "#cdd2df",
-          "#f3f4f7"
-        ]
-      }
+      "mauve-mocha": { "role": "primary", "displayName": "Mauve (Mocha)", "canonical": "#cba6f7", "tonalRamp": ["#3b2a5c", "#5a3f8f", "#7a58c0", "#9a77e6", "#b08ff0", "#cba6f7", "#e0c8fb", "#f1e6fd"] },
+      "mauve-latte": { "role": "primary", "displayName": "Mauve (Latte)", "canonical": "#8839ef", "tonalRamp": ["#2a0f57", "#431a8a", "#5f25bd", "#8839ef", "#a566f3", "#c093f6", "#dabdfa", "#efe2fd"] },
+      "mocha-base": { "role": "neutral", "displayName": "Base (Mocha)", "canonical": "#1e1e2e", "tonalRamp": ["#11111b", "#181825", "#1e1e2e", "#313244", "#45475a", "#585b70", "#7f849c", "#a6adc8"] },
+      "latte-base": { "role": "neutral", "displayName": "Base (Latte)", "canonical": "#eff1f5", "tonalRamp": ["#4c4f69", "#5c5f77", "#8c8fa1", "#acb0be", "#bcc0cc", "#ccd0da", "#dce0e8", "#eff1f5"] }
     },
     "typographyMeta": {
-      "display": {
-        "displayName": "Display",
-        "purpose": "Note title in the full-page editor only."
-      },
-      "headline": {
-        "displayName": "Headline",
-        "purpose": "Page titles."
-      },
-      "title": {
-        "displayName": "Title",
-        "purpose": "Card titles and headings."
-      },
-      "body": {
-        "displayName": "Body",
-        "purpose": "Default UI and card text."
-      },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Sidebar folder and note rows."
-      },
-      "caption": {
-        "displayName": "Caption",
-        "purpose": "Chips, badges, hints, compact previews."
-      },
-      "mono": {
-        "displayName": "Mono",
-        "purpose": "Code editor and previews; the 20px line height is structural."
-      }
+      "display": { "displayName": "Display", "purpose": "The note title in the full-page editor only." },
+      "headline": { "displayName": "Headline", "purpose": "Page titles; the Home title." },
+      "instrument": { "displayName": "Instrument numerals", "purpose": "Mini Pomodoro time, with tabular numerals." }
     },
     "shadows": [
-      {
-        "name": "acrylic-edge",
-        "value": "inset 0 1px 0 rgb(255 255 255 / 0.7)",
-        "purpose": "Light catch on the top edge of every card (6% white in dark)."
-      },
-      {
-        "name": "acrylic-lift",
-        "value": "0 1px 2px rgb(46 42 56 / 0.04), 0 8px 24px -8px rgb(76 56 140 / 0.14)",
-        "purpose": "Resting card shadow, stacked with the 1px ring through --tw-shadow."
-      },
-      {
-        "name": "acrylic-lift-dark",
-        "value": "0 1px 2px rgb(0 0 0 / 0.2), 0 10px 30px -10px rgb(0 0 0 / 0.5)",
-        "purpose": "Resting card shadow in dark."
-      },
-      {
-        "name": "ring-card",
-        "value": "0 0 0 1px rgb(46 42 56 / 0.10)",
-        "purpose": "Card edge at rest (25% on hover)."
-      },
-      {
-        "name": "floating",
-        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-        "purpose": "Menus, popovers, selects, toasts."
-      },
-      {
-        "name": "floating-high",
-        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
-        "purpose": "Submenus."
-      }
+      { "name": "floating", "value": "0 4px 16px -4px rgb(0 0 0 / 0.1)", "purpose": "The only shadow: menus, selects, popovers and hover actions, always with a 1px border." }
     ],
     "motion": [
-      {
-        "name": "state",
-        "value": "150ms ease",
-        "purpose": "Hover color and background transitions."
-      },
-      {
-        "name": "sidebar",
-        "value": "width 200ms",
-        "purpose": "Sidebar collapse and expand."
-      },
-      {
-        "name": "popover-in",
-        "value": "fade-in + zoom-in-95, 100ms",
-        "purpose": "Menus and popovers opening."
-      },
-      {
-        "name": "press",
-        "value": "translateY(1px)",
-        "purpose": "Button press nudge."
-      },
-      {
-        "name": "rotating-title-in",
-        "value": "translateY(0.4em) + blur(10px) + fade, 700ms cubic-bezier(0.16, 1, 0.3, 1), 90ms delay",
-        "purpose": "Incoming phrase of the Home title; plays once per visit, none under reduced motion."
-      },
-      {
-        "name": "rotating-title-out",
-        "value": "translateY(-0.3em) + blur(8px) + fade, 320ms cubic-bezier(0.7, 0, 0.84, 0)",
-        "purpose": "Outgoing phrase of the Home title; plays once per visit."
-      }
+      { "name": "title-in", "value": "700ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Incoming phrase of the Home title." },
+      { "name": "title-out", "value": "320ms cubic-bezier(0.7, 0, 0.84, 0)", "purpose": "Outgoing phrase of the Home title." },
+      { "name": "sidebar-width", "value": "200ms", "purpose": "Sidebar open and close." }
     ],
     "breakpoints": [
-      {
-        "name": "sm",
-        "value": "640px"
-      },
-      {
-        "name": "md",
-        "value": "768px"
-      }
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" }
     ]
   },
   "components": [
@@ -700,138 +32,98 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Solid warm-ink button for the one main action in a view (Nueva nota, Añadir).",
-      "html": "<button class=\"ds-btn-primary\">Nueva nota</button>",
-      "css": ".ds-btn-primary{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid transparent;border-radius:var(--radius,8px);background:var(--primary,#2e2a38);color:var(--primary-foreground,#fff);font:500 14px/1 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;cursor:pointer;transition:background .15s,transform .1s}.ds-btn-primary:hover{background:color-mix(in srgb,var(--primary,#2e2a38) 80%,transparent)}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:none;border-color:var(--ring,#7a5af8);box-shadow:0 0 0 3px color-mix(in srgb,var(--ring,#7a5af8) 50%,transparent)}"
+      "description": "The one main action of a context: save, add, create.",
+      "html": "<button class=\"ds-btn-primary\">Añadir rutina</button>",
+      "css": ".ds-btn-primary { height: 36px; padding: 0 16px; border: 1px solid transparent; border-radius: 9999px; background: #cba6f7; color: #11111b; font: 500 14px ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: opacity .15s; } .ds-btn-primary:hover { opacity: .8; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgb(203 166 247 / .5); }"
     },
     {
-      "name": "Ghost Button",
+      "name": "Outline Button",
       "kind": "button",
-      "refersTo": "button-ghost",
-      "description": "Default quiet button; shows up on hover.",
-      "html": "<button class=\"ds-btn-ghost\">Ver todas</button>",
-      "css": ".ds-btn-ghost{height:32px;padding:0 10px;border:1px solid transparent;border-radius:var(--radius,8px);background:transparent;color:var(--muted-foreground,#6a6478);font:500 14px/1 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;cursor:pointer;transition:background .15s,color .15s}.ds-btn-ghost:hover{background:var(--muted,#f1eff6);color:var(--foreground,#2e2a38)}.ds-btn-ghost:active{transform:translateY(1px)}.ds-btn-ghost:focus-visible{outline:none;border-color:var(--ring,#7a5af8);box-shadow:0 0 0 3px color-mix(in srgb,var(--ring,#7a5af8) 50%,transparent)}"
+      "refersTo": "button-outline",
+      "description": "Header actions such as Nueva rutina and Fijar en inicio.",
+      "html": "<button class=\"ds-btn-outline\">Fijar en inicio</button>",
+      "css": ".ds-btn-outline { height: 36px; padding: 0 16px; border: 1px solid #313244; border-radius: 9999px; background: #1e1e2e; color: #cdd6f4; font: 500 14px ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background .15s; } .ds-btn-outline:hover { background: #181825; } .ds-btn-outline:focus-visible { outline: none; border-color: #cba6f7; box-shadow: 0 0 0 3px rgb(203 166 247 / .5); }"
     },
     {
-      "name": "Icon Button",
-      "kind": "button",
-      "refersTo": "button-icon",
-      "description": "28px ghost icon button; always has a tooltip and aria-label.",
-      "html": "<button class=\"ds-btn-icon\" aria-label=\"Fijar en inicio\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 17v5\"/><path d=\"M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z\"/></svg></button>",
-      "css": ".ds-btn-icon{display:inline-grid;place-items:center;width:28px;height:28px;border:1px solid transparent;border-radius:6.4px;background:transparent;color:var(--muted-foreground,#6a6478);cursor:pointer;transition:background .15s,color .15s}.ds-btn-icon:hover{background:var(--muted,#f1eff6);color:var(--foreground,#2e2a38)}.ds-btn-icon:focus-visible{outline:none;border-color:var(--ring,#7a5af8);box-shadow:0 0 0 3px color-mix(in srgb,var(--ring,#7a5af8) 50%,transparent)}"
-    },
-    {
-      "name": "Text Input",
+      "name": "Search Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "32px field with a hairline stroke and a blue focus ring.",
-      "html": "<input class=\"ds-input\" placeholder=\"Añadir tarea…\" />",
-      "css": ".ds-input{height:32px;width:260px;padding:4px 10px;border:1px solid var(--input,#e0dcea);border-radius:var(--radius,8px);background:transparent;color:var(--foreground,#2e2a38);font:400 14px/1.5 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;transition:border-color .15s,box-shadow .15s}.ds-input::placeholder{color:var(--muted-foreground,#6a6478)}.ds-input:focus-visible{outline:none;border-color:var(--ring,#7a5af8);box-shadow:0 0 0 3px color-mix(in srgb,var(--ring,#7a5af8) 50%,transparent)}"
+      "description": "Pill input, 36px high; the search field is 40px with a muted fill.",
+      "html": "<input class=\"ds-input\" placeholder=\"Buscar notas…\" />",
+      "css": ".ds-input { height: 36px; width: 240px; padding: 4px 16px; border: 1px solid #45475a; border-radius: 9999px; background: transparent; color: #cdd6f4; font: 400 14px ui-sans-serif, system-ui, sans-serif; outline: none; transition: border-color .15s; } .ds-input::placeholder { color: #a6adc8; } .ds-input:focus-visible { border-color: #cba6f7; box-shadow: 0 0 0 3px rgb(203 166 247 / .5); }"
     },
     {
-      "name": "Folder Chip",
-      "kind": "chip",
-      "refersTo": "chip-folder",
-      "description": "Pill label with a folder emoji; also the label on Home mini-cards.",
-      "html": "<span class=\"ds-chip\">💻 Código</span>",
-      "css": ".ds-chip{display:inline-flex;align-items:center;gap:4px;height:20px;padding:2px 8px;border-radius:9999px;background:var(--secondary,#eeebf4);color:var(--secondary-foreground,#2e2a38);font:500 12px/1 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;white-space:nowrap}"
-    },
-    {
-      "name": "Sidebar Nav",
-      "kind": "nav",
-      "refersTo": "nav-item",
-      "description": "Sidebar rows: muted until hover, filled and medium weight when active.",
-      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item is-active\" href=\"#\">Inicio</a><a class=\"ds-nav-item\" href=\"#\">Notas</a><a class=\"ds-nav-item\" href=\"#\">Tareas</a></nav>",
-      "css": ".ds-nav{display:flex;flex-direction:column;gap:2px;width:224px;padding:8px;background:var(--sidebar,#f8f6fb);border-right:1px solid var(--sidebar-border,#e8e5ef)}.ds-nav-item{display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:6.4px;color:var(--muted-foreground,#6a6478);font:400 14px/1.4 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;text-decoration:none;transition:background .15s,color .15s}.ds-nav-item:hover{background:var(--sidebar-accent,#ebe8f2);color:var(--foreground,#2e2a38)}.ds-nav-item.is-active{background:var(--sidebar-accent,#ebe8f2);color:var(--foreground,#2e2a38);font-weight:500}.ds-nav-item:focus-visible{outline:2px solid color-mix(in srgb,var(--ring,#7a5af8) 50%,transparent)}"
-    },
-    {
-      "name": "Note Card",
+      "name": "Card",
       "kind": "card",
       "refersTo": "card",
-      "description": "Note preview card with folder chip, title and a code preview in VS Code colors. Rendered as an acrylic pane over the color-field backdrop.",
-      "html": "<article class=\"ds-card\"><span class=\"ds-card-chip\">💻 Código</span><strong class=\"ds-card-title\">Script de backup</strong><pre class=\"ds-card-code\"><span style=\"color:var(--code-function,#795e26)\">rsync</span> -av ~/notas <span style=\"color:var(--code-string,#a31515)\">\"/mnt/backup\"</span></pre></article>",
-      "css": ".ds-card{display:flex;flex-direction:column;gap:8px;width:240px;padding:16px;border-radius:11.2px;background:var(--card,rgb(255 255 255 / .62));color:var(--card-foreground,#2e2a38);box-shadow:inset 0 1px 0 rgb(255 255 255 / .7),0 1px 2px rgb(46 42 56 / .04),0 8px 24px -8px rgb(76 56 140 / .14),0 0 0 1px color-mix(in srgb,var(--foreground,#2e2a38) 10%,transparent);transition:box-shadow .15s}.ds-card:hover{box-shadow:0 0 0 1px color-mix(in srgb,var(--foreground,#2e2a38) 25%,transparent)}.ds-card-chip{align-self:flex-start;height:20px;padding:2px 8px;border-radius:9999px;background:var(--secondary,#eeebf4);font:500 12px/16px 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif}.ds-card-title{font:600 16px/1.375 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif}.ds-card-code{margin:0;padding:8px 10px;border:1px solid var(--code-border,#e5e5e5);border-radius:6.4px;background:var(--code-bg,#fff);color:var(--code-text,#1f1f1f);font:400 13px/1.5 Consolas, 'SFMono-Regular', Menlo, 'Courier New', monospace;white-space:pre-wrap}"
+      "description": "Flat pane with a 1px border and 21.6px corners; the border darkens on hover.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Tareas flash · Hoy 2/5</div><div class=\"ds-card-text\">Terminar el informe</div></div>",
+      "css": ".ds-card { width: 260px; padding: 16px; border: 1px solid #313244; border-radius: 21.6px; background: #1e1e2e; color: #cdd6f4; font: 400 14px ui-sans-serif, system-ui, sans-serif; transition: border-color .15s; } .ds-card:hover { border-color: rgb(205 214 244 / .3); } .ds-card-title { font-weight: 600; margin-bottom: 8px; } .ds-card-text { color: #a6adc8; }"
     },
     {
-      "name": "Pinned Mini-Card",
+      "name": "Day Check",
       "kind": "custom",
-      "refersTo": "card-mini",
-      "description": "Home cockpit instrument: chip label, unpin action and a live miniature (here the Pomodoro).",
-      "html": "<div class=\"ds-mini\"><div class=\"ds-mini-head\"><span class=\"ds-chip-s\">Pomodoro</span><button class=\"ds-mini-unpin\" aria-label=\"Quitar de inicio\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M18 6 6 18\"/><path d=\"m6 6 12 12\"/></svg></button></div><span class=\"ds-mini-time\">24:13</span></div>",
-      "css": ".ds-mini{display:flex;flex-direction:column;gap:10px;width:200px;padding:12px;border-radius:11.2px;background:var(--card,rgb(255 255 255 / .62));box-shadow:0 0 0 1px color-mix(in srgb,var(--foreground,#2e2a38) 10%,transparent)}.ds-mini-head{display:flex;justify-content:space-between;align-items:center}.ds-chip-s{height:20px;padding:2px 8px;border-radius:9999px;background:var(--secondary,#eeebf4);font:500 12px/16px 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif}.ds-mini-unpin{display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:4.8px;background:transparent;color:var(--muted-foreground,#6a6478);cursor:pointer}.ds-mini-unpin:hover{background:var(--muted,#f1eff6);color:var(--foreground,#2e2a38)}.ds-mini-unpin:focus-visible{outline:none;border-color:var(--ring,#7a5af8);box-shadow:0 0 0 3px color-mix(in srgb,var(--ring,#7a5af8) 50%,transparent)}.ds-mini-time{font:700 28px/1 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;font-variant-numeric:tabular-nums;color:var(--foreground,#2e2a38)}"
+      "refersTo": "check-done",
+      "description": "The routine toggle: bordered circle when pending, Mauve with a check when done.",
+      "html": "<button class=\"ds-check\" aria-pressed=\"false\"></button> <button class=\"ds-check ds-check-done\" aria-pressed=\"true\"><svg viewBox=\"0 0 256 256\" width=\"14\" height=\"14\" fill=\"currentColor\"><path d=\"M232.49 80.49l-128 128a12 12 0 0 1-17 0l-56-56a12 12 0 1 1 17-17L96 183 215.51 63.51a12 12 0 0 1 17 17z\"/></svg></button>",
+      "css": ".ds-check { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 1px solid rgb(166 173 200 / .8); border-radius: 9999px; background: transparent; color: #11111b; cursor: pointer; transition: background .15s; } .ds-check:hover { background: #181825; } .ds-check:focus-visible { outline: 2px solid #cba6f7; outline-offset: 2px; } .ds-check-done { border-color: #cba6f7; background: #cba6f7; }"
     },
     {
-      "name": "Task Checkbox",
-      "kind": "custom",
-      "refersTo": "checkbox-done",
-      "description": "18px near-square box that fills Azul Hecho when the task is done.",
-      "html": "<label class=\"ds-task\"><input type=\"checkbox\" class=\"ds-check\" checked /> Repasar apuntes</label>",
-      "css": ".ds-task{display:flex;align-items:center;gap:8px;font:400 14px/1.5 'Figtree Variable', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;color:var(--foreground,#2e2a38)}.ds-check{appearance:none;display:grid;place-items:center;width:18px;height:18px;margin:0;border:1px solid color-mix(in srgb,var(--muted-foreground,#6a6478) 60%,transparent);border-radius:4px;cursor:pointer}.ds-check:checked{background:var(--brand,#7a5af8);border-color:var(--brand,#7a5af8)}.ds-check:checked::after{content:'';width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}.ds-check:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--ring,#7a5af8) 50%,transparent)}"
+      "name": "Segmented Switch",
+      "kind": "chip",
+      "refersTo": "segmented-active",
+      "description": "Semana / Mes view switch; the active option uses the Surface fill, not Mauve.",
+      "html": "<div class=\"ds-seg\"><button class=\"ds-seg-on\" aria-pressed=\"true\">Semana</button><button aria-pressed=\"false\">Mes</button></div>",
+      "css": ".ds-seg { display: inline-flex; padding: 2px; border: 1px solid #313244; border-radius: 9999px; } .ds-seg button { padding: 4px 16px; border: 0; border-radius: 9999px; background: transparent; color: #a6adc8; font: 400 14px ui-sans-serif, system-ui, sans-serif; cursor: pointer; } .ds-seg button:hover { color: #cdd6f4; } .ds-seg .ds-seg-on { background: #313244; color: #cdd6f4; font-weight: 500; }"
+    },
+    {
+      "name": "Sidebar Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Sidebar row: 14px Subtext with an icon; active row fills Surface.",
+      "html": "<div class=\"ds-nav\"><a class=\"ds-nav-item\">Inicio</a><a class=\"ds-nav-item ds-nav-active\">Rutinas</a></div>",
+      "css": ".ds-nav { width: 224px; padding: 8px; background: #181825; } .ds-nav-item { display: block; padding: 6px 10px; border-radius: 9.6px; color: #a6adc8; font: 400 14px ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background .15s; } .ds-nav-item:hover { background: #313244; color: #cdd6f4; } .ds-nav-active { background: #313244; color: #cdd6f4; font-weight: 500; }"
     }
   ],
   "narrative": {
     "northStar": "La cabina del día",
-    "overview": "SnapNote is the screen a student or developer keeps open all day. Home works like a cockpit: pinned notes, today's tasks, the calendar and the running Pomodoro sit together as small instruments you can read at a glance and use without leaving the page. Every other page (Notas, Tareas, Pomodoro, Calendario, Ajustes) is the full-size version of one of those instruments.\n\nThe cockpit is friendly, not technical. Neutrals carry a quiet violet tint (\"Violeta nocturno\"), and emoji folder icons, softly rounded corners and plain Spanish copy (\"Sin título\", \"Quitar de inicio\") make it feel like a personal desk at night rather than a control room. The instruments are made of acrylic: the sidebar, cards, menus and toasts are frosted, translucent panes over a fixed backdrop of three faint, muted color fields from the same lilac family (lavender, mauve and slate; dusky violet, plum and night slate in dark) with a fine grain, in the spirit of Windows 11 Fluent acrylic. The backdrop is deliberately quiet, a tint you sense rather than see, and it is the only ambient color. On the panes themselves color stays almost absent, and a single lavender (Lavanda Hecha) lights up only when something is done or switched on. The one place with full color is code, which renders in VS Code's Dark+ and Light+ token palettes because code notes are first-class.\n\nThe system keeps the calm structure and system type of a Notion-style workspace but must not become a pixel copy of Notion. Its own identity comes from the violet-tinted palette, the acrylic material, the cockpit structure, the pinned mini-cards and the code surfaces. Dark is the default theme and light is a full equal.",
+    "overview": "SnapNote is the screen a student or developer keeps open all day. Home works like a cockpit: pinned notes, today's flash tasks, today's routines, the calendar and the running Pomodoro sit together as small instruments you can read at a glance and use without leaving the page. Every other page is the full-size version of one of those instruments.\n\nThe cockpit is calm and flat. Colors come from Catppuccin: Mocha in dark (the default theme) and Latte in light. Surfaces are flat panes separated by 1px borders, never by shadow or blur, and every control is a pill or a generously rounded card, in the manner of Ollama's interface. One accent, Mauve, lights up only when something is done, active or focused. The one place with full color is code, which renders in VS Code's Dark+ and Light+ token palettes.",
     "keyCharacteristics": [
-      "Acrylic panes over a fixed, barely-there lilac color-field backdrop with grain: cards and sidebar are translucent with a light top edge; floating layers add a 16px frost (1.15 saturation).",
-      "Violet-tinted neutral text and a single lavender status accent; no gradients on surfaces, text or buttons.",
-      "Figtree for everything, monospace only inside code; Phosphor icons throughout.",
-      "Compact controls (28–32px) that stay quiet until hover.",
-      "Small pinned mini-cards on Home, as read-and-act instruments, under a title that greets once and settles on today's date.",
+      "Catppuccin Mocha / Latte neutrals with a single Mauve accent; no gradients, no blur, no acrylic.",
+      "Flat 1px-bordered cards (21.6px corners) and pill-shaped buttons, inputs and selects.",
+      "System sans for everything, monospace only inside code; Phosphor icons throughout.",
+      "Compact controls (28-36px) that stay quiet until hover.",
+      "Small pinned mini-cards on Home as read-and-act instruments.",
       "Code blocks in true VS Code colors, inside notes and on cards.",
-      "Friendly details: emoji folders, rounded corners, plain-language labels."
+      "Friendly details: emoji folders and routine icons, plain Spanish copy."
     ],
     "rules": [
-      {
-        "name": "The Lit-When-Done Rule",
-        "body": "Lavanda Hecha appears only on completed, active or focused things. A lavender that is just decoration is a bug.",
-        "section": "colors"
-      },
-      {
-        "name": "The Backdrop-Only Color Rule",
-        "body": "Ambient color lives only in the fixed backdrop behind the glass. Panes, text and controls never get gradients or tints of their own; the color reaches them only through the blur.",
-        "section": "colors"
-      },
-      {
-        "name": "The Code Keeps Its Colors Rule",
-        "body": "Syntax colors never leak into the interface, and the interface palette never recolors code.",
-        "section": "colors"
-      },
-      {
-        "name": "The One Family Rule",
-        "body": "Only Figtree and the code mono. No second UI face, no decorative display face, and no fonts loaded from a CDN (the app must work offline).",
-        "section": "typography"
-      },
-      {
-        "name": "The Soft-Lift Rule",
-        "body": "Any depth stays soft and ambient: low opacity, wide blur, no hard drop shadows, no colored glows. Depth says \"this sits on top\", never \"look at me\".",
-        "section": "elevation"
-      },
-      {
-        "name": "The Frost-By-Height Rule",
-        "body": "The higher a layer sits, the more opaque its pane. A floating layer is never more transparent than the surface it covers.",
-        "section": "elevation"
-      }
+      { "name": "The Lit-When-Done Rule", "body": "Mauve appears only on completed, active or focused things, plus the single primary button. A mauve that is just decoration is a bug. \"Today\" is never mauve: it is marked with inverted text color.", "section": "colors" },
+      { "name": "The Code Keeps Its Colors Rule", "body": "Syntax colors never leak into the interface, and the interface palette never recolors code.", "section": "colors" },
+      { "name": "The Both-Themes Rule", "body": "Every color is defined for Mocha and Latte. Unchecked control borders sit at 80% of the subtext color so they hold 3:1 against the page in both themes.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "Only the system sans and the code mono. No second UI face, no decorative display face, no CDN fonts.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. The only shadow in the system is the soft Floating shadow on layers that sit above the page. Hover on cards darkens the border; it never adds a shadow.", "section": "elevation" }
     ],
     "dos": [
-      "**Do** keep Lavanda Hecha (#7a5af8 / #9b7bff) for checked, active, progress and focus states only.",
-      "**Do** use the violet-tinted neutrals (Tinta Violeta #2e2a38, never pure black) and keep every color token defined for both light and dark.",
-      "**Do** design dark first (it's the default theme) and check light as an equal.",
-      "**Do** make anything pinnable usable in its mini-card form on Home, not just as a link to its page.",
-      "**Do** give every icon button a tooltip in Spanish, plus its shortcut when one exists.",
-      "**Do** render code with the `--code-*` tokens and the 20px mono line.",
-      "**Do** use Phosphor icons in the regular weight, switching to `fill` only to mark the active item.",
-      "**Do** keep depth soft and ambient (see the Soft-Lift Rule), and build new surfaces as acrylic panes from the existing `--card`, `--popover` or `--sidebar` tokens plus `.acrylic`.",
-      "**Do** keep the solid fallback values in sync with the translucent ones."
+      "Do keep Mauve for done, active, focused and the single primary button.",
+      "Do mark \"today\" with inverted text color, never with Mauve.",
+      "Do define every color for Mocha and Latte, and design dark first.",
+      "Do make buttons, inputs, selects and chips pills, and cards 21.6px with a 1px border.",
+      "Do separate surfaces with a border; keep depth to the Floating shadow on layers above the page.",
+      "Do make anything pinnable usable in its mini-card form on Home.",
+      "Do give every icon button a tooltip in Spanish, plus its shortcut when one exists.",
+      "Do render code with the --code-* tokens and the 20px mono line.",
+      "Do use Phosphor icons in the regular weight, fill only to mark the active item or a lit streak.",
+      "Do keep text at 12px or larger, and touch targets at 44px where the layout is touch-first."
     ],
     "donts": [
-      "**Don't** turn SnapNote into a pixel copy of Notion. Keep its calm, but let the cockpit structure, mini-cards and code surfaces carry the identity.",
-      "**Don't** add a second accent color, or gradients and brand color on panes, text or controls. Ambient color belongs only to the backdrop (see the Backdrop-Only Color Rule).",
-      "**Don't** put code on glass, or nest acrylic inside acrylic more than one level deep.",
-      "**Don't** add a second UI font, a display typeface or CDN-loaded fonts. Hierarchy comes from weight and size.",
-      "**Don't** mix icon families. Every icon comes from Phosphor (`@phosphor-icons/react`).",
-      "**Don't** use hard or colored shadows.",
-      "**Don't** let syntax colors leak into UI chrome."
+      "Don't add a second accent color, gradients, glows or blur to panes, text or controls.",
+      "Don't use hard or colored shadows.",
+      "Don't put code on a translucent surface or recolor it with interface colors.",
+      "Don't add a second UI font or CDN-loaded fonts.",
+      "Don't mix icon families; interface icons come from Phosphor (routine and folder icons are user-chosen emoji).",
+      "Don't let a view switch, a header action or \"today\" borrow the Mauve reserved for done.",
+      "Don't turn SnapNote into a pixel copy of Notion or Ollama; the cockpit structure, mini-cards, day-based tools and code surfaces carry the identity."
     ]
   }
 }

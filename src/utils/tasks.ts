@@ -27,8 +27,3 @@ export function formatDayLabel(key: string) {
   if (key === shiftDateKey(today, -1)) return 'Ayer'
   return formatLongDay(key)
 }
-
-// Fecha corta para las tareas pendientes: "15 nov"
-export function formatShortDay(key: string) {
-  return fromDateKey(key).toLocaleDateString('es', { day: 'numeric', month: 'short' })
-}

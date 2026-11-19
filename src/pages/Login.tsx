@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import type { FormEvent } from 'react'
 import {
   createUserWithEmailAndPassword,
@@ -7,13 +7,13 @@ import {
   signInWithPopup,
 } from 'firebase/auth'
 import { FirebaseError } from 'firebase/app'
+import { CaretLeftIcon, CheckIcon, EyeIcon, EyeSlashIcon, GoogleLogoIcon } from '@phosphor-icons/react'
+import { IconButton } from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { auth, googleProvider } from '../firebase'
-
-type Mode = 'login' | 'register'
+import { goToAuthRoute } from '../hooks/useAuthRoute'
 
 const ERROR_MESSAGES: Record<string, string> = {
   'auth/invalid-credential': 'Email o contraseña incorrectos.',
@@ -32,13 +32,26 @@ function getErrorMessage(error: unknown) {
   return 'Algo salió mal. Inténtalo de nuevo.'
 }
 
-export default function Login() {
-  const [mode, setMode] = useState<Mode>('login')
+const BENEFITS = [
+  'Notas con código y los colores de VS Code',
+  'Tareas flash y rutinas con racha',
+  'Pomodoro y calendario semanal o mensual',
+  'Todo se guarda en tu cuenta y funciona sin conexión',
+]
+
+interface LoginProps {
+  // La pantalla (iniciar sesión o crear cuenta) la elige la URL: #entrar o #registro
+  mode: 'login' | 'register'
+}
+
+export default function Login({ mode }: LoginProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const ids = { email: useId(), password: useId(), hint: useId() }
 
   const isRegister = mode === 'register'
 
@@ -78,81 +91,148 @@ export default function Login() {
     })
   }
 
+  const switchMode = () => {
+    setError('')
+    setInfo('')
+    goToAuthRoute(isRegister ? 'login' : 'register')
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-sm gap-3.5 px-7 py-8">
-        <h1 className="flex items-center gap-3 text-2xl font-bold">
-          <img src="/favicon.svg" alt="" width={36} height={36} />
+    <div className="grid min-h-screen md:grid-cols-2">
+      {/* Columna de apoyo: solo en pantallas anchas, para no estorbar al formulario en móvil */}
+      <aside className="hidden flex-col justify-between border-r bg-sidebar p-12 md:flex">
+        <a href="#" className="flex w-fit items-center gap-2.5 rounded-full text-lg font-bold focus-visible:outline-2 focus-visible:outline-offset-4">
+          <img src="/favicon.svg" alt="" width={28} height={28} />
           SnapNote
-        </h1>
-        <p className="mb-1 text-sm text-muted-foreground">
-          {isRegister ? 'Crea una cuenta para guardar tus notas y ajustes.' : 'Inicia sesión para ver tus notas.'}
-        </p>
+        </a>
+        <div>
+          <p className="max-w-[16ch] text-4xl font-bold leading-[1.1] tracking-tight text-balance">Tu día entero, en una sola pantalla.</p>
+          <ul className="mt-8 flex flex-col gap-3 text-sm text-muted-foreground">
+            {BENEFITS.map((benefit) => (
+              <li key={benefit} className="flex items-center gap-2.5">
+                <CheckIcon aria-hidden="true" weight="bold" className="size-4 shrink-0 text-brand" />
+                {benefit}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <p className="text-[13px] text-muted-foreground">Notas, tareas, rutinas y foco en un solo sitio.</p>
+      </aside>
 
-        <form className="flex flex-col gap-2.5" onSubmit={handleSubmit}>
-          <Input
-            className="h-9 bg-background"
-            type="email"
-            placeholder="Email"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
-          <Input
-            className="h-9 bg-background"
-            type="password"
-            placeholder="Contraseña"
-            autoComplete={isRegister ? 'new-password' : 'current-password'}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-
-          {error && <p className="text-[13px] text-destructive">{error}</p>}
-          {info && <p className="text-[13px]">{info}</p>}
-
-          <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
-            {isRegister ? 'Crear cuenta' : 'Iniciar sesión'}
+      <main className="flex flex-col p-4 sm:p-8">
+        <div>
+          <Button variant="ghost" className="-ml-2 text-muted-foreground" onClick={() => goToAuthRoute('landing')}>
+            <CaretLeftIcon />
+            Volver
           </Button>
-        </form>
-
-        {!isRegister && (
-          <Button variant="link" size="sm" className="self-center text-[13px]" onClick={resetPassword} disabled={isLoading}>
-            ¿Olvidaste tu contraseña?
-          </Button>
-        )}
-
-        <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
-          <Separator className="flex-1" />o<Separator className="flex-1" />
         </div>
 
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-full"
-          onClick={() => run(() => signInWithPopup(auth, googleProvider))}
-          disabled={isLoading}
-        >
-          Continuar con Google
-        </Button>
+        <div className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center pb-12">
+          <h1 className="text-3xl font-bold tracking-tight">{isRegister ? 'Crea tu cuenta' : 'Inicia sesión'}</h1>
+          <p className="mb-6 mt-2 text-sm text-muted-foreground">
+            {isRegister ? 'Guarda tus notas, tareas y rutinas, y llévalas a cualquier dispositivo.' : 'Entra para seguir con tu día.'}
+          </p>
 
-        <p className="mt-1 text-center text-[13px] text-muted-foreground">
-          {isRegister ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}{' '}
-          <Button
-            variant="link"
-            size="sm"
-            className="h-auto p-0 text-[13px] text-foreground"
-            onClick={() => {
-              setMode(isRegister ? 'login' : 'register')
-              setError('')
-              setInfo('')
-            }}
-          >
-            {isRegister ? 'Inicia sesión' : 'Crea una'}
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor={ids.email} className="text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id={ids.email}
+                type="email"
+                placeholder="tu@email.com"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <label htmlFor={ids.password} className="text-sm font-medium">
+                  Contraseña
+                </label>
+                {!isRegister && (
+                  <button
+                    type="button"
+                    onClick={resetPassword}
+                    disabled={isLoading}
+                    className="rounded-sm text-[13px] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-50"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </button>
+                )}
+              </div>
+              <div className="relative">
+                <Input
+                  id={ids.password}
+                  className="pr-11"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete={isRegister ? 'new-password' : 'current-password'}
+                  aria-describedby={isRegister ? ids.hint : undefined}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  required
+                />
+                <IconButton
+                  label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  size="icon-xs"
+                  type="button"
+                  className="absolute right-2 top-1/2 -translate-y-1/2"
+                  onClick={() => setShowPassword((value) => !value)}
+                >
+                  {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                </IconButton>
+              </div>
+              {isRegister && (
+                <p id={ids.hint} className="text-[13px] text-muted-foreground">
+                  Mínimo 6 caracteres.
+                </p>
+              )}
+            </div>
+
+            <div aria-live="polite">
+              {error && (
+                <p role="alert" className="text-[13px] text-destructive">
+                  {error}
+                </p>
+              )}
+              {info && (
+                <p role="status" className="text-[13px]">
+                  {info}
+                </p>
+              )}
+            </div>
+
+            <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
+              {isLoading ? (isRegister ? 'Creando cuenta…' : 'Entrando…') : isRegister ? 'Crear cuenta' : 'Iniciar sesión'}
+            </Button>
+          </form>
+
+          <div className="my-5 flex items-center gap-2.5 text-xs text-muted-foreground">
+            <Separator className="flex-1" />o<Separator className="flex-1" />
+          </div>
+
+          <Button variant="outline" size="lg" className="w-full" onClick={() => run(() => signInWithPopup(auth, googleProvider))} disabled={isLoading}>
+            <GoogleLogoIcon weight="bold" />
+            Continuar con Google
           </Button>
-        </p>
-      </Card>
+
+          <p className="mt-6 text-center text-[13px] text-muted-foreground">
+            {isRegister ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}{' '}
+            <button
+              type="button"
+              onClick={switchMode}
+              className="rounded-sm font-medium text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              {isRegister ? 'Inicia sesión' : 'Crea una'}
+            </button>
+          </p>
+        </div>
+      </main>
     </div>
   )
 }

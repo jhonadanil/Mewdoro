@@ -26,7 +26,8 @@ const GROUPS: { title: string; items: { keys: string[]; label: ReactNode }[] }[]
       { keys: ['Alt', '3'], label: 'Pomodoro' },
       { keys: ['Alt', '4'], label: 'Tareas' },
       { keys: ['Alt', '5'], label: 'Calendario' },
-      { keys: ['Alt', '6'], label: 'Ajustes' },
+      { keys: ['Alt', '6'], label: 'Rutinas' },
+      { keys: ['Alt', '7'], label: 'Ajustes' },
     ],
   },
   {
@@ -34,6 +35,7 @@ const GROUPS: { title: string; items: { keys: string[]; label: ReactNode }[] }[]
     items: [
       { keys: ['Alt', 'N'], label: 'Añadir tarea' },
       { keys: ['Alt', 'P'], label: 'Iniciar o pausar el Pomodoro' },
+      { keys: ['Alt', 'R'], label: 'Marcar la siguiente rutina de hoy' },
     ],
   },
   {

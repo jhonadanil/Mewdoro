@@ -7,14 +7,18 @@ import Toaster from "./components/Toaster";
 import { auth } from "./firebase";
 import { useFolders } from "./hooks/useFolders";
 import { useNotes } from "./hooks/useNotes";
+import { useRoutines } from "./hooks/useRoutines";
 import { useTasks } from "./hooks/useTasks";
 import { PomodoroProvider } from "./hooks/PomodoroContext";
 import { useUserData } from "./hooks/useUserData";
 import { showToast } from "./utils/toast";
+import { countsOn, hasLog } from "./utils/routines";
+import { todayKey } from "./utils/tasks";
 import Calendar from "./pages/Calendar";
 import Home from "./pages/Home";
 import Notes from "./pages/Notes";
 import Pomodoro from "./pages/Pomodoro";
+import Routines from "./pages/Routines";
 import Settings from "./pages/Settings";
 import Tasks from "./pages/Tasks";
 import type { FolderView, Page } from "./types";
@@ -34,12 +38,32 @@ function Workspace({ user }: WorkspaceProps) {
 
   const { notes, loaded: notesLoaded, createNote: saveNewNote, updateNote, deleteNote, togglePin, flush, flushAll } = useNotes(user.uid);
   const { folders, createFolder, updateFolder, deleteFolder } = useFolders(user.uid);
-  const { tasks, loaded: tasksLoaded, addTask, updateTask, deleteTask, moveTasks, deleteTasks } = useTasks(user.uid);
+  const { tasks, loaded: tasksLoaded, addTask, updateTask, deleteTask, deleteTasks } = useTasks(user.uid);
+  const { routines, logs: routineLogs, loaded: routinesLoaded, addRoutine, updateRoutine, deleteRoutine, restoreRoutine, setDone: setRoutineDone } = useRoutines(user.uid);
   const { settings, pinned, loaded: userLoaded, updateSettings, updatePinned } = useUserData(user.uid);
 
   useEffect(() => {
     applyTheme(settings.theme);
   }, [settings.theme]);
+
+  // Alt + R marca la siguiente rutina pendiente de hoy desde cualquier página
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.code !== "KeyR") return;
+      event.preventDefault();
+      const today = todayKey();
+      const due = routines.filter((routine) => countsOn(routine, routineLogs, today));
+      const next = due.find((routine) => !hasLog(routineLogs, routine, today));
+      if (next) {
+        setRoutineDone(next.id, today, true);
+        showToast(`Marcada: ${next.icon} ${next.name}`, { action: { label: "Deshacer", onClick: () => setRoutineDone(next.id, today, false) } });
+      } else {
+        showToast(due.length === 0 ? "Hoy no toca ninguna rutina" : "Rutinas de hoy terminadas");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [routines, routineLogs, setRoutineDone]);
 
   const filteredNotes = filterNotes(notes, query);
   const openNote = notes.find((note) => note.id === openNoteId);
@@ -169,13 +193,18 @@ function Workspace({ user }: WorkspaceProps) {
               onPinToHome={pinToHome}
               onCreateNote={() => addNote(null)}
               onCreateNoteTitled={addNoteTitled}
-              loaded={notesLoaded && tasksLoaded && userLoaded}
+              loaded={notesLoaded && tasksLoaded && userLoaded && routinesLoaded}
               onUnpinPomodoro={() => unpinFromHome("pomodoro", "Pomodoro quitado de Inicio")}
               isCalendarPinned={pinned.calendar}
               onUnpinCalendar={() => unpinFromHome("calendar", "Calendario quitado de Inicio")}
               tasks={tasks}
               isTasksPinned={pinned.tasks}
-              onUnpinTasks={() => unpinFromHome("tasks", "Tareas quitadas de Inicio")}
+              onUnpinTasks={() => unpinFromHome("tasks", "Tareas flash quitadas de Inicio")}
+              routines={routines}
+              routineLogs={routineLogs}
+              isRoutinesPinned={pinned.routines}
+              onUnpinRoutines={() => unpinFromHome("routines", "Rutinas quitadas de Inicio")}
+              onSetRoutineDone={setRoutineDone}
               onAddTask={addTask}
               onUpdateTask={updateTask}
               onNavigate={navigate}
@@ -221,7 +250,6 @@ function Workspace({ user }: WorkspaceProps) {
               onAdd={addTask}
               onUpdate={updateTask}
               onDelete={deleteTask}
-              onMove={moveTasks}
               onDeleteMany={deleteTasks}
             />
           )}
@@ -230,6 +258,24 @@ function Workspace({ user }: WorkspaceProps) {
             <Calendar
               isPinned={pinned.calendar}
               onTogglePin={() => updatePinned({ calendar: !pinned.calendar })}
+              tasks={tasks}
+              routines={routines}
+              logs={routineLogs}
+            />
+          )}
+
+          {page === "routines" && (
+            <Routines
+              routines={routines}
+              logs={routineLogs}
+              loaded={routinesLoaded}
+              isPinned={pinned.routines}
+              onTogglePin={() => updatePinned({ routines: !pinned.routines })}
+              onAdd={addRoutine}
+              onUpdate={updateRoutine}
+              onDelete={deleteRoutine}
+              onRestore={restoreRoutine}
+              onSetDone={setRoutineDone}
             />
           )}
 

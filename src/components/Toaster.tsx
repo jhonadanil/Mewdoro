@@ -21,7 +21,7 @@ function Toast({ toast }: { toast: ToastData }) {
     <div
       role={toast.tone === 'error' ? 'alert' : undefined}
       className={cn(
-        'pointer-events-auto flex max-w-md items-center gap-1 acrylic rounded-lg bg-popover py-1.5 pl-3.5 pr-1.5 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 animate-in fade-in-0 slide-in-from-bottom-2 duration-200',
+        'pointer-events-auto flex max-w-md items-center gap-1 floating rounded-2xl bg-popover py-1.5 pl-3.5 pr-1.5 text-sm text-popover-foreground shadow-md border border-border animate-in fade-in-0 slide-in-from-bottom-2 duration-200',
         toast.tone === 'error' && 'text-destructive'
       )}
     >

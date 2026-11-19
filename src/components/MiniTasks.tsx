@@ -1,6 +1,4 @@
 import { useEffect, useRef } from 'react'
-import { ArrowLineDownIcon } from '@phosphor-icons/react'
-import { IconButton } from '@/components/IconButton'
 import { MiniCard } from '@/components/MiniCard'
 import { ScrollArea } from '@/components/ScrollArea'
 import { cn } from '@/lib/utils'
@@ -8,7 +6,7 @@ import AddTask from './AddTask'
 import { TaskCheckbox } from './TaskItem'
 import type { TaskChanges } from '../hooks/useTasks'
 import type { Task } from '../types'
-import { formatShortDay, todayKey } from '../utils/tasks'
+import { todayKey } from '../utils/tasks'
 
 interface MiniTasksProps {
   tasks: Task[]
@@ -24,13 +22,11 @@ export default function MiniTasks({ tasks, onOpen, onUnpin, onAdd, onUpdate, cla
   const addInput = useRef<HTMLInputElement>(null)
   const today = todayKey()
   const todayTasks = tasks.filter((task) => task.date === today)
-  // Pendientes de días anteriores, como en la página de Tareas
-  const overdue = tasks.filter((task) => task.date < today && !task.done)
   const done = todayTasks.filter((task) => task.done).length
 
-  // Primero las atrasadas y luego las de hoy, siempre en su orden: así una tarea no salta bajo
-  // el cursor al marcarla. Todas están en la lista; si no caben, se baja con la rueda
-  const visible = [...overdue, ...todayTasks]
+  // Siempre en su orden: así una tarea no salta bajo el cursor al marcarla.
+  // Todas están en la lista; si no caben, se baja con la rueda
+  const visible = todayTasks
 
   // Alt + N enfoca "Añadir tarea" desde cualquier sitio de Inicio
   useEffect(() => {
@@ -44,11 +40,10 @@ export default function MiniTasks({ tasks, onOpen, onUnpin, onAdd, onUpdate, cla
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  // Las atrasadas ya se cuentan en la línea de estado de Inicio y se ven marcadas en la lista
-  const label = `Tareas · Hoy${todayTasks.length > 0 ? ` ${done}/${todayTasks.length}` : ''}`
+  const label = `Tareas flash · Hoy${todayTasks.length > 0 ? ` ${done}/${todayTasks.length}` : ''}`
 
   return (
-    <MiniCard label={label} onOpen={onOpen} openLabel="Abrir Tareas" onUnpin={onUnpin} className={className}>
+    <MiniCard label={label} onOpen={onOpen} openLabel="Abrir Tareas flash" onUnpin={onUnpin} className={className}>
       {/* Unas 7 filas a la vista; el relleno (compensado con margen negativo) deja sitio a los
           anillos de foco y a los botones, que si no quedarían recortados por el desplazamiento */}
       <ScrollArea
@@ -56,31 +51,15 @@ export default function MiniTasks({ tasks, onOpen, onUnpin, onAdd, onUpdate, cla
         scrollToEndWhenGrows={todayTasks.length}
         className="-mx-1 -my-1 flex max-h-52 flex-col gap-1.5 px-1 py-1"
       >
-        {visible.length === 0 && <p className="text-[13px] text-muted-foreground">No hay tareas para hoy.</p>}
-        {visible.map((task) => {
-          const isOverdue = task.date < today
-          return (
-            <div key={task.id} className="group flex min-w-0 items-center gap-2 text-[13px]">
-              <TaskCheckbox checked={task.done} text={task.text} onChange={() => onUpdate(task.id, { done: !task.done })} />
-              <span title={task.text} className={cn('min-w-0 flex-1 truncate', task.done && 'text-muted-foreground line-through')}>
-                {task.text}
-              </span>
-              {isOverdue && (
-                <>
-                  <span className="whitespace-nowrap text-xs text-muted-foreground">{formatShortDay(task.date)}</span>
-                  <IconButton
-                    label="Pasar a hoy"
-                    size="icon-xs"
-                    className="-my-1 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
-                    onClick={() => onUpdate(task.id, { date: today })}
-                  >
-                    <ArrowLineDownIcon />
-                  </IconButton>
-                </>
-              )}
-            </div>
-          )
-        })}
+        {visible.length === 0 && <p className="text-[13px] text-muted-foreground">No hay tareas flash para hoy.</p>}
+        {visible.map((task) => (
+          <div key={task.id} className="flex min-w-0 items-center gap-2 text-[13px]">
+            <TaskCheckbox checked={task.done} text={task.text} onChange={() => onUpdate(task.id, { done: !task.done })} />
+            <span title={task.text} className={cn('min-w-0 flex-1 truncate', task.done && 'text-muted-foreground line-through')}>
+              {task.text}
+            </span>
+          </div>
+        ))}
       </ScrollArea>
 
       <AddTask

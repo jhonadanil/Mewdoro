@@ -34,7 +34,7 @@ export default function NoteCard({ note, folder, onOpen, onTogglePin, onDelete, 
     <Card
       size={variant === 'compact' ? 'sm' : 'default'}
       className={cn(
-        'group relative px-(--card-spacing) transition-shadow hover:ring-foreground/25',
+        'group relative px-(--card-spacing) transition-shadow hover:border-foreground/30',
         variant === 'compact' && 'gap-2',
         // Sin borde en reposo: el panel translúcido basta; el anillo aparece al pasar el ratón
         large && 'gap-3 px-5 py-5 ring-transparent'
@@ -55,7 +55,7 @@ export default function NoteCard({ note, folder, onOpen, onTogglePin, onDelete, 
         ))}
 
       {/* Fijar y borrar flotan arriba a la derecha y aparecen al pasar el ratón (en táctil, siempre) */}
-      <div className="absolute right-2 top-2 flex gap-0.5 acrylic rounded-md bg-popover opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100">
+      <div className="absolute right-2 top-2 flex gap-0.5 floating rounded-md bg-popover opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100">
         <IconButton
           label={note.pinned ? 'Quitar de inicio' : 'Fijar en inicio'}
           size="icon-xs"

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import type { ReactNode } from 'react'
 import { TrashIcon } from '@phosphor-icons/react'
 import { IconButton } from '@/components/IconButton'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -11,13 +10,9 @@ interface TaskItemProps {
   task: Task
   onUpdate: (id: string, changes: TaskChanges) => void
   onDelete: (id: string) => void
-  // Texto pequeño junto a la tarea, por ejemplo la fecha de una pendiente
-  meta?: ReactNode
-  // Botones extra que aparecen al pasar el ratón
-  actions?: ReactNode
 }
 
-// Casilla que se llena de Lavanda Hecha al marcarla.
+// Casilla que se llena de Mauve al marcarla.
 // Con el texto de la tarea, el lector de pantalla dice cuál se marca
 export function TaskCheckbox({ checked, onChange, text }: { checked: boolean; onChange: () => void; text?: string }) {
   const action = checked ? 'Marcar como pendiente' : 'Marcar como hecha'
@@ -26,13 +21,13 @@ export function TaskCheckbox({ checked, onChange, text }: { checked: boolean; on
       checked={checked}
       onCheckedChange={onChange}
       aria-label={text ? `${action}: ${text}` : action}
-      className="size-[18px] rounded-[4px] border-muted-foreground/60 data-checked:border-brand data-checked:bg-brand data-checked:text-white dark:data-checked:bg-brand"
+      className="size-[18px] rounded-[4px] border-muted-foreground/80 data-checked:border-brand data-checked:bg-brand data-checked:text-primary-foreground dark:data-checked:bg-brand"
     />
   )
 }
 
 // Una tarea: casilla, texto editable en el sitio y borrar al pasar el ratón
-export default function TaskItem({ task, onUpdate, onDelete, meta, actions }: TaskItemProps) {
+export default function TaskItem({ task, onUpdate, onDelete }: TaskItemProps) {
   const [text, setText] = useState(task.text)
 
   // Se guarda al salir del campo; si se queda vacía, se borra
@@ -57,9 +52,7 @@ export default function TaskItem({ task, onUpdate, onDelete, meta, actions }: Ta
         onKeyDown={(event) => event.key === 'Enter' && event.currentTarget.blur()}
         aria-label="Texto de la tarea"
       />
-      {meta && <span className="whitespace-nowrap text-xs text-muted-foreground">{meta}</span>}
       <div className="flex gap-0.5 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100">
-        {actions}
         <IconButton label="Eliminar tarea" size="icon-xs" onClick={() => onDelete(task.id)}>
           <TrashIcon />
         </IconButton>

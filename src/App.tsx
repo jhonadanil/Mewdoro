@@ -1,8 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { isFirebaseConfigured } from "./firebase";
 import { useAuth } from "./hooks/useAuth";
+import { useAuthRoute } from "./hooks/useAuthRoute";
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 
 // La app con sesión (Firestore, editor, páginas) va en un archivo aparte. Se empieza a descargar
 // en cuanto carga la página, en paralelo, así el login aparece antes y la app no espera de más.
@@ -14,13 +16,19 @@ const loading = <div className="flex min-h-screen items-center justify-center te
 
 function AuthGate() {
   const user = useAuth();
+  const route = useAuthRoute();
+
+  // Con la sesión iniciada, el #entrar o #registro de la URL ya no hace falta
+  useEffect(() => {
+    if (user && window.location.hash) window.history.replaceState(null, "", window.location.pathname);
+  }, [user]);
 
   // Firebase todavía está comprobando si hay una sesión guardada
   if (user === undefined) {
     return loading;
   }
 
-  if (!user) return <Login />;
+  if (!user) return route === "landing" ? <Landing /> : <Login mode={route} />;
 
   // key: al cambiar de usuario se empieza de cero
   return (

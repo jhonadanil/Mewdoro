@@ -16,7 +16,7 @@ export const DEFAULT_SETTINGS: Settings = {
   defaultNoteType: 'text',
 }
 
-const DEFAULT_PINNED: Pinned = { pomodoro: false, calendar: false, tasks: false }
+const DEFAULT_PINNED: Pinned = { pomodoro: false, calendar: false, tasks: false, routines: false }
 
 // Ajustes y elementos fijados, guardados en el documento users/{uid}
 export function useUserData(uid: string) {

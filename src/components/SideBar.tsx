@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
-import { CalendarDotsIcon, CaretDownIcon, CaretRightIcon, GearSixIcon, HouseIcon, ListChecksIcon, NotebookIcon, PlusIcon, SidebarSimpleIcon, SignOutIcon, TimerIcon } from "@phosphor-icons/react";
+import { CalendarDotsIcon, CaretDownIcon, CaretRightIcon, GearSixIcon, HouseIcon, ListChecksIcon, NotebookIcon, PlusIcon, RepeatIcon, SidebarSimpleIcon, SignOutIcon, TimerIcon } from "@phosphor-icons/react";
 import type { User } from "firebase/auth";
 
 import { IconButton } from "@/components/IconButton";
@@ -34,10 +34,11 @@ const LINKS = [
   { page: "home", label: "Inicio", Icon: HouseIcon, key: "1" },
   { page: "notes", label: "Notas", Icon: NotebookIcon, key: "2" },
   { page: "pomodoro", label: "Pomodoro", Icon: TimerIcon, key: "3" },
-  { page: "tasks", label: "Tareas", Icon: ListChecksIcon, key: "4" },
+  { page: "tasks", label: "Tareas flash", Icon: ListChecksIcon, key: "4" },
   { page: "calendar", label: "Calendario", Icon: CalendarDotsIcon, key: "5" },
+  { page: "routines", label: "Rutinas", Icon: RepeatIcon, key: "6" },
 ] as const;
-const SETTINGS_KEY = "6";
+const SETTINGS_KEY = "7";
 
 // Tecla (event.code, para que funcione igual con cualquier distribución de teclado) → página
 const PAGE_KEYS: Record<string, Page> = {
@@ -243,7 +244,7 @@ function Sidebar({
     };
   }, [isOpen, narrow]);
 
-  // Alt + 1…6 lleva a cada sección desde cualquier sitio, también mientras se escribe y con la barra cerrada
+  // Alt + 1…7 lleva a cada sección desde cualquier sitio, también mientras se escribe y con la barra cerrada
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey ? PAGE_KEYS[event.code] : undefined;
