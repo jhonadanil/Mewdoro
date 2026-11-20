@@ -1,21 +1,23 @@
 import { useState } from 'react'
 import type { DragEvent } from 'react'
 
-const NOTE_DRAG = 'application/x-mewdoro-note'
+export const NOTE_DRAG = 'application/x-mewdoro-note'
 
-// Se llama al empezar a arrastrar una nota (tarjeta o fila de la barra lateral)
-export function startNoteDrag(event: DragEvent, noteId: string) {
-  event.dataTransfer.setData(NOTE_DRAG, noteId)
+// Se llama al empezar a arrastrar algo (una nota, una herramienta de Inicio…)
+export function startDrag(event: DragEvent, id: string, mime: string) {
+  event.dataTransfer.setData(mime, id)
   event.dataTransfer.effectAllowed = 'move'
 }
 
-// Convierte un elemento en destino donde soltar notas; isOver sirve para resaltarlo mientras se arrastra encima
-export function useNoteDrop(onDrop: (noteId: string) => void) {
+export const startNoteDrag = (event: DragEvent, noteId: string) => startDrag(event, noteId, NOTE_DRAG)
+
+// Convierte un elemento en destino donde soltar; isOver sirve para resaltarlo mientras se arrastra encima
+export function useDrop(onDrop: (id: string) => void, mime: string) {
   const [isOver, setIsOver] = useState(false)
 
   const props = {
     onDragOver: (event: DragEvent) => {
-      if (!event.dataTransfer.types.includes(NOTE_DRAG)) return
+      if (!event.dataTransfer.types.includes(mime)) return
       event.preventDefault()
       event.dataTransfer.dropEffect = 'move'
       setIsOver(true)
@@ -25,13 +27,16 @@ export function useNoteDrop(onDrop: (noteId: string) => void) {
       if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsOver(false)
     },
     onDrop: (event: DragEvent) => {
-      const noteId = event.dataTransfer.getData(NOTE_DRAG)
+      const id = event.dataTransfer.getData(mime)
       setIsOver(false)
-      if (!noteId) return
+      if (!id) return
       event.preventDefault()
-      onDrop(noteId)
+      onDrop(id)
     },
   }
 
   return { isOver, props }
 }
+
+// Destino donde soltar notas
+export const useNoteDrop = (onDrop: (noteId: string) => void) => useDrop(onDrop, NOTE_DRAG)

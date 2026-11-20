@@ -30,7 +30,7 @@ function MiniWeek({ tasks, routines, logs, onOpen, onUnpin }: MiniCalendarProps)
   const isCurrent = weekStartKey(anchor) === weekStartKey(today)
 
   return (
-    <MiniCard label="Calendario · Semana" onOpen={onOpen} openLabel="Abrir Calendario" onUnpin={onUnpin} className="@md:col-span-2">
+    <MiniCard label="Calendario · Semana" onOpen={onOpen} openLabel="Abrir Calendario" onUnpin={onUnpin}>
       <div className="flex items-center justify-between">
         <span aria-live="polite" className="whitespace-nowrap text-sm font-semibold">
           {formatWeekRange(anchor)}

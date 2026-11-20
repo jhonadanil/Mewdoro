@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
-import { CalendarDotsIcon, CaretDownIcon, CaretRightIcon, GearSixIcon, HouseIcon, ListChecksIcon, NotebookIcon, PlusIcon, RepeatIcon, SidebarSimpleIcon, SignOutIcon, TimerIcon } from "@phosphor-icons/react";
+import { CalendarDotsIcon, CaretDownIcon, CaretRightIcon, GearSixIcon, HouseIcon, ListChecksIcon, NotebookIcon, RepeatIcon, SidebarSimpleIcon, SignOutIcon, TimerIcon } from "@phosphor-icons/react";
 import type { User } from "firebase/auth";
 
 import { IconButton } from "@/components/IconButton";
@@ -27,7 +27,6 @@ interface SidebarProps {
   openNoteId: string | null;
   onOpenFolder: (view: FolderView) => void;
   onOpenNote: (id: string) => void;
-  onCreateFolder: () => void;
   // Soltar una nota sobre una carpeta (null = sin carpeta)
   onMoveNote: (noteId: string, folderId: string | null) => void;
 }
@@ -172,7 +171,6 @@ function Sidebar({
   openNoteId,
   onOpenFolder,
   onOpenNote,
-  onCreateFolder,
   onMoveNote,
 }: SidebarProps) {
   // En pantallas estrechas la barra empieza cerrada y, abierta, flota encima del contenido
@@ -387,18 +385,6 @@ function Sidebar({
                         <span className="truncate">{note.title || "Sin título"}</span>
                       </button>
                     ))}
-
-                    {/* Sin carpetas, se muestra el atajo para que se sepa cómo crear una */}
-                    {folders.length === 0 && (
-                      <button
-                        type="button"
-                        onClick={onCreateFolder}
-                        className="flex items-center gap-1.5 rounded-md px-1.5 py-1.5 text-left text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
-                      >
-                        <PlusIcon className="size-3.5" />
-                        <span>Nueva carpeta</span>
-                      </button>
-                    )}
                   </div>
                 )}
               </div>

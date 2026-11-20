@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
-import { MoonIcon, SunIcon } from '@phosphor-icons/react'
+import { DeviceMobileIcon, MoonIcon, SunIcon } from '@phosphor-icons/react'
 import { IconButton } from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
 import { Kbd, KbdGroup } from '@/components/ui/kbd'
@@ -7,6 +7,7 @@ import DemoCockpit from '../components/landing/DemoCockpit'
 import DemoWeek from '../components/landing/DemoWeek'
 import { useDemoRoutines } from '../components/landing/demoData'
 import { goToAuthRoute } from '../hooks/useAuthRoute'
+import { isIos, usePwaInstall } from '../hooks/usePwaInstall'
 import type { Theme } from '../types'
 import { applyTheme, getSavedTheme } from '../utils/theme'
 
@@ -34,6 +35,51 @@ function Feature({ title, children, demo, reverse = false, stack = false }: { ti
         <p className="mt-3 leading-relaxed text-muted-foreground">{children}</p>
       </div>
       <div className={reverse ? 'md:order-1' : undefined}>{demo}</div>
+    </section>
+  )
+}
+
+// Versión de móvil: se instala como app desde el navegador (sin tienda)
+function MobileApp() {
+  const { installed, canPrompt, install } = usePwaInstall()
+  const [showSteps, setShowSteps] = useState(false)
+
+  if (installed) return null
+
+  const steps = isIos()
+    ? ['Abre esta página en Safari.', 'Pulsa el botón Compartir (el cuadrado con la flecha).', 'Elige «Añadir a pantalla de inicio».']
+    : ['Abre esta página en Chrome desde tu móvil.', 'Pulsa el menú ⋮ de arriba a la derecha.', 'Elige «Instalar aplicación» o «Añadir a pantalla de inicio».']
+
+  return (
+    <section id="movil" className={`${SECTION} pb-16`}>
+      <div className="flex flex-col gap-6 rounded-2xl border p-8 sm:flex-row sm:items-center sm:justify-between sm:p-12">
+        <div className="flex items-start gap-4">
+          <DeviceMobileIcon aria-hidden="true" className="mt-1 size-9 shrink-0 text-brand" />
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-balance">También en tu móvil</h2>
+            <p className="mt-2 max-w-md leading-relaxed text-muted-foreground">
+              Una versión pensada para el pulgar: tus tareas y rutinas de hoy a un toque, con tus notas siempre a mano. Se instala como una app, sin tienda y sin ocupar casi nada.
+            </p>
+          </div>
+        </div>
+        <Button
+          size="lg"
+          className="shrink-0"
+          aria-expanded={canPrompt ? undefined : showSteps}
+          aria-controls={canPrompt ? undefined : 'pasos-movil'}
+          onClick={() => (canPrompt ? install() : setShowSteps((show) => !show))}
+        >
+          <DeviceMobileIcon />
+          Instalar en el móvil
+        </Button>
+      </div>
+      {showSteps && !canPrompt && (
+        <ol id="pasos-movil" className="mt-4 list-decimal space-y-1.5 pl-9 text-sm text-muted-foreground">
+          {steps.map((step) => (
+            <li key={step}>{step}</li>
+          ))}
+        </ol>
+      )}
     </section>
   )
 }
@@ -158,6 +204,8 @@ export default function Landing() {
             </div>
           </div>
         </section>
+
+        <MobileApp />
       </main>
 
       <footer className={SECTION}>

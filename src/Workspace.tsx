@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { signOut } from "firebase/auth";
 import type { User } from "firebase/auth";
+import MobileNav from "./components/MobileNav";
 import SearchBar from "./components/SearchBar";
 import Sidebar from "./components/SideBar";
 import Toaster from "./components/Toaster";
 import { auth } from "./firebase";
+import { useIsMobile } from "./hooks/useIsMobile";
 import { useFolders } from "./hooks/useFolders";
 import { useNotes } from "./hooks/useNotes";
 import { useRoutines } from "./hooks/useRoutines";
@@ -16,6 +18,7 @@ import { countsOn, hasLog } from "./utils/routines";
 import { todayKey } from "./utils/tasks";
 import Calendar from "./pages/Calendar";
 import Home from "./pages/Home";
+import HomeMobile from "./pages/HomeMobile";
 import Notes from "./pages/Notes";
 import Profile from "./pages/Profile";
 import Pomodoro from "./pages/Pomodoro";
@@ -37,6 +40,7 @@ function Workspace({ user }: WorkspaceProps) {
   const [query, setQuery] = useState("");
   const [openNoteId, setOpenNoteId] = useState<string | null>(null);
   const [folderView, setFolderView] = useState<FolderView>("all");
+  const isMobile = useIsMobile();
 
   const { notes, loaded: notesLoaded, createNote: saveNewNote, updateNote, deleteNote, togglePin, flush, flushAll } = useNotes(user.uid);
   const { folders, createFolder, updateFolder, deleteFolder } = useFolders(user.uid);
@@ -161,6 +165,7 @@ function Workspace({ user }: WorkspaceProps) {
   return (
     <PomodoroProvider settings={settings}>
       <div className="flex min-h-screen">
+        <div className="contents max-md:hidden">
         <Sidebar
           page={page}
           onNavigate={navigate}
@@ -172,20 +177,35 @@ function Workspace({ user }: WorkspaceProps) {
           openNoteId={openNoteId}
           onOpenFolder={openFolder}
           onOpenNote={openNoteById}
-          onCreateFolder={addFolder}
           onMoveNote={(noteId, folderId) => updateNote(noteId, { folderId })}
         />
+        </div>
 
-        <main id="app-main" className="min-w-0 flex-1">
+        <main id="app-main" className={`min-w-0 flex-1 ${isMobile && !openNote ? "pb-20" : ""}`}>
           <SearchBar
             query={query}
             onQueryChange={changeQuery}
-            showSearch={page === "home" || (page === "notes" && !openNote)}
+            showSearch={(page === "home" && !isMobile) || (page === "notes" && !openNote)}
             theme={settings.theme}
             onToggleTheme={() => updateSettings({ theme: settings.theme === "dark" ? "light" : "dark" })}
           />
 
-          {page === "home" && (
+          {page === "home" && isMobile && (
+            <HomeMobile
+              loaded={notesLoaded && tasksLoaded && routinesLoaded}
+              notes={notes}
+              tasks={tasks}
+              routines={routines}
+              routineLogs={routineLogs}
+              onAddTask={addTask}
+              onUpdateTask={updateTask}
+              onSetRoutineDone={setRoutineDone}
+              onNavigate={navigate}
+              onOpenNote={openNoteById}
+            />
+          )}
+
+          {page === "home" && !isMobile && (
             <Home
               notes={notes}
               folders={folders}
@@ -298,6 +318,8 @@ function Workspace({ user }: WorkspaceProps) {
             />
           )}
         </main>
+
+        {isMobile && !openNote && <MobileNav page={page} user={user} onNavigate={navigate} />}
 
         {/* Avisos de error al guardar y "Deshacer" */}
         <Toaster />

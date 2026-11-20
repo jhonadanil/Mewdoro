@@ -48,6 +48,7 @@ const RESULTS_GRID = 'grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] items
 // Notas fijadas: tarjetas grandes, una columna en estrecho y dos en cuanto caben (container query),
 // para que se lea el contenido y no solo el título. Columnas que fluyen, sin huecos entre tarjetas de distinta altura
 const PINNED_GRID = 'columns-1 gap-4 @xl:columns-2 *:mb-4 *:break-inside-avoid'
+const TOOL_ORDER = ['tasks', 'routines', 'pomodoro', 'calendar']
 // Herramientas: columnas según el ancho real del contenido (container queries), no de la ventana
 const TOOLS_GRID = 'grid grid-cols-1 items-start gap-3 @md:grid-cols-2 @3xl:grid-cols-3'
 // Tareas es lo principal del día: ocupa dos columnas para que su lista no se corte
@@ -194,6 +195,10 @@ export default function Home({
   const pinnedNotes = notes.filter((note) => note.pinned)
   const hasTools = isTasksPinned || isPomodoroPinned || isCalendarPinned || isRoutinesPinned
 
+  // Herramientas fijadas, siempre en el mismo orden
+  const pinnedTools: Record<string, boolean> = { tasks: isTasksPinned, routines: isRoutinesPinned, pomodoro: isPomodoroPinned, calendar: isCalendarPinned }
+  const order = TOOL_ORDER.filter((id) => pinnedTools[id])
+
   // Sin nada fijado: una frase y los botones para fijar o crear desde aquí mismo
   if (!hasTools && pinnedNotes.length === 0) {
     return (
@@ -235,36 +240,39 @@ export default function Home({
       {hasTools && (
         <div className="@container mt-6">
           <div className={TOOLS_GRID}>
-            {isTasksPinned && (
-              <MiniTasks
-                tasks={tasks}
-                onOpen={() => onNavigate('tasks')}
-                onUnpin={onUnpinTasks}
-                onAdd={onAddTask}
-                onUpdate={onUpdateTask}
-                className={TASKS_SPAN}
-              />
-            )}
-            {isRoutinesPinned && (
-              <MiniRoutines
-                routines={routines}
-                logs={routineLogs}
-                onOpen={() => onNavigate('routines')}
-                onUnpin={onUnpinRoutines}
-                onSetDone={onSetRoutineDone}
-              />
-            )}
-            {isPomodoroPinned && <MiniPomodoro onOpen={() => onNavigate('pomodoro')} onUnpin={onUnpinPomodoro} />}
-            {isCalendarPinned && (
-              <MiniCalendar
-                view={calendarView}
-                tasks={tasks}
-                routines={routines}
-                logs={routineLogs}
-                onOpen={() => onNavigate('calendar')}
-                onUnpin={onUnpinCalendar}
-              />
-            )}
+            {order.map((id) => (
+              <div key={id} className={id === 'tasks' ? TASKS_SPAN : id === 'calendar' && calendarView === 'week' ? '@md:col-span-2' : undefined}>
+                {id === 'tasks' && (
+                  <MiniTasks
+                    tasks={tasks}
+                    onOpen={() => onNavigate('tasks')}
+                    onUnpin={onUnpinTasks}
+                    onAdd={onAddTask}
+                    onUpdate={onUpdateTask}
+                  />
+                )}
+                {id === 'routines' && (
+                  <MiniRoutines
+                    routines={routines}
+                    logs={routineLogs}
+                    onOpen={() => onNavigate('routines')}
+                    onUnpin={onUnpinRoutines}
+                    onSetDone={onSetRoutineDone}
+                  />
+                )}
+                {id === 'pomodoro' && <MiniPomodoro onOpen={() => onNavigate('pomodoro')} onUnpin={onUnpinPomodoro} />}
+                {id === 'calendar' && (
+                  <MiniCalendar
+                    view={calendarView}
+                    tasks={tasks}
+                    routines={routines}
+                    logs={routineLogs}
+                    onOpen={() => onNavigate('calendar')}
+                    onUnpin={onUnpinCalendar}
+                  />
+                )}
+              </div>
+            ))}
           </div>
         </div>
       )}

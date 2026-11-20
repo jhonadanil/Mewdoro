@@ -33,7 +33,7 @@ function SearchBar({ query, onQueryChange, showSearch, theme, onToggleTheme }: S
   }, [showSearch]);
 
   return (
-    <header className="relative flex min-h-[74px] items-center justify-center py-4 pl-14 pr-24 sm:px-24">
+    <header className="relative flex min-h-[74px] items-center justify-center py-4 pl-14 pr-24 max-md:min-h-14 max-md:py-2 max-md:pl-4 max-md:pr-14 sm:px-24">
       {/* El buscador solo se muestra en Inicio y Notas */}
       {showSearch && (
         <div className="group relative w-full max-w-md">
@@ -74,7 +74,9 @@ function SearchBar({ query, onQueryChange, showSearch, theme, onToggleTheme }: S
 
       {/* Atajos y tema, arriba a la derecha */}
       <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-0.5 sm:right-6">
-        <ShortcutsHelp />
+        <span className="max-md:hidden">
+          <ShortcutsHelp />
+        </span>
         <IconButton label={theme === "dark" ? "Tema claro" : "Tema oscuro"} size="icon" onClick={onToggleTheme}>
           {theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </IconButton>
