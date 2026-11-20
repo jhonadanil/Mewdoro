@@ -3,7 +3,7 @@ import type { PomodoroMode, Settings } from '../types'
 
 export type PomodoroSettings = Pick<
   Settings,
-  'workMinutes' | 'shortBreakMinutes' | 'longBreakMinutes' | 'longBreakInterval' | 'autoStart' | 'sound'
+  'workMinutes' | 'shortBreakMinutes' | 'longBreakMinutes' | 'longBreakInterval' | 'autoStart' | 'sound' | 'notify' | 'timerInTitle'
 >
 
 export const MODE_LABELS: Record<PomodoroMode, string> = {
@@ -63,6 +63,7 @@ type PomodoroAction =
   | { type: 'reset'; settings: PomodoroSettings }
   | { type: 'changeMode'; mode: PomodoroMode; settings: PomodoroSettings }
   | { type: 'syncSettings'; settings: PomodoroSettings }
+  | { type: 'setDuration'; seconds: number }
 
 function createInitialState(settings: PomodoroSettings): PomodoroState {
   const duration = getDuration('work', settings)
@@ -103,6 +104,8 @@ function reducer(state: PomodoroState, action: PomodoroAction): PomodoroState {
       const duration = getDuration(action.mode, action.settings)
       return { ...state, mode: action.mode, secondsLeft: duration, duration, isRunning: false }
     }
+    case 'setDuration':
+      return { ...state, duration: action.seconds, secondsLeft: action.seconds }
     case 'syncSettings': {
       // Si el bloque no ha empezado, toma la nueva duración; si ya empezó, solo se recorta
       const duration = getDuration(state.mode, action.settings)
@@ -143,12 +146,27 @@ export function usePomodoro(settings: PomodoroSettings) {
     if (state.finishedBlocks === lastFinished.current) return
     lastFinished.current = state.finishedBlocks
     if (settings.sound) playBeep()
-  }, [state.finishedBlocks, settings.sound])
+    if (settings.notify && 'Notification' in window && Notification.permission === 'granted') {
+      new Notification(state.mode === 'work' ? 'Hora de trabajar' : 'Hora de descansar', { body: `${MODE_LABELS[state.mode]} · ${state.secondsLeft / 60} min` })
+    }
+  }, [state.finishedBlocks, state.mode, state.secondsLeft, settings.sound, settings.notify])
+
+  // Tiempo restante en el título de la pestaña mientras corre
+  useEffect(() => {
+    if (!settings.timerInTitle || !state.isRunning) return
+    const base = document.title
+    document.title = `${formatTime(state.secondsLeft)} · ${MODE_LABELS[state.mode]}`
+    return () => {
+      document.title = base
+    }
+  }, [settings.timerInTitle, state.isRunning, state.secondsLeft, state.mode])
 
   return {
     ...state,
     toggle: () => dispatch({ type: 'toggle' }),
     reset: () => dispatch({ type: 'reset', settings }),
+    // Cambia la duración del bloque actual y lo reinicia con ella
+    setDuration: (minutes: number) => dispatch({ type: 'setDuration', seconds: minutes * 60 }),
     changeMode: (mode: PomodoroMode) => dispatch({ type: 'changeMode', mode, settings }),
   }
 }

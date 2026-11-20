@@ -3,30 +3,6 @@ import { collection, doc, getDocFromServer, onSnapshot, orderBy, query, setDoc, 
 import { db } from '../db'
 import type { Folder } from '../types'
 
-// Iconos para las carpetas, agrupados como en el selector de Notion
-export const FOLDER_ICON_GROUPS: { name: string; icons: string[] }[] = [
-  {
-    name: 'Trabajo',
-    icons: ['📁', '📂', '💼', '📋', '📌', '📎', '📅', '📆', '📈', '📊', '📉', '🗂️', '🗃️', '🗄️', '📇', '🧾', '✉️', '📨', '📞', '🏢'],
-  },
-  {
-    name: 'Código',
-    icons: ['💻', '🖥️', '⌨️', '🖱️', '🧑‍💻', '🐍', '☕', '🦀', '🐳', '🐧', '⚙️', '🛠️', '🔧', '🔩', '🧩', '🧪', '🐛', '🔌', '💾', '🌐'],
-  },
-  {
-    name: 'Tareas y proyectos',
-    icons: ['✅', '☑️', '✔️', '📝', '✏️', '🖊️', '🎯', '🚀', '🏁', '⏰', '⏳', '🔔', '🔥', '⚡', '💡', '🧠', '🏆', '🥇', '📣', '🗓️'],
-  },
-  {
-    name: 'Estudio y personal',
-    icons: ['📚', '📖', '📓', '📒', '🎓', '🏫', '🔬', '🧮', '🏠', '🛒', '🍳', '🏋️', '🧘', '✈️', '🌍', '🎵', '🎮', '🎬', '📷', '🎨'],
-  },
-  {
-    name: 'Símbolos',
-    icons: ['⭐', '🌟', '✨', '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🔴', '🟠', '🟡', '🟢', '🔵', '🟣', '⚫', '💎', '🍀'],
-  },
-]
-
 // Carpetas con las que empieza cada cuenta; ids fijos para no duplicarlas
 const DEFAULT_FOLDERS = [
   { id: 'trabajo', name: 'Trabajo', icon: '💼' },

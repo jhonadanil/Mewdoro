@@ -11,6 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import SignOutDialog from "./SignOutDialog";
+import { startNoteDrag, useNoteDrop } from "../hooks/useNoteDrop";
 import type { Folder, FolderView, Note, Page } from "../types";
 import { filterByFolder } from "../utils/notes";
 
@@ -25,8 +27,9 @@ interface SidebarProps {
   openNoteId: string | null;
   onOpenFolder: (view: FolderView) => void;
   onOpenNote: (id: string) => void;
-  onCreateNote: (folderId: string | null) => void;
   onCreateFolder: () => void;
+  // Soltar una nota sobre una carpeta (null = sin carpeta)
+  onMoveNote: (noteId: string, folderId: string | null) => void;
 }
 
 // Alt + número lleva a cada sección (el número es el de su tecla, ver PAGE_KEYS)
@@ -94,7 +97,7 @@ interface FolderRowProps {
   onToggle: () => void;
   onOpen: () => void;
   onOpenNote: (id: string) => void;
-  onCreateNote: () => void;
+  onDropNote: (noteId: string) => void;
 }
 
 // Una carpeta del árbol, que se despliega para ver sus notas (como en Notion)
@@ -108,11 +111,12 @@ function FolderRow({
   onToggle,
   onOpen,
   onOpenNote,
-  onCreateNote,
+  onDropNote,
 }: FolderRowProps) {
+  const { isOver, props: dropProps } = useNoteDrop(onDropNote);
   return (
     <div>
-      <div className={cn("group/row flex items-center rounded-md hover:bg-sidebar-accent", isActive && "bg-sidebar-accent")}>
+      <div {...dropProps} className={cn("group/row flex items-center rounded-md hover:bg-sidebar-accent", isActive && "bg-sidebar-accent", isOver && "bg-sidebar-accent ring-2 ring-foreground/40")}>
         <IconButton label={isExpanded ? "Contraer carpeta" : "Desplegar carpeta"} size="icon-xs" side="right" onClick={onToggle}>
           {isExpanded ? <CaretDownIcon /> : <CaretRightIcon />}
         </IconButton>
@@ -127,16 +131,6 @@ function FolderRow({
           <span className="shrink-0 text-sm">{icon}</span>
           <span className="truncate">{name}</span>
         </button>
-        {/* El + solo aparece al pasar el ratón, como en Notion */}
-        <IconButton
-          label="Nueva nota en esta carpeta"
-          size="icon-xs"
-          side="right"
-          className="mr-0.5 opacity-0 group-hover/row:opacity-100 focus-visible:opacity-100"
-          onClick={onCreateNote}
-        >
-          <PlusIcon />
-        </IconButton>
       </div>
 
       {isExpanded &&
@@ -147,6 +141,8 @@ function FolderRow({
             <button
               key={note.id}
               type="button"
+              draggable
+              onDragStart={(event) => startNoteDrag(event, note.id)}
               onClick={() => onOpenNote(note.id)}
               title={note.title || "Sin título"}
               className={cn(
@@ -176,14 +172,15 @@ function Sidebar({
   openNoteId,
   onOpenFolder,
   onOpenNote,
-  onCreateNote,
   onCreateFolder,
+  onMoveNote,
 }: SidebarProps) {
   // En pantallas estrechas la barra empieza cerrada y, abierta, flota encima del contenido
   const [isOpen, setIsOpen] = useState(() => !isNarrow());
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
   // Las carpetas solo se ven tras pulsar Notas, y siguen visibles hasta que se vuelve a pulsar
   const [showFolders, setShowFolders] = useState(false);
+  const [confirmSignOut, setConfirmSignOut] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const asideRef = useRef<HTMLElement>(null);
   // Se sigue el ancho en vivo: al girar una tablet o ensanchar la ventana, la barra deja de ser panel
@@ -344,7 +341,6 @@ function Sidebar({
                     label={label}
                     isActive={page === linkPage}
                     shortcutKey={key}
-                    hasAction={linkPage === "notes"}
                     expanded={linkPage === "notes" ? showFolders : undefined}
                     onClick={() => {
                       if (linkPage !== "notes") return onNavigate(linkPage);
@@ -352,23 +348,6 @@ function Sidebar({
                       onOpenFolder("all");
                     }}
                   />
-
-                  {/* Como en Notion: el + para crear carpeta aparece al pasar el ratón */}
-                  {linkPage === "notes" && (
-                    <IconButton
-                      label="Nueva carpeta"
-                      size="icon-xs"
-                      side="right"
-                      className="absolute right-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover/link:opacity-100 focus-visible:opacity-100"
-                      // Se despliegan las carpetas para que se vea la nueva
-                      onClick={() => {
-                        setShowFolders(true);
-                        onCreateFolder();
-                      }}
-                    >
-                      <PlusIcon />
-                    </IconButton>
-                  )}
                 </div>
 
                 {/* Árbol de carpetas debajo de Notas */}
@@ -386,24 +365,28 @@ function Sidebar({
                         onToggle={() => toggleExpanded(folder.id)}
                         onOpen={() => openFolder(folder.id)}
                         onOpenNote={onOpenNote}
-                        onCreateNote={() => onCreateNote(folder.id)}
+                        onDropNote={(noteId) => onMoveNote(noteId, folder.id)}
                       />
                     ))}
 
-                    {notesWithoutFolder.length > 0 && (
-                      <FolderRow
-                        icon="📄"
-                        name="Sin carpeta"
-                        notes={notesWithoutFolder}
-                        isActive={isFolderActive("none")}
-                        isExpanded={expanded.has("none")}
-                        openNoteId={openNoteId}
-                        onToggle={() => toggleExpanded("none")}
-                        onOpen={() => openFolder("none")}
-                        onOpenNote={onOpenNote}
-                        onCreateNote={() => onCreateNote(null)}
-                      />
-                    )}
+                    {/* Notas sueltas: van solas, sin carpeta; se arrastran a una carpeta para guardarlas */}
+                    {notesWithoutFolder.map((note) => (
+                      <button
+                        key={note.id}
+                        type="button"
+                        draggable
+                        onDragStart={(event) => startNoteDrag(event, note.id)}
+                        onClick={() => onOpenNote(note.id)}
+                        title={note.title || "Sin título"}
+                        className={cn(
+                          "flex w-full items-center gap-1.5 truncate rounded-md py-1.5 pl-2 pr-2 text-left text-[13px] text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
+                          openNoteId === note.id && "bg-sidebar-accent text-foreground"
+                        )}
+                      >
+                        <span className="shrink-0 text-sm">📄</span>
+                        <span className="truncate">{note.title || "Sin título"}</span>
+                      </button>
+                    ))}
 
                     {/* Sin carpetas, se muestra el atajo para que se sepa cómo crear una */}
                     {folders.length === 0 && (
@@ -426,7 +409,14 @@ function Sidebar({
           <div className="flex flex-col gap-2">
             <NavItem icon={<GearSixIcon weight={page === "settings" ? "fill" : "regular"} />} label="Ajustes" isActive={page === "settings"} shortcutKey={SETTINGS_KEY} onClick={() => onNavigate("settings")} />
             <Separator />
-            <div className="flex items-center gap-2.5 pl-2.5 pr-1">
+            <div className="flex items-center gap-1 pr-1">
+              <button
+                type="button"
+                onClick={() => onNavigate("profile")}
+                aria-current={page === "profile" ? "page" : undefined}
+                title="Ver mi perfil y mis rachas"
+                className={cn("flex min-w-0 flex-1 items-center gap-2.5 rounded-md py-1 pl-2.5 pr-1 text-left hover:bg-sidebar-accent focus-visible:outline-2 focus-visible:outline-offset-2", page === "profile" && "bg-sidebar-accent")}
+              >
               <Avatar className="size-7">
                 <AvatarImage src={user.photoURL ?? undefined} alt="" referrerPolicy="no-referrer" />
                 <AvatarFallback className="text-xs font-semibold">{name.charAt(0).toUpperCase()}</AvatarFallback>
@@ -437,13 +427,15 @@ function Sidebar({
                   <span className="truncate text-xs text-muted-foreground" title={user.email}>{user.email}</span>
                 )}
               </div>
-              <IconButton label="Cerrar sesión" side="top" onClick={onSignOut}>
+              </button>
+              <IconButton label="Cerrar sesión" side="top" onClick={() => setConfirmSignOut(true)}>
                 <SignOutIcon />
               </IconButton>
             </div>
           </div>
         </aside>
       )}
+      <SignOutDialog open={confirmSignOut} onOpenChange={setConfirmSignOut} onConfirm={onSignOut} />
     </div>
   );
 }

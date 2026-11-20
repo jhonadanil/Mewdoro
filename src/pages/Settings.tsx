@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { SignOutIcon } from '@phosphor-icons/react'
+import { SignOutIcon, TrashIcon } from '@phosphor-icons/react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import DeleteAccountDialog from '../components/DeleteAccountDialog'
+import SignOutDialog from '../components/SignOutDialog'
+import NumberField from '../components/NumberField'
 import { Page, PageText, PageTitle } from '../components/Page'
 import { DEFAULT_SETTINGS } from '../hooks/useUserData'
-import type { NoteType, Settings as SettingsType, Theme } from '../types'
+import type { CalendarView, NoteType, Settings as SettingsType, Theme } from '../types'
 import { NOTE_TYPES } from '../utils/notes'
 
 interface SettingsProps {
@@ -15,6 +17,8 @@ interface SettingsProps {
   email: string | null
   onChange: (changes: Partial<SettingsType>) => void
   onSignOut: () => void
+  hasPassword: boolean
+  onDeleteAccount: (password?: string) => Promise<void>
 }
 
 function Section({ children }: { children: ReactNode }) {
@@ -39,48 +43,15 @@ function SettingRow({ label, hint, children }: RowProps) {
   )
 }
 
-interface NumberFieldProps {
-  value: number
-  min: number
-  max: number
-  label: string
-  onChange: (value: number) => void
-}
-
-// Se guarda al salir del campo, para poder borrar y escribir otro número
-function NumberField({ value, min, max, label, onChange }: NumberFieldProps) {
-  const [draft, setDraft] = useState(String(value))
-
-  const commit = () => {
-    const number = Number(draft)
-    if (Number.isInteger(number) && number >= min && number <= max) {
-      if (number !== value) onChange(number)
-    } else {
-      setDraft(String(value))
-    }
-  }
-
-  return (
-    <Input
-      className="w-20 shrink-0"
-      type="number"
-      min={min}
-      max={max}
-      aria-label={label}
-      value={draft}
-      onChange={(event) => setDraft(event.target.value)}
-      onBlur={commit}
-      onKeyDown={(event) => event.key === 'Enter' && event.currentTarget.blur()}
-    />
-  )
-}
-
 // Interruptor con el azul de Notion cuando está activado
 function Toggle({ checked, label, onChange }: { checked: boolean; label: string; onChange: (value: boolean) => void }) {
   return <Switch checked={checked} onCheckedChange={onChange} aria-label={label} className="data-[state=checked]:bg-brand" />
 }
 
-export default function Settings({ settings, email, onChange, onSignOut }: SettingsProps) {
+export default function Settings({ settings, email, onChange, onSignOut, hasPassword, onDeleteAccount }: SettingsProps) {
+  const [confirmSignOut, setConfirmSignOut] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+
   return (
     <Page narrow>
       <PageTitle>Ajustes</PageTitle>
@@ -133,6 +104,22 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
       <SettingRow label="Sonido al terminar">
         <Toggle label="Sonido" checked={settings.sound} onChange={(value) => onChange({ sound: value })} />
       </SettingRow>
+      <SettingRow label="Tiempo en la pestaña" hint="Muestra el tiempo que queda en el título de la pestaña del navegador">
+        <Toggle label="Tiempo en la pestaña" checked={settings.timerInTitle} onChange={(value) => onChange({ timerInTitle: value })} />
+      </SettingRow>
+      <SettingRow label="Avisar al terminar" hint="Notificación del navegador al acabar un bloque (te pedirá permiso)">
+        <Toggle
+          label="Notificación"
+          checked={settings.notify}
+          onChange={async (value) => {
+            if (value && 'Notification' in window && Notification.permission !== 'granted') {
+              const permission = await Notification.requestPermission()
+              if (permission !== 'granted') return
+            }
+            onChange({ notify: value })
+          }}
+        />
+      </SettingRow>
       <SettingRow label="Restablecer" hint="Vuelve a 25 / 5 / 15 minutos">
         <Button
           variant="outline"
@@ -165,6 +152,19 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
         </Select>
       </SettingRow>
 
+      <Section>Calendario</Section>
+      <SettingRow label="Vista al abrirlo" hint="Semana o mes">
+        <Select value={settings.calendarView} onValueChange={(value) => onChange({ calendarView: value as CalendarView })}>
+          <SelectTrigger className="w-36" aria-label="Vista del calendario">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="week">Semana</SelectItem>
+            <SelectItem value="month">Mes</SelectItem>
+          </SelectContent>
+        </Select>
+      </SettingRow>
+
       <Section>Apariencia</Section>
       <SettingRow label="Tema">
         <Select value={settings.theme} onValueChange={(value) => onChange({ theme: value as Theme })}>
@@ -180,11 +180,20 @@ export default function Settings({ settings, email, onChange, onSignOut }: Setti
 
       <Section>Cuenta</Section>
       <SettingRow label="Sesión iniciada como" hint={email ?? undefined}>
-        <Button variant="outline" onClick={onSignOut}>
+        <Button variant="outline" onClick={() => setConfirmSignOut(true)}>
           <SignOutIcon />
           Cerrar sesión
         </Button>
       </SettingRow>
+      <SettingRow label="Eliminar cuenta" hint="Borra tu cuenta y todos tus datos para siempre">
+        <Button variant="destructive" onClick={() => setConfirmDelete(true)}>
+          <TrashIcon />
+          Eliminar cuenta
+        </Button>
+      </SettingRow>
+
+      <SignOutDialog open={confirmSignOut} onOpenChange={setConfirmSignOut} onConfirm={onSignOut} />
+      <DeleteAccountDialog open={confirmDelete} onOpenChange={setConfirmDelete} needsPassword={hasPassword} onConfirm={onDeleteAccount} />
     </Page>
   )
 }

@@ -4,7 +4,7 @@ import { IconButton } from '@/components/IconButton'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Page, PageHeader, PageTitle } from '../components/Page'
-import type { Routine, Task } from '../types'
+import type { CalendarView, Routine, Task } from '../types'
 import { WEEK_DAYS, WEEK_DAYS_LONG, formatMonth, getMonthCells, getMonthStart } from '../utils/calendar'
 import { toDateKey } from '../utils/notes'
 import { countsOn, dayProgress, formatWeekRange, hasLog, weekKeys, weekStartKey } from '../utils/routines'
@@ -12,18 +12,20 @@ import { formatLongDay, fromDateKey, shiftDateKey, todayKey } from '../utils/tas
 
 interface CalendarProps {
   isPinned: boolean
-  onTogglePin: () => void
+  // Al fijar, Inicio recibe la vista que se está viendo (semana o mes)
+  onTogglePin: (view: CalendarView) => void
+  defaultView: CalendarView
   tasks: Task[]
   routines: Routine[]
   logs: Set<string>
 }
 
-type View = 'week' | 'month'
+type View = CalendarView
 
 // Calendario con vista semanal y mensual: cada día muestra sus tareas flash y sus rutinas
-export default function Calendar({ isPinned, onTogglePin, tasks, routines, logs }: CalendarProps) {
+export default function Calendar({ isPinned, onTogglePin, defaultView, tasks, routines, logs }: CalendarProps) {
   const today = todayKey()
-  const [view, setView] = useState<View>('week')
+  const [view, setView] = useState<View>(defaultView)
   const [anchor, setAnchor] = useState(today)
 
   const monthDate = getMonthStart(fromDateKey(anchor))
@@ -45,9 +47,9 @@ export default function Calendar({ isPinned, onTogglePin, tasks, routines, logs 
     <Page>
       <PageHeader
         actions={
-          <Button variant="outline" onClick={onTogglePin}>
+          <Button variant="outline" onClick={() => onTogglePin(view)}>
             {isPinned ? <PushPinSlashIcon /> : <PushPinIcon />}
-            {isPinned ? 'Quitar de inicio' : 'Fijar en inicio'}
+            {isPinned ? 'Quitar de inicio' : `Fijar ${view === 'week' ? 'semana' : 'mes'} en inicio`}
           </Button>
         }
       >

@@ -15,7 +15,7 @@ import { usePomodoroContext } from '../hooks/PomodoroContext'
 import type { Pomodoro } from '../hooks/usePomodoro'
 import { useClock } from '../hooks/useClock'
 import type { TaskChanges } from '../hooks/useTasks'
-import type { Folder, Note, Page as PageName, Pinned, Routine, Task } from '../types'
+import type { CalendarView, Folder, Note, Page as PageName, Pinned, Routine, Task } from '../types'
 import { getNoteFolder, toDateKey } from '../utils/notes'
 
 function greeting(now: Date) {
@@ -103,6 +103,7 @@ interface HomeProps {
   onUnpinPomodoro: () => void
   isCalendarPinned: boolean
   onUnpinCalendar: () => void
+  calendarView: CalendarView
   tasks: Task[]
   isTasksPinned: boolean
   onUnpinTasks: () => void
@@ -131,6 +132,7 @@ export default function Home({
   onUnpinPomodoro,
   isCalendarPinned,
   onUnpinCalendar,
+  calendarView,
   tasks,
   isTasksPinned,
   onUnpinTasks,
@@ -253,7 +255,16 @@ export default function Home({
               />
             )}
             {isPomodoroPinned && <MiniPomodoro onOpen={() => onNavigate('pomodoro')} onUnpin={onUnpinPomodoro} />}
-            {isCalendarPinned && <MiniCalendar onOpen={() => onNavigate('calendar')} onUnpin={onUnpinCalendar} />}
+            {isCalendarPinned && (
+              <MiniCalendar
+                view={calendarView}
+                tasks={tasks}
+                routines={routines}
+                logs={routineLogs}
+                onOpen={() => onNavigate('calendar')}
+                onUnpin={onUnpinCalendar}
+              />
+            )}
           </div>
         </div>
       )}

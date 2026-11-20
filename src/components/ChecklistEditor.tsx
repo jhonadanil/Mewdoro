@@ -97,7 +97,7 @@ export default function ChecklistEditor({ value, onChange, firstInputRef }: Chec
                 row.done && 'text-muted-foreground line-through'
               )}
               type="text"
-              placeholder="Escribe una tarea…"
+              placeholder="Escribe un elemento…"
               value={row.text}
               onChange={(event) => edit(index, { text: event.target.value })}
               onKeyDown={(event) => handleKeyDown(event, index)}

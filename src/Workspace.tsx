@@ -17,12 +17,14 @@ import { todayKey } from "./utils/tasks";
 import Calendar from "./pages/Calendar";
 import Home from "./pages/Home";
 import Notes from "./pages/Notes";
+import Profile from "./pages/Profile";
 import Pomodoro from "./pages/Pomodoro";
 import Routines from "./pages/Routines";
 import Settings from "./pages/Settings";
 import Tasks from "./pages/Tasks";
 import type { FolderView, Page } from "./types";
 import { createNote, filterByFolder, filterNotes, isEmptyNote } from "./utils/notes";
+import { deleteAccount, hasPasswordLogin } from "./utils/account";
 import { applyTheme } from "./utils/theme";
 
 interface WorkspaceProps {
@@ -93,8 +95,8 @@ function Workspace({ user }: WorkspaceProps) {
     setFolderView(view);
   };
 
-  // Sin carpeta indicada, la nota se crea en la carpeta que se está viendo
-  const addNote = (folderId: string | null = folders.some((folder) => folder.id === folderView) ? folderView : null) => {
+  // Sin carpeta indicada, la nota se crea suelta (sin carpeta); luego se arrastra a una carpeta
+  const addNote = (folderId: string | null = null) => {
     closeNote();
     const note = createNote(settings.defaultNoteType, folderId);
     saveNewNote(note);
@@ -170,8 +172,8 @@ function Workspace({ user }: WorkspaceProps) {
           openNoteId={openNoteId}
           onOpenFolder={openFolder}
           onOpenNote={openNoteById}
-          onCreateNote={addNote}
           onCreateFolder={addFolder}
+          onMoveNote={(noteId, folderId) => updateNote(noteId, { folderId })}
         />
 
         <main id="app-main" className="min-w-0 flex-1">
@@ -196,6 +198,7 @@ function Workspace({ user }: WorkspaceProps) {
               loaded={notesLoaded && tasksLoaded && userLoaded && routinesLoaded}
               onUnpinPomodoro={() => unpinFromHome("pomodoro", "Pomodoro quitado de Inicio")}
               isCalendarPinned={pinned.calendar}
+              calendarView={pinned.calendarView}
               onUnpinCalendar={() => unpinFromHome("calendar", "Calendario quitado de Inicio")}
               tasks={tasks}
               isTasksPinned={pinned.tasks}
@@ -218,7 +221,6 @@ function Workspace({ user }: WorkspaceProps) {
               notes={filterByFolder(filteredNotes, folders, folderView)}
               folders={folders}
               view={folderView}
-              hasNotesWithoutFolder={filterByFolder(notes, folders, "none").length > 0}
               query={query}
               openNote={openNote}
               onChangeView={openFolder}
@@ -237,6 +239,7 @@ function Workspace({ user }: WorkspaceProps) {
           {page === "pomodoro" && (
             <Pomodoro
               settings={settings}
+              onChangeSettings={updateSettings}
               isPinned={pinned.pomodoro}
               onTogglePin={() => updatePinned({ pomodoro: !pinned.pomodoro })}
             />
@@ -257,7 +260,8 @@ function Workspace({ user }: WorkspaceProps) {
           {page === "calendar" && (
             <Calendar
               isPinned={pinned.calendar}
-              onTogglePin={() => updatePinned({ calendar: !pinned.calendar })}
+              onTogglePin={(view) => updatePinned({ calendar: !pinned.calendar, calendarView: view })}
+              defaultView={settings.calendarView}
               tasks={tasks}
               routines={routines}
               logs={routineLogs}
@@ -279,12 +283,18 @@ function Workspace({ user }: WorkspaceProps) {
             />
           )}
 
+          {page === "profile" && (
+            <Profile user={user} routines={routines} logs={routineLogs} onOpenRoutines={() => navigate("routines")} />
+          )}
+
           {page === "settings" && (
             <Settings
               settings={settings}
               email={user.email}
               onChange={updateSettings}
               onSignOut={handleSignOut}
+              hasPassword={hasPasswordLogin(user)}
+              onDeleteAccount={(password) => deleteAccount(user, password)}
             />
           )}
         </main>

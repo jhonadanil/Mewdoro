@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import EmojiPicker from '../components/EmojiPicker'
 import NoteCard from '../components/NoteCard'
@@ -19,13 +20,13 @@ import NoteEditor from '../components/NoteEditor'
 import type { NoteChanges } from '../components/NoteEditor'
 import { Page, PageHeader, PageText, PageTitle } from '../components/Page'
 import type { Folder, FolderView, Note } from '../types'
+import { useNoteDrop } from '../hooks/useNoteDrop'
 import { getNoteFolder } from '../utils/notes'
 
 interface NotesProps {
   notes: Note[]
   folders: Folder[]
   view: FolderView
-  hasNotesWithoutFolder: boolean
   query: string
   openNote: Note | undefined
   onChangeView: (view: FolderView) => void
@@ -62,9 +63,27 @@ function FolderTitle({ folder, onRename }: { folder: Folder; onRename: (name: st
 }
 
 // Pestaña de carpeta (filtro) con forma de píldora
-function FolderTab({ isActive, onClick, children }: { isActive: boolean; onClick: () => void; children: ReactNode }) {
+// Se puede soltar una nota encima para moverla a esa carpeta (onDropNote)
+function FolderTab({
+  isActive,
+  onClick,
+  onDropNote,
+  children,
+}: {
+  isActive: boolean
+  onClick: () => void
+  onDropNote?: (noteId: string) => void
+  children: ReactNode
+}) {
+  const { isOver, props } = useNoteDrop((noteId) => onDropNote?.(noteId))
   return (
-    <Button size="sm" variant={isActive ? 'default' : 'outline'} className="rounded-full font-normal" onClick={onClick}>
+    <Button
+      size="sm"
+      variant={isActive ? 'default' : 'outline'}
+      className={cn('rounded-full font-normal', isOver && 'ring-2 ring-foreground/60')}
+      onClick={onClick}
+      {...(onDropNote ? props : {})}
+    >
       {children}
     </Button>
   )
@@ -74,7 +93,6 @@ export default function Notes({
   notes,
   folders,
   view,
-  hasNotesWithoutFolder,
   query,
   openNote,
   onChangeView,
@@ -130,7 +148,7 @@ export default function Notes({
                       ¿Eliminar la carpeta "{currentFolder.name || 'Sin título'}"?
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                      Las notas no se borran: pasarán a "Sin carpeta".
+                      Las notas no se borran: pasarán a ser notas sueltas.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -169,16 +187,10 @@ export default function Notes({
           Todas
         </FolderTab>
         {folders.map((folder) => (
-          <FolderTab key={folder.id} isActive={view === folder.id} onClick={() => onChangeView(folder.id)}>
+          <FolderTab key={folder.id} isActive={view === folder.id} onClick={() => onChangeView(folder.id)} onDropNote={(noteId) => onUpdate(noteId, { folderId: folder.id })}>
             {folder.icon} {folder.name || 'Sin título'}
           </FolderTab>
         ))}
-        {/* Filtro para las notas que no están en ninguna carpeta; solo si hay alguna */}
-        {(hasNotesWithoutFolder || view === 'none') && (
-          <FolderTab isActive={view === 'none'} onClick={() => onChangeView('none')}>
-            Sin carpeta
-          </FolderTab>
-        )}
         <Button size="sm" variant="ghost" className="rounded-full border border-dashed font-normal text-muted-foreground" onClick={onCreateFolder}>
           <FolderPlusIcon />
           Nueva carpeta

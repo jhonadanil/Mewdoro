@@ -4,6 +4,7 @@ import { ScrollArea } from '@/components/ScrollArea'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { startNoteDrag } from '../hooks/useNoteDrop'
 import type { Folder, Note } from '../types'
 import { highlightCode } from '../utils/code'
 import { getNotePreview, isCodeNote } from '../utils/notes'
@@ -32,6 +33,8 @@ export default function NoteCard({ note, folder, onOpen, onTogglePin, onDelete, 
 
   return (
     <Card
+      draggable
+      onDragStart={(event) => startNoteDrag(event, note.id)}
       size={variant === 'compact' ? 'sm' : 'default'}
       className={cn(
         'group relative px-(--card-spacing) transition-shadow hover:border-foreground/30',

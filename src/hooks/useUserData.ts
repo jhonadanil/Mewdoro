@@ -14,9 +14,12 @@ export const DEFAULT_SETTINGS: Settings = {
   sound: true,
   theme: 'dark',
   defaultNoteType: 'text',
+  calendarView: 'week',
+  notify: false,
+  timerInTitle: true,
 }
 
-const DEFAULT_PINNED: Pinned = { pomodoro: false, calendar: false, tasks: false, routines: false }
+const DEFAULT_PINNED: Pinned = { pomodoro: false, calendar: false, tasks: false, routines: false, calendarView: 'week' }
 
 // Ajustes y elementos fijados, guardados en el documento users/{uid}
 export function useUserData(uid: string) {

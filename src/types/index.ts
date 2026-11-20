@@ -1,4 +1,4 @@
-export type Page = 'home' | 'notes' | 'pomodoro' | 'tasks' | 'calendar' | 'routines' | 'settings'
+export type Page = 'home' | 'notes' | 'pomodoro' | 'tasks' | 'calendar' | 'routines' | 'profile' | 'settings'
 
 export type NoteType =
   | 'text'
@@ -49,13 +49,23 @@ export interface Settings {
   sound: boolean
   theme: Theme
   defaultNoteType: NoteType
+  // Calendario: vista con la que se abre
+  calendarView: CalendarView
+  // Aviso del navegador al terminar un bloque del Pomodoro
+  notify: boolean
+  // Tiempo restante en el título de la pestaña
+  timerInTitle: boolean
 }
+
+export type CalendarView = 'week' | 'month'
 
 export interface Pinned {
   pomodoro: boolean
   calendar: boolean
   tasks: boolean
   routines: boolean
+  // Vista del calendario fijado en Inicio
+  calendarView: CalendarView
 }
 
 export interface Task {
