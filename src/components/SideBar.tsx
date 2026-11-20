@@ -54,14 +54,12 @@ interface NavItemProps {
   isActive: boolean;
   // Número del atajo Alt + número; se enseña al pasar el ratón
   shortcutKey: string;
-  // Deja hueco a la derecha para un botón que aparece encima (el + de Notas)
-  hasAction?: boolean;
   // Solo en Notas: indica si el árbol de carpetas está desplegado
   expanded?: boolean;
   onClick: () => void;
 }
 
-function NavItem({ icon, label, isActive, shortcutKey, hasAction, expanded, onClick }: NavItemProps) {
+function NavItem({ icon, label, isActive, shortcutKey, expanded, onClick }: NavItemProps) {
   return (
     <button
       type="button"
@@ -77,7 +75,7 @@ function NavItem({ icon, label, isActive, shortcutKey, hasAction, expanded, onCl
       <span>{label}</span>
       <KbdGroup
         aria-hidden="true"
-        className={cn("ml-auto opacity-0 transition-opacity group-hover/nav:opacity-100", hasAction && "mr-6")}
+        className="ml-auto opacity-0 transition-opacity group-hover/nav:opacity-100"
       >
         <Kbd>Alt</Kbd>
         <Kbd>{shortcutKey}</Kbd>
