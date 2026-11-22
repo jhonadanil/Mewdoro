@@ -117,7 +117,7 @@ export default function Landing() {
         <section className={`${SECTION} pb-14 pt-10 sm:pt-16`}>
           <h1 className="max-w-[16ch] text-4xl font-bold leading-[1.1] tracking-tight text-balance sm:text-6xl">Tu día entero, en una sola pantalla.</h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            Notas con código, tareas flash, rutinas, calendario y Pomodoro, juntos. Para estudiar y programar sin saltar de una app a otra.
+            Mewdoro es una app web de notas con código, tareas flash, rutinas, calendario y temporizador Pomodoro, juntos. Para estudiar y programar sin saltar de una app a otra.
           </p>
           <div className="mt-7 flex flex-wrap gap-2">
             <Button size="lg" onClick={() => goToAuthRoute('register')}>
