@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://snap-note-nine.vercel.app/">snap-note-nine.vercel.app</a>
+  <a href="https://mewdoro.web.app/">mewdoro.web.app</a>
 </p>
 
 ## Funcionalidades
